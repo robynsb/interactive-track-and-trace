@@ -85,7 +85,7 @@ pair<vector<T>, std::dextents<std::size_t, 3>> get3DMat(NcVar var) {
 }
 
 int main () {
-  netCDF::NcFile data("../../../hdf5/hydrodynamic_U.h5", netCDF::NcFile::read);
+  netCDF::NcFile data("../../../../data/hydrodynamic_U.h5", netCDF::NcFile::read);
 
   multimap< string, NcVar > vars = data.getVars();
 
