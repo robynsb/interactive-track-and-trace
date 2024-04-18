@@ -91,6 +91,7 @@ int main () {
 
   auto [vec, size] = get3DMat<double>(vars.find("uo")->second);
 
+
   auto arr = std::mdspan(vec.data(), size);
 
   print3DMatrixSlice(arr, 100);
