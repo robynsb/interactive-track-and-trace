@@ -20,5 +20,16 @@ make
 ```
 
 ### Building with Linux
-Makes use of `mdspan` which is not supported by GCC libstdc++ at time of writing. See [compiler support](https://en.cppreference.com/w/cpp/compiler_support/23) for `mdspan`. Probably you will need to install Clang libc++.
+Makes use of `mdspan` which is not supported by GCC libstdc++ at time of writing. See [compiler support](https://en.cppreference.com/w/cpp/compiler_support/23) for `mdspan`. The solution to this is to use Clang and libc++; this is configured in our CMake setup, however the default installation of the `netcdf-cxx` package on at least Arch linux (and suspectedly Debian derivatves as well) specifically builds for the glibc implementation. To get the netcdf C++ bindings functional with the libc++ implementation, one needs to build from source. On Linux, this requires a few changes to the CMake file included with the netcdf-cxx source code, which are detailed below.
 
+Step-by-step to build the program using clang++ and libc++ on linux:
+ 1. Download the source code of netcdf-cxx, found at 'https://github.com/Unidata/netcdf-cxx4/releases/tag/v4.3.1' (make sure to download the release source code, as the master branch contains non-compilable code).
+ 2. Build the source code with the following flags: 
+  ```sh 
+    mkdir build && cd build
+    cmake .. -DCMAKE_CXX_COMPILER=/usr/bin/clang++
+    make
+    ctest
+    make install
+  ```
+ 3. Now the code should compile through the standard steps described in the Compiling section.
