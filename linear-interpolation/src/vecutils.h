@@ -43,5 +43,6 @@ void print3DMatrixSlice(const arr3d<T> &arr, int t) {
 }
 
 void print3DMatrixSlice(const arr3d<double> &arr, int t);
+void print3DMatrixSlice(const arr3d<std::pair<double, double>> &arr, int t);
 
 #endif //LINEARINTERPOLATE_VECUTILS_H

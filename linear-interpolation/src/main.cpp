@@ -1,18 +1,13 @@
-#include "readdata.h"
-
-#include <vector>
+#include "interpolate.h"
 
 using namespace std;
 
 int main() {
-    auto [vec, size] = readHydrodynamicU();
+    UVGrid uvGrid;
+    auto p = bilinearInterpolate(uvGrid, {392400, 53, -14.5});
 
-    auto arr = std::mdspan(vec.data(), size);
-
-    print3DMatrixSlice(arr, 100);
-
-    auto [times, lats, longs] = readGrid();
-    printContentsOfVec(lats);
+    println("({}, {})", p.first, p.second);
+    p = bilinearInterpolate(uvGrid, {802400, 62, -14.5});
 
     return 0;
 }

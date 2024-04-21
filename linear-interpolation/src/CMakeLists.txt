@@ -16,7 +16,13 @@ add_executable(LinearInterpolate main.cpp
         readdata.cpp
         readdata.h
         vecutils.cpp
-        vecutils.h)
+        vecutils.h
+        interpolate.cpp
+        interpolate.h
+        UVGrid.cpp
+        UVGrid.h
+        point.h
+        point.cpp)
 
 execute_process(
     COMMAND nc-config --includedir

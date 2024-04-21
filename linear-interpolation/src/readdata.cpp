@@ -55,10 +55,18 @@ pair<vector<double>, std::dextents<std::size_t, 3>> readHydrodynamicU() {
     return get3DMat<double>(vars.find("uo")->second);
 }
 
-tuple<vector<double>, vector<double>, vector<double>> readGrid() {
+pair<vector<double>, std::dextents<std::size_t, 3>> readHydrodynamicV() {
+    netCDF::NcFile data("../../../../data/hydrodynamic_V.h5", netCDF::NcFile::read);
+
+    multimap< string, NcVar > vars = data.getVars();
+
+    return get3DMat<double>(vars.find("vo")->second);
+}
+
+tuple<vector<int>, vector<double>, vector<double>> readGrid() {
     netCDF::NcFile data("../../../../data/grid.h5", netCDF::NcFile::read);
     multimap< string, NcVar > vars = data.getVars();
-    vector<double> time = getVarVector<double>(vars.find("times")->second);
+    vector<int> time = getVarVector<int>(vars.find("times")->second);
     vector<double> longitude = getVarVector<double>(vars.find("longitude")->second);
     vector<double> latitude = getVarVector<double>(vars.find("latitude")->second);
 
