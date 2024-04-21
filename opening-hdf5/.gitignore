@@ -2,3 +2,5 @@
 src/.DS_Store
 src/.cache
 src/build
+.idea
+src/cmake-build-debug
