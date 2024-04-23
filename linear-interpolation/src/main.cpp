@@ -1,7 +1,7 @@
 #include "interpolate.h"
 #include "Vel.h"
-#include <print>
 #include <ranges>
+#include <chrono>
 
 using namespace std;
 
@@ -39,14 +39,14 @@ int main() {
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds >(stop - start);
 
-    println("Time taken for {} points was {} seconds", N, duration.count()/1000.);
+    printf("Time taken for %d points was %lf seconds\n", N, duration.count()/1000.);
 
     // Do something with result in case of optimisation
     double sum = 0;
     for (auto [u,v]: x) {
         sum += u + v;
     }
-    println("Sum = {}", sum);
+    printf("Sum = %lf\n", sum);
 
     return 0;
 }

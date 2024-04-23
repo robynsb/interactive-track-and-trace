@@ -1,8 +1,8 @@
 #include <ranges>
-#include <print>
 
 #include "UVGrid.h"
 #include "readdata.h"
+#include "to_vector.h"
 
 #define sizeError2 "The sizes of the hydrodynamic data files are different"
 #define sizeError "The sizes of the hydrodynamicU or -V files does not correspond with the sizes of the grid file"
@@ -27,11 +27,12 @@ UVGrid::UVGrid() {
         throw domain_error(sizeError);
     }
 
-    uvData = views::zip(us, vs)
-             | views::transform([](auto pair) {
-        return Vel(pair);
-    })
-             | ranges::to<vector>();
+  uvData = to_vector(views::transform(views::zip(us, vs), [](auto pair){return Vel(pair);}));
+//     uvData = views::zip(us, vs)
+//              | views::transform([](auto pair) {
+//         return Vel(pair);
+//     })
+// | ranges::to<vector>();
 }
 
 const Vel &UVGrid::operator[](size_t timeIndex, size_t latIndex, size_t lonIndex) const {
@@ -55,8 +56,8 @@ void UVGrid::printSlice(size_t t) {
     for (int x = 0; x < latSize; x++) {
         for (int y = 0; y < lonSize; y++) {
             auto [u,v] = (*this)[t,x,y];
-            print("({:>7.4f}, {:>7.4f}) ", u, v);
+            printf("%7.4f, %7.4f", u, v);
         }
-        println("");
+      cout << endl;
     }
 }
