@@ -7,7 +7,7 @@ using namespace std;
 
 int main() {
     UVGrid uvGrid;
-    uvGrid.printSlice(100);
+    uvGrid.streamSlice(cout, 100);
 
     int N = 10000000;  // Number of points
 
@@ -20,7 +20,6 @@ int main() {
     double lon_start = -15.875;
     double lon_end = 12.875;
 
-    // Calculate increments
     double lat_step = (lat_end - lat_start) / (N - 1);
     double lon_step = (lon_end - lon_start) / (N - 1);
     int time_step = (time_end - time_start) / (N - 1);
@@ -31,22 +30,22 @@ int main() {
         points.push_back({time_start+time_step*i, lat_start+lat_step*i, lon_start+lon_step*i});
     }
 
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = chrono::high_resolution_clock::now();
 
     auto x = bilinearInterpolate(uvGrid, points);
 
-    auto stop = std::chrono::high_resolution_clock::now();
+    auto stop = chrono::high_resolution_clock::now();
 
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds >(stop - start);
+    auto duration = chrono::duration_cast<std::chrono::milliseconds >(stop - start);
 
-    printf("Time taken for %d points was %lf seconds\n", N, duration.count()/1000.);
+    cout << "Time taken for " << N << " points was " << duration.count()/1000. << " seconds\n";
 
     // Do something with result in case of optimisation
     double sum = 0;
     for (auto [u,v]: x) {
         sum += u + v;
     }
-    printf("Sum = %lf\n", sum);
+    cout << "Sum = " << sum << endl;
 
     return 0;
 }

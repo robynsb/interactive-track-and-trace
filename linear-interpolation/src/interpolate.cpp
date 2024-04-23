@@ -1,8 +1,4 @@
-#include <cmath>
-#include <ranges>
-
 #include "interpolate.h"
-#include "to_vector.h"
 
 using namespace std;
 
@@ -41,9 +37,11 @@ Vel bilinearInterpolate(const UVGrid &uvGrid, int time, double lat, double lon) 
 }
 
 vector<Vel> bilinearInterpolate(const UVGrid &uvGrid, vector<tuple<int, double, double>> points) {
-    auto results = points | std::views::transform([&uvGrid](const auto &point) {
-        auto [time, lat, lon] = point;
-        return bilinearInterpolate(uvGrid, time, lat, lon);
-    });
-    return to_vector(results);
+    vector<Vel> result;
+    result.reserve(points.size());
+    for (auto [time, lat, lon]: points) {
+        result.push_back(bilinearInterpolate(uvGrid, time, lat, lon));
+    }
+
+    return result;
 }

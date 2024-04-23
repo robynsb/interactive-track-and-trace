@@ -6,10 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Make flags for release compilation
-# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -DNDEBUG")
-
-
 find_package(netCDF REQUIRED)
 
 add_executable(LinearInterpolate main.cpp
@@ -20,7 +16,6 @@ add_executable(LinearInterpolate main.cpp
         UVGrid.cpp
         UVGrid.h
         Vel.h
-        to_vector.h
         Vel.cpp)
 
 execute_process(

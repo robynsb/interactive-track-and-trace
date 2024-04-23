@@ -1,5 +1,8 @@
 #include "Vel.h"
 #include <stdexcept>
+#include <iomanip>
+
+using namespace std;
 
 Vel::Vel(double u, double v) : u(u), v(v) {}
 
@@ -27,7 +30,11 @@ Vel Vel::operator/(Scalar scalar) const {
     return Vel(u / scalar, v / scalar);
 }
 
-std::ostream& operator<<(std::ostream& os, const Vel& vel) {
-    os << "(" << vel.u << ", " << vel.v << ")";
+std::ostream& operator<<(ostream& os, const Vel& vel) {
+    os << "(";
+    os << fixed << setprecision(2) << setw(5) << vel.u;
+    os << ", ";
+    os << fixed << setprecision(2) << setw(5) << vel.v;
+    os << ")";
     return os;
 }

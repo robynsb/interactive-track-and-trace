@@ -45,11 +45,7 @@ public:
      */
     const Vel& operator[](size_t timeIndex, size_t latIndex, size_t lonIndex) const;
 
-    // Friend declaration for the stream insertion operator
-    friend std::ostream& operator<<(std::ostream& os, const UVGrid& vel);
-
-    void printSlice(size_t t);
+    void streamSlice(std::ostream &os, size_t t);
 };
-
 
 #endif //LINEARINTERPOLATE_UVGRID_H
