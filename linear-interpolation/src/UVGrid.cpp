@@ -1,18 +1,42 @@
-#include <mdspan>
 #include <ranges>
+#include <print>
 
 #include "UVGrid.h"
 #include "readdata.h"
 
+#define sizeError2 "The sizes of the hydrodynamic data files are different"
+#define sizeError "The sizes of the hydrodynamicU or -V files does not correspond with the sizes of the grid file"
+
 using namespace std;
 
 UVGrid::UVGrid() {
-    auto [us, sizeU] = readHydrodynamicU();
-    auto [vs, sizeV] = readHydrodynamicV();
-    // Assuming sizeU == sizeV
-    uvData = views::zip(us, vs) | ranges::to<vector>();
-    uvMatrix = mdspan(uvData.data(), sizeU);
+    auto us = readHydrodynamicU();
+    auto vs = readHydrodynamicV();
+    if (us.size() != vs.size()) {
+        throw domain_error(sizeError2);
+    }
+
     tie(times, lats, lons) = readGrid();
+
+    timeSize = times.size();
+    latSize = lats.size();
+    lonSize = lons.size();
+
+    size_t gridSize = timeSize * latSize * lonSize;
+    if (gridSize != us.size()) {
+        throw domain_error(sizeError);
+    }
+
+    uvData = views::zip(us, vs)
+             | views::transform([](auto pair) {
+        return Vel(pair);
+    })
+             | ranges::to<vector>();
+}
+
+const Vel &UVGrid::operator[](size_t timeIndex, size_t latIndex, size_t lonIndex) const {
+    size_t index = timeIndex * (latSize * lonSize) + latIndex * lonIndex + lonIndex;
+    return uvData[index];
 }
 
 double UVGrid::lonStep() const {
@@ -20,9 +44,19 @@ double UVGrid::lonStep() const {
 }
 
 double UVGrid::latStep() const {
-    return lats[1]-lats[0];
+    return lats[1] - lats[0];
 }
 
 int UVGrid::timeStep() const {
-    return times[1]-times[0];
+    return times[1] - times[0];
+}
+
+void UVGrid::printSlice(size_t t) {
+    for (int x = 0; x < latSize; x++) {
+        for (int y = 0; y < lonSize; y++) {
+            auto [u,v] = (*this)[t,x,y];
+            print("({:>7.4f}, {:>7.4f}) ", u, v);
+        }
+        println("");
+    }
 }

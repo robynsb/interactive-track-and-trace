@@ -4,10 +4,6 @@ project (LinearInterpolate)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Force use of libc++ for mdspan support
-set(CMAKE_CXX_COMPILER "clang++")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ ")
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(netCDF REQUIRED)
@@ -15,14 +11,12 @@ find_package(netCDF REQUIRED)
 add_executable(LinearInterpolate main.cpp
         readdata.cpp
         readdata.h
-        vecutils.cpp
-        vecutils.h
         interpolate.cpp
         interpolate.h
         UVGrid.cpp
         UVGrid.h
-        point.h
-        point.cpp)
+        Vel.h
+        Vel.cpp)
 
 execute_process(
     COMMAND nc-config --includedir
