@@ -32,7 +32,7 @@ int main() {
 
     auto start = chrono::high_resolution_clock::now();
 
-    auto x = bilinearInterpolate(uvGrid, points);
+    auto x = biadvection(uvGrid, points);
 
     auto stop = chrono::high_resolution_clock::now();
 

@@ -1,5 +1,5 @@
-#ifndef LINEARINTERPOLATE_UVGRID_H
-#define LINEARINTERPOLATE_UVGRID_H
+#ifndef ADVECTION_UVGRID_H
+#define ADVECTION_UVGRID_H
 
 #include <vector>
 #include "Vel.h"
@@ -48,4 +48,4 @@ public:
     void streamSlice(std::ostream &os, size_t t);
 };
 
-#endif //LINEARINTERPOLATE_UVGRID_H
+#endif //ADVECTION_UVGRID_H

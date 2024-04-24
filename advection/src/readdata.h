@@ -1,5 +1,5 @@
-#ifndef LINEARINTERPOLATE_READDATA_H
-#define LINEARINTERPOLATE_READDATA_H
+#ifndef ADVECTION_READDATA_H
+#define ADVECTION_READDATA_H
 
 /**
  * reads the file hydrodynamic_U.h5
@@ -19,4 +19,4 @@ std::vector<double> readHydrodynamicV();
  */
 std::tuple<std::vector<int>, std::vector<double>, std::vector<double>> readGrid();
 
-#endif //LINEARINTERPOLATE_READDATA_H
+#endif //ADVECTION_READDATA_H
