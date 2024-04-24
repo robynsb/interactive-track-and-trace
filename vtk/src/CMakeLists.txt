@@ -9,6 +9,10 @@ find_package(VTK COMPONENTS
   CommonCore
   CommonDataModel
   FiltersGeneral
+  FiltersGeometry
+  FiltersProgrammable
+  IOImage
+  ImagingSources
   InteractionStyle
   RenderingContextOpenGL2
   RenderingCore
@@ -16,7 +20,6 @@ find_package(VTK COMPONENTS
   RenderingGL2PSOpenGL2
   RenderingOpenGL2
     CommonColor
-    FiltersGeometry
     RenderingCore)
 
 if (NOT VTK_FOUND)
