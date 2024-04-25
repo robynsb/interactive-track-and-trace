@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Vel biadvection(const UVGrid &uvGrid, int time, double lat, double lon) {
+Vel bilinearinterpolation(const UVGrid &uvGrid, int time, double lat, double lon) {
     double latStep = uvGrid.latStep();
     double lonStep = uvGrid.lonStep();
     int timeStep = uvGrid.timeStep();
@@ -36,11 +36,11 @@ Vel biadvection(const UVGrid &uvGrid, int time, double lat, double lon) {
     return point;
 }
 
-vector<Vel> biadvection(const UVGrid &uvGrid, vector<tuple<int, double, double>> points) {
+vector<Vel> bilinearinterpolation(const UVGrid &uvGrid, vector<tuple<int, double, double>> points) {
     vector<Vel> result;
     result.reserve(points.size());
     for (auto [time, lat, lon]: points) {
-        result.push_back(biadvection(uvGrid, time, lat, lon));
+        result.push_back(bilinearinterpolation(uvGrid, time, lat, lon));
     }
 
     return result;

@@ -15,7 +15,7 @@
  * @param lon longitude of point
  * @return interpolated velocity
  */
-Vel biadvection(const UVGrid &uvGrid, int time, double lat, double lon);
+Vel bilinearinterpolation(const UVGrid &uvGrid, int time, double lat, double lon);
 
 /**
  * Helper function for bilnearly interpolating a vector of points
@@ -23,6 +23,6 @@ Vel biadvection(const UVGrid &uvGrid, int time, double lat, double lon);
  * @param points vector of points
  * @return interpolated velocities
  */
-std::vector<Vel> biadvection(const UVGrid &uvGrid, std::vector<std::tuple<int, double, double>> points);
+std::vector<Vel> bilinearinterpolation(const UVGrid &uvGrid, std::vector<std::tuple<int, double, double>> points);
 
 #endif //ADVECTION_INTERPOLATE_H

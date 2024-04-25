@@ -6,8 +6,9 @@
 using namespace std;
 
 int main() {
-    UVGrid uvGrid;
-    uvGrid.streamSlice(cout, 100);
+//    UVGrid uvGrid;
+    std::shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
+    uvGrid->streamSlice(cout, 100);
 
     int N = 10000000;  // Number of points
 
@@ -32,7 +33,7 @@ int main() {
 
     auto start = chrono::high_resolution_clock::now();
 
-    auto x = biadvection(uvGrid, points);
+    auto x = bilinearinterpolation(*uvGrid, points);
 
     auto stop = chrono::high_resolution_clock::now();
 

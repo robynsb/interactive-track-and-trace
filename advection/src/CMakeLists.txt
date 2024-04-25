@@ -17,6 +17,9 @@ add_executable(Advection main.cpp
         UVGrid.h
         Vel.h
         Vel.cpp
+        AdvectionKernel.h
+        EulerAdvectionKernel.cpp
+        EulerAdvectionKernel.h
 )
 
 execute_process(
