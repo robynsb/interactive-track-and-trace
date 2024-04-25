@@ -29,7 +29,18 @@ endif()
 # netcdf setup
 find_package(netCDF REQUIRED)
 
-add_executable(VtkBase MACOSX_BUNDLE main.cpp )
+add_executable(VtkBase MACOSX_BUNDLE main.cpp 
+  helperClasses/BackgroundImage.cpp 
+  helperClasses/BackgroundImage.h
+  helperClasses/EGlyphLayer.cpp
+  helperClasses/EGlyphLayer.h
+  helperClasses/Layer.cpp
+  helperClasses/Layer.h
+  helperClasses/LGlyphLayer.cpp
+  helperClasses/LGlyphLayer.h
+  helperClasses/Program.cpp
+  helperClasses/Program.h
+)
 
 execute_process(
     COMMAND nc-config --includedir

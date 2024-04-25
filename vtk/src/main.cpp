@@ -1,31 +1,17 @@
-#include <vtkActor.h>
-#include <vtkActor2D.h>
-#include <vtkCamera.h>
-#include <vtkDoubleArray.h>
-#include <vtkMapper2D.h>
-#include <vtkImageReader2.h>
-#include <vtkImageData.h>
-#include <vtkImageActor.h>
-#include <vtkImageReader2Factory.h>
-#include <vtkNamedColors.h>
-#include <vtkNew.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkPolyDataMapper2D.h>
-#include <vtkProgrammableGlyphFilter.h>
-#include <vtkSmartPointer.h>
-#include <vtkProperty.h>
-#include <vtkProperty2D.h>
-#include <vtkRectilinearGrid.h>
-#include <vtkRectilinearGridGeometryFilter.h>
-#include <vtkRenderWindow.h>
-#include <vtkRenderWindowInteractor.h>
-#include <vtkRenderer.h>
-
 #include <netcdf>
+#include <vector>
+#include <vtkActor2D.h>
+#include <vtkNamedColors.h>
+#include <vtkPoints.h>
+#include <vtkPolyData.h>
+#include <vtkPolyDataMapper2D.h>
+#include <vtkProperty2D.h>
+#include <vtkRenderer.h>
 #include <vtkVertexGlyphFilter.h>
 
-#define NLATS 67
-#define NLONS 116
+#include "helperClasses/BackgroundImage.h"
+#include "helperClasses/EGlyphLayer.h"
+#include "helperClasses/Program.h"
 
 using namespace std;
 using namespace netCDF;
@@ -71,6 +57,7 @@ void renderCoordinates(vtkRenderer *ren, vtkNamedColors *colors) {
   vtkNew<vtkPolyData> polydata;
   polydata->SetPoints(points);
 
+
   vtkNew<vtkVertexGlyphFilter> glyphFilter;
   glyphFilter->SetInputData(polydata);
   glyphFilter->Update();
@@ -87,73 +74,21 @@ void renderCoordinates(vtkRenderer *ren, vtkNamedColors *colors) {
   ren->AddActor(actor);
 }
 
-void renderBackground(vtkRenderer *background) {
-  vtkSmartPointer<vtkImageData> imageData;
-
-  vtkNew<vtkImageReader2Factory> readerFactory;
-  vtkSmartPointer<vtkImageReader2> imageReader;
-  
-  imageReader.TakeReference(readerFactory->CreateImageReader2("../../../../data/map_661-661.png"));
-  imageReader->SetFileName("../../../../data/map_661-661.png");
-  imageReader->Update();
-  imageData = imageReader->GetOutput();
-
-  vtkNew<vtkImageActor> imageActor;
-  imageActor->SetInputData(imageData);
-
-  background->AddActor(imageActor);
-
-
-  // camera stuff
-  // essentially sets the camera to the middle of the background, and points it at the background
-  double origin[3], spacing[3];
-  int extent[6];
-  imageData->GetOrigin(origin);
-  imageData->GetSpacing(spacing);
-  imageData->GetExtent(extent);
-
-  vtkCamera *camera = background->GetActiveCamera();
-  camera->ParallelProjectionOn();
-
-  double xc = origin[0] + 0.5 * (extent[0] + extent[1]) * spacing[0];
-  double yc = origin[1] + 0.5 * (extent[2] + extent[3]) * spacing[1];
-  double yd = (extent[3] - extent[2] + 1) * spacing[1];
-  double d = camera->GetDistance();
-  camera->SetParallelScale(0.5 * yd);
-  camera->SetFocalPoint(xc, yc, 0.0);
-  camera->SetPosition(xc, yc, d);
-}
 
 int main() {
-  vtkNew<vtkNamedColors> colors;
-  vtkNew<vtkRenderer> Euler, Background, Lagrange;
-  Euler->SetBackground(colors->GetColor3d("DarkSlateGray").GetData());
+  auto bg = new BackgroundImage("../../../../data/map_661-661.png");
+  auto e = new EGlyphLayer();
+  auto l = new EGlyphLayer();
+  auto program = new Program(*bg, *e, *l);
+  program->render();
 
 
-  Background->SetLayer(0);
-  Background->InteractiveOff();
-  Euler->SetLayer(1);
-  Euler->InteractiveOff();
-  Lagrange->SetLayer(2);
+  // vtkNew<vtkNamedColors> colors;
+  // vtkNew<vtkRenderer> Euler, Background, Lagrange;
+  // Euler->SetBackground(colors->GetColor3d("DarkSlateGray").GetData());
 
-  renderCoordinates(Euler, colors);
-  renderBackground(Background);
 
-  vtkNew<vtkRenderWindow> renWin;
-  renWin->SetNumberOfLayers(3);
-  // renWin->SetNumberOfLayers(2);
-  renWin->AddRenderer(Background);
-  renWin->AddRenderer(Euler);
-  renWin->AddRenderer(Lagrange);
-  renWin->SetWindowName("Simulation");
-  renWin->SetSize(661, 661);
-
-  vtkNew<vtkRenderWindowInteractor> iren;
-  iren->SetRenderWindow(renWin);
-
-  renWin->Render();
-  iren->Start();
-
+  // renderCoordinates(Euler, colors);
 
   return EXIT_SUCCESS;
 }
