@@ -4,6 +4,14 @@
 #include "AdvectionKernel.h"
 #include "UVGrid.h"
 
+/**
+ * Implementation of AdvectionKernel.
+ * The basic equation is:
+ * new_latitude = latitude + u*DT
+ * new_longitude = longitude + v*DT
+ *
+ * Uses bilinear interpolation as implemented in interpolate.h
+ */
 class EulerAdvectionKernel: public AdvectionKernel {
 private:
     std::shared_ptr<UVGrid> grid;

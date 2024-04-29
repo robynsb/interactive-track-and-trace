@@ -11,7 +11,10 @@ using namespace std;
 
 template <typename AdvectionKernelImpl>
 void advectForSomeTime(const UVGrid &uvGrid, const AdvectionKernelImpl &kernel, double latstart, double lonstart) {
+
+    // Require at compile time that kernel derives from the abstract class AdvectionKernel
     static_assert(std::is_base_of<AdvectionKernel, AdvectionKernelImpl>::value, NotAKernelError);
+
     double lat1 = latstart, lon1 = lonstart;
     for(int time = 100; time <= 10000; time += DT) {
         cout << "lat = " << lat1 << " lon = " << lon1 << endl;
@@ -24,7 +27,6 @@ void advectForSomeTime(const UVGrid &uvGrid, const AdvectionKernelImpl &kernel, 
 
 int main() {
     std::shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
-//    uvGrid->streamSlice(cout, 100);
 
     EulerAdvectionKernel kernelEuler = EulerAdvectionKernel(uvGrid);
 

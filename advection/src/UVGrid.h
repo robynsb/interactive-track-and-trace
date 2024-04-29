@@ -13,6 +13,9 @@ private:
 public:
     UVGrid();
 
+    /**
+     * The matrix has shape (timeSize, latSize, lonSize)
+     */
     size_t timeSize;
     size_t latSize;
     size_t lonSize;
@@ -35,6 +38,12 @@ public:
      */
     int timeStep() const;
 
+    /**
+     * times, lats, lons are vector of length timeSize, latSize, lonSize respectively.
+     * The maintain the following invariant:
+     * grid[timeIndex,latIndex,lonIndex] gives the u,v at the point with latitude at lats[latIndex],
+     * with longitude at lons[lonIndex], and with time at times[timeIndex].
+     */
     std::vector<int> times;
     std::vector<double> lats;
     std::vector<double> lons;
@@ -45,6 +54,11 @@ public:
      */
     const Vel& operator[](size_t timeIndex, size_t latIndex, size_t lonIndex) const;
 
+    /**
+     * Streams a slice at timeIndex t of the matrix to the outstream given by os
+     * @param os outstream
+     * @param t index with which to slice matrix
+     */
     void streamSlice(std::ostream &os, size_t t);
 };
 
