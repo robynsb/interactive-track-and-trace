@@ -1,3 +1,0 @@
-/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/build/CMakeFiles/VtkBase.dir
-/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/build/CMakeFiles/edit_cache.dir
-/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/build/CMakeFiles/rebuild_cache.dir
