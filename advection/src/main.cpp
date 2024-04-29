@@ -5,33 +5,37 @@
 #include <ranges>
 #include <chrono>
 
+#define NotAKernelError "Template parameter T must derive from AdvectionKernel"
+
 using namespace std;
+
+template <typename AdvectionKernelImpl>
+void advectForSomeTime(const UVGrid &uvGrid, const AdvectionKernelImpl &kernel, double latstart, double lonstart) {
+    static_assert(std::is_base_of<AdvectionKernel, AdvectionKernelImpl>::value, NotAKernelError);
+    double lat1 = latstart, lon1 = lonstart;
+    for(int time = 100; time <= 10000; time += DT) {
+        cout << "lat = " << lat1 << " lon = " << lon1 << endl;
+        auto [templat, templon] = kernel.advect(time, lat1, lon1);
+        lat1 = templat;
+        lon1 = templon;
+    }
+}
+
 
 int main() {
     std::shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
 //    uvGrid->streamSlice(cout, 100);
 
     EulerAdvectionKernel kernelEuler = EulerAdvectionKernel(uvGrid);
+
     RK4AdvectionKernel kernelRK4 = RK4AdvectionKernel(uvGrid);
 
-    double latstart = 54.860801, lonstart = 4.075492;
+    double latstart = 52.881770, lonstart = 3.079979;
 
-    double lat1 = latstart, lon1 = lonstart;
     cout << "======= Euler Integration =======" << endl;
-    for(int time = 100; time <= 10000; time += DT) {
-        cout << "lat = " << lat1 << " lon = " << lon1 << endl;
-        auto [templat, templon] = kernelEuler.advect(time, lat1, lon1);
-        lat1 = templat;
-        lon1 = templon;
-    }
+    advectForSomeTime(*uvGrid, kernelEuler, latstart, lonstart);
     cout << "======= RK4 Integration =======" << endl;
-    lat1 = latstart, lon1 = lonstart;
-    for(int time = 100; time <= 10000; time += DT) {
-        cout << "lat = " << lat1 << " lon = " << lon1 << endl;
-        auto [templat, templon] = kernelRK4.advect(time, lat1, lon1);
-        lat1 = templat;
-        lon1 = templon;
-    }
+    advectForSomeTime(*uvGrid, kernelRK4, latstart, lonstart);
 
     return 0;
 }

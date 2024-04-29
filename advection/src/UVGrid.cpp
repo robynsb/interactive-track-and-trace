@@ -34,6 +34,11 @@ UVGrid::UVGrid() {
 }
 
 const Vel &UVGrid::operator[](size_t timeIndex, size_t latIndex, size_t lonIndex) const {
+    if(timeIndex < 0 or timeIndex >= timeSize
+        or latIndex < 0 or latIndex >= latSize
+        or lonIndex < 0 or lonIndex >= lonSize) {
+        throw std::out_of_range("Index out of bounds");
+    }
     size_t index = timeIndex * (latSize * lonSize) + latIndex * lonIndex + lonIndex;
     return uvData[index];
 }
