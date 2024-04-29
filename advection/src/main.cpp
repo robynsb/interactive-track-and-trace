@@ -16,7 +16,7 @@ void advectForSomeTime(const UVGrid &uvGrid, const AdvectionKernelImpl &kernel, 
     static_assert(std::is_base_of<AdvectionKernel, AdvectionKernelImpl>::value, NotAKernelError);
 
     double lat1 = latstart, lon1 = lonstart;
-    for(int time = 100; time <= 10000; time += DT) {
+    for(int time = 100; time <= 10000; time += AdvectionKernel::DT) {
         cout << "lat = " << lat1 << " lon = " << lon1 << endl;
         auto [templat, templon] = kernel.advect(time, lat1, lon1);
         lat1 = templat;
