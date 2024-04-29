@@ -20,6 +20,8 @@ add_executable(Advection main.cpp
         AdvectionKernel.h
         EulerAdvectionKernel.cpp
         EulerAdvectionKernel.h
+        RK4AdvectionKernel.cpp
+        RK4AdvectionKernel.h
 )
 
 execute_process(

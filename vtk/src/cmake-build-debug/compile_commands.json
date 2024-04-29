@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/cmake-build-debug",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -Dkiss_fft_scalar=double -DvtkRenderingContext2D_AUTOINIT_INCLUDE=\\\"/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/cmake-build-debug/CMakeFiles/vtkModuleAutoInit_04d683062bbc5774e34e8c62b13e1a5a.h\\\" -DvtkRenderingCore_AUTOINIT_INCLUDE=\\\"/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/cmake-build-debug/CMakeFiles/vtkModuleAutoInit_04d683062bbc5774e34e8c62b13e1a5a.h\\\" -DvtkRenderingOpenGL2_AUTOINIT_INCLUDE=\\\"/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/cmake-build-debug/CMakeFiles/vtkModuleAutoInit_04d683062bbc5774e34e8c62b13e1a5a.h\\\" -isystem /opt/homebrew/include -isystem /opt/homebrew/include/vtk-9.3 -isystem /opt/homebrew/include/vtk-9.3/vtkfreetype/include -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.3 -fcolor-diagnostics -o CMakeFiles/VtkBase.dir/main.cpp.o -c /Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/main.cpp",
+  "file": "/Users/robin/Desktop/Projects/Thesis/interactive-track-and-trace/vtk/src/main.cpp",
+  "output": "CMakeFiles/VtkBase.dir/main.cpp.o"
+}
+]

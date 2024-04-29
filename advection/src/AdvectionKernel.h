@@ -5,7 +5,7 @@
 
 #include "Vel.h"
 
-#define DT 4000
+#define DT 50
 
 class AdvectionKernel {
 public:

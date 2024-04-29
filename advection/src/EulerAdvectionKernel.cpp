@@ -1,11 +1,13 @@
 
 #include "EulerAdvectionKernel.h"
+#include "interpolate.h"
 
 using namespace std;
 
-EulerAdvectionKernel::EulerAdvectionKernel(std::shared_ptr<UVGrid> grid) { }
+EulerAdvectionKernel::EulerAdvectionKernel(std::shared_ptr<UVGrid> grid): grid(grid) { }
 
 std::pair<double, double> EulerAdvectionKernel::advect(int time, double latitude, double longitude) const {
-    auto [u,v] = (*grid)[time, latitude, longitude];
+    auto [u, v] = bilinearinterpolation(*grid, time, latitude, longitude);
+
     return {latitude+u*DT, longitude+v*DT};
 }
