@@ -6,21 +6,23 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(VTK COMPONENTS 
   CommonColor
+  CommonColor
   CommonCore
   CommonDataModel
   FiltersGeneral
   FiltersGeometry
   FiltersProgrammable
-  IOImage
+  FiltersSources
   ImagingSources
   InteractionStyle
+  IOImage
   RenderingContextOpenGL2
+  RenderingCore
   RenderingCore
   RenderingFreeType
   RenderingGL2PSOpenGL2
-  RenderingOpenGL2
-    CommonColor
-    RenderingCore)
+  RenderingOpenGL2)
+
 
 if (NOT VTK_FOUND)
   message(FATAL_ERROR "VtkBase: Unable to find the VTK build folder.")
