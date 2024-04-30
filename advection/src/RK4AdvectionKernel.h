@@ -1,7 +1,6 @@
 #ifndef ADVECTION_RK4ADVECTIONKERNEL_H
 #define ADVECTION_RK4ADVECTIONKERNEL_H
 
-
 #include "AdvectionKernel.h"
 #include "UVGrid.h"
 

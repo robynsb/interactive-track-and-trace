@@ -49,7 +49,7 @@ public:
     std::vector<double> lons;
 
     /**
-     * The 3D index into the data
+     * The 3D index into the data. The array is sized by [8761][67][116]
      * @return Velocity at that index
      */
     const Vel& operator[](size_t timeIndex, size_t latIndex, size_t lonIndex) const;

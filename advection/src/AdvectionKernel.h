@@ -11,7 +11,7 @@
  */
 class AdvectionKernel {
 public:
-    const static int DT = 50;
+    const static int DT = 100000; // Seconds
     /**
      * This function must take a time, latitude and longitude of a particle and must output
      * a new latitude and longitude after being advected once for AdvectionKernel::DT time as defined above.
@@ -21,6 +21,11 @@ public:
      * @return A pair of latitude and longitude of particle.
      */
     virtual std::pair<double, double> advect(int time, double latitude, double longitude) const = 0;
+
+    // Taken from Parcels https://github.com/OceanParcels/parcels/blob/daa4b062ed8ae0b2be3d87367d6b45599d6f95db/parcels/tools/converters.py#L155
+    const static double metreToDegrees(double metre) {
+        return metre / 1000. / 1.852 / 60.;
+    }
 
 };
 
