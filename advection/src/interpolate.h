@@ -15,7 +15,7 @@
  * @param lon longitude of point
  * @return interpolated velocity
  */
-Vel bilinearinterpolation(const UVGrid &uvGrid, int time, double lat, double lon);
+Vel bilinearinterpolate(const UVGrid &uvGrid, int time, double lat, double lon);
 
 /**
  * Helper function for bilnearly interpolating a vector of points

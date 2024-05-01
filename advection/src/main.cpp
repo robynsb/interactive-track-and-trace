@@ -37,25 +37,25 @@ void advectForSomeTime(const UVGrid &uvGrid, const AdvectionKernelImpl &kernel, 
 void testGridIndexing(const UVGrid *uvGrid) {
     int time = 20000;
     cout << "=== land === (should all give 0)" << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 53.80956379699079, -1.6496306344654406) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 55.31428895563707, -2.851581041325997) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 47.71548983067583, -1.8704054037408626) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 56.23521060314398, 8.505979324950573) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 53.135645440244375, 8.505979324950573) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 56.44761278775708, -4.140629303756164) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 52.67625153110339, 0.8978569759455872) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 52.07154079279377, 4.627951041411331) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 53.80956379699079, -1.6496306344654406) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 55.31428895563707, -2.851581041325997) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 47.71548983067583, -1.8704054037408626) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 56.23521060314398, 8.505979324950573) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 53.135645440244375, 8.505979324950573) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 56.44761278775708, -4.140629303756164) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 52.67625153110339, 0.8978569759455872) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 52.07154079279377, 4.627951041411331) << endl;
 
     cout << "=== ocean === (should give not 0)" << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 47.43923166616274, -4.985451481829083) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 50.68943556852362, -9.306162999561733) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 53.70606799886677, -4.518347647034465) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 60.57987114267971, -12.208262973672621) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 46.532221548197285, -13.408189172582638) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 50.92725094937812, 1.3975824052375256) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 51.4028921682209, 2.4059571950925203) << endl;
-    cout << bilinearinterpolation(*uvGrid, time, 53.448445236769004, 0.7996966058017515) << endl;
-//    cout << bilinearinterpolation(*uvGrid, time, ) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 47.43923166616274, -4.985451481829083) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 50.68943556852362, -9.306162999561733) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 53.70606799886677, -4.518347647034465) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 60.57987114267971, -12.208262973672621) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 46.532221548197285, -13.408189172582638) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 50.92725094937812, 1.3975824052375256) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 51.4028921682209, 2.4059571950925203) << endl;
+    cout << bilinearinterpolate(*uvGrid, time, 53.448445236769004, 0.7996966058017515) << endl;
+//    cout << bilinearinterpolate(*uvGrid, time, ) << endl;
 }
 
 int main() {
