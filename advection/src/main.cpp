@@ -27,7 +27,7 @@ void advectForSomeTime(const UVGrid &uvGrid, const AdvectionKernelImpl &kernel, 
             lon1 = templon;
         } catch (const out_of_range& e) {
             cerr << "broke out of loop!" << endl;
-            break;
+            time = 31536001;
         }
     }
     cout << setprecision(8) << latstart << "," << setprecision(8) << lonstart << ",begin" << i << "," << colour << endl;
@@ -63,26 +63,32 @@ int main() {
 
     uvGrid->streamSlice(cout, 900);
 
-    RK4AdvectionKernel kernelRK4 = RK4AdvectionKernel(uvGrid);
+    auto kernelRK4 = RK4AdvectionKernel(uvGrid);
 
 //    You can use https://maps.co/gis/ to visualise these points
     cout << "======= RK4 Integration =======" << endl;
-    advectForSomeTime(*uvGrid, kernelRK4, 54.331795276466615, 4.845871408626273, 0, "#ADD8E6");
-    advectForSomeTime(*uvGrid, kernelRK4, 59.17208978388813, 0.32865481669722213, 1, "#DC143C");
-    advectForSomeTime(*uvGrid, kernelRK4, 56.18661322856813, -9.521463269751877, 2, "#50C878");
-    advectForSomeTime(*uvGrid, kernelRK4, 46.6048774007515, -2.8605696406405947, 3, "#FFEA00");
-    advectForSomeTime(*uvGrid, kernelRK4, 51.45431808648367, 1.6682437444140332, 4, "#663399");
-    advectForSomeTime(*uvGrid, kernelRK4, 51.184757012016085, -6.418923014612084, 5, "#FFA500");
-    advectForSomeTime(*uvGrid, kernelRK4, 54.48325546269538, 7.167517140551792, 6, "#008080");
-    advectForSomeTime(*uvGrid, kernelRK4, 55.43253322410253, -1.1712503620884716, 7, "#FFB6C1");
-    advectForSomeTime(*uvGrid, kernelRK4, 48.852815074172085, 3.4294489497130516, 8, "#36454F"); // on land
-    advectForSomeTime(*uvGrid, kernelRK4, 58.02431905976983, 1.6892571305388995, 9, "#1E90FF"); // Dodger Blue
-    advectForSomeTime(*uvGrid, kernelRK4, 58.99404571805297, 3.4121513161325425, 10, "#FFD700"); // Gold
-    advectForSomeTime(*uvGrid, kernelRK4, 59.51039243098509, -1.6674160241521663, 11, "#6A5ACD"); // Slate Blue
-    advectForSomeTime(*uvGrid, kernelRK4, 60.51250220636489, 1.020893006817227, 12, "#20B2AA"); // Light Sea Green
-    advectForSomeTime(*uvGrid, kernelRK4, 60.38797801281417, 3.516119068711471, 13, "#FF69B4"); // Hot Pink
-    advectForSomeTime(*uvGrid, kernelRK4, 60.02637651315464, -2.4546004365354697, 14, "#800080"); // Purple
-    advectForSomeTime(*uvGrid, kernelRK4, 58.732929454411305, 3.649791893455804, 15, "#FF4500"); // Orange Red
+    advectForSomeTime(*uvGrid, kernelRK4, 53.53407391652826, 6.274975037862238, 0, "#ADD8E6");
+    advectForSomeTime(*uvGrid, kernelRK4, 53.494053820479365, 5.673454142386921, 1, "#DC143C");
+    advectForSomeTime(*uvGrid, kernelRK4, 53.49321966653616, 5.681867022043919, 2, "#50C878");
+    advectForSomeTime(*uvGrid, kernelRK4, 53.581548701694324, 6.552600066543153, 3, "#FFEA00");
+    advectForSomeTime(*uvGrid, kernelRK4, 53.431446729744124, 5.241592961691523, 4, "#663399");
+    advectForSomeTime(*uvGrid, kernelRK4, 53.27913608324572, 4.82094897884165, 5, "#FFA500");
+    advectForSomeTime(*uvGrid, kernelRK4, 53.18597595482688, 4.767667388308705, 6, "#008080");
+    advectForSomeTime(*uvGrid, kernelRK4, 53.01592078792383, 4.6064205160882, 7, "#FFB6C1");
+    advectForSomeTime(*uvGrid, kernelRK4, 52.72816940158886, 4.5853883152993635, 8, "#36454F"); // on land
+    advectForSomeTime(*uvGrid, kernelRK4, 52.56142091881038, 4.502661662924255, 9, "#1E90FF"); // Dodger Blue
+    advectForSomeTime(*uvGrid, kernelRK4, 52.23202593893584, 4.2825246383181845, 10, "#FFD700"); // Gold
+    advectForSomeTime(*uvGrid, kernelRK4, 52.08062567609582, 4.112864890830927, 11, "#6A5ACD"); // Slate Blue
+    advectForSomeTime(*uvGrid, kernelRK4, 51.89497719759734, 3.8114033568921686, 12, "#20B2AA"); // Light Sea Green
+    advectForSomeTime(*uvGrid, kernelRK4, 51.752848503723634, 3.664177951809339, 13, "#FF69B4"); // Hot Pink
+    advectForSomeTime(*uvGrid, kernelRK4, 51.64595756528835, 3.626319993352851, 14, "#800080"); // Purple
+    advectForSomeTime(*uvGrid, kernelRK4, 51.55140730645238, 3.4326152213887986, 15, "#FF4500"); // Orange Red
+    advectForSomeTime(*uvGrid, kernelRK4, 51.45679776223422, 3.4452813365018384, 16, "#A52A2A"); // Brown
+    advectForSomeTime(*uvGrid, kernelRK4, 51.41444662720727, 3.4648562416765363, 17, "#4682B4"); // Steel Blue
+    advectForSomeTime(*uvGrid, kernelRK4, 51.37421261203866, 3.2449264214689455, 18, "#FF6347"); // Tomato
+    advectForSomeTime(*uvGrid, kernelRK4, 51.29651848898365, 2.9547572241424773, 19, "#008000"); // Green
+    advectForSomeTime(*uvGrid, kernelRK4, 51.19705098468974, 2.7647654914530024, 20, "#B8860B"); // Dark Goldenrod
+    advectForSomeTime(*uvGrid, kernelRK4, 51.114719857442665, 2.577076679365129, 21, "#FFC0CB"); // Pink
 //    advectForSomeTime(*uvGrid, kernelRK4, ,0);
 
     return 0;

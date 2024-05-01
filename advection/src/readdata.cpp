@@ -22,19 +22,21 @@ vector<T> getVarVector(const NcVar &var) {
 }
 
 vector<double> readHydrodynamicU() {
-    netCDF::NcFile data("../../../../data/hydrodynamic_U.h5", netCDF::NcFile::read);
-
-    multimap< string, NcVar > vars = data.getVars();
-
-    return getVarVector<double>(vars.find("uo")->second);
-}
-
-vector<double> readHydrodynamicV() {
+    // Vs and Us flipped cause the files are named incorrectly
     netCDF::NcFile data("../../../../data/hydrodynamic_V.h5", netCDF::NcFile::read);
 
     multimap< string, NcVar > vars = data.getVars();
 
     return getVarVector<double>(vars.find("vo")->second);
+}
+
+vector<double> readHydrodynamicV() {
+    // Vs and Us flipped cause the files are named incorrectly
+    netCDF::NcFile data("../../../../data/hydrodynamic_U.h5", netCDF::NcFile::read);
+
+    multimap< string, NcVar > vars = data.getVars();
+
+    return getVarVector<double>(vars.find("uo")->second);
 }
 
 tuple<vector<int>, vector<double>, vector<double>> readGrid() {

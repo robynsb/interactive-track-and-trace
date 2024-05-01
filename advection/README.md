@@ -25,6 +25,7 @@ void advectForSomeTime(const UVGrid &uvGrid, const AdvectionKernelImpl &kernel, 
 
 ## Location of data
 The data path is hardcoded such that the following tree structure is assumed:
+The current assumption is that the name of the `u`s and `v`s are flipped since this is the way the data was given to us.
 ```
 data/
   grid.h5

@@ -7,8 +7,8 @@
 /**
  * Implementation of AdvectionKernel.
  * The basic equation is:
- * new_latitude = latitude + u*DT
- * new_longitude = longitude + v*DT
+ * new_latitude = latitude + v*DT
+ * new_longitude = longitude + u*DT
  *
  * Uses bilinear interpolation as implemented in interpolate.h
  */
