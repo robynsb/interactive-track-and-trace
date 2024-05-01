@@ -9,5 +9,5 @@ EulerAdvectionKernel::EulerAdvectionKernel(std::shared_ptr<UVGrid> grid): grid(g
 std::pair<double, double> EulerAdvectionKernel::advect(int time, double latitude, double longitude) const {
     auto [u, v] = bilinearinterpolate(*grid, time, latitude, longitude);
 
-    return {latitude+metreToDegrees(u*DT), longitude+metreToDegrees(v*DT)};
+    return {latitude+metreToDegrees(v*DT), longitude+metreToDegrees(u*DT)};
 }
