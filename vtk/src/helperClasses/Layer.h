@@ -11,7 +11,16 @@ protected:
   vtkSmartPointer<vtkRenderer> ren;
 
 public:
+  /** gets the vtkRenderer to assign it to the vtkRenderWindow of the program class.
+   * @return pointer to the vtkRenderer of this class.
+   */
   virtual vtkSmartPointer<vtkRenderer> getLayer();
+
+
+  /** updates the data in the layer to reflect the given timestamp.
+    * @param t : the timestamp which the data should reflect.
+    */
+  virtual void updateData(int t);
 };
 
 #endif

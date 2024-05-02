@@ -16,16 +16,15 @@ private:
   vtkSmartPointer<vtkRenderWindowInteractor> interact;
 
   void setWinProperties();
-  
+  static void CallbackFunction(vtkObject* caller, long unsigned int eventId, void* clientData, void* callData);
+  void setupTimer();
 
 public:
-  // Program();
-  Program(Layer bg, Layer e, Layer l);
+  Program(Layer *bg, Layer *e, Layer *l);
 
   void setBackground(Layer bg);
   void setEuler(Layer e);
   void setLagrange(Layer l);
-
 
   // void addInteractionStyle(vtkInteractorStyle style);
 

@@ -1,4 +1,7 @@
 #include "EGlyphLayer.h"
+#include <vtkPointData.h>
+#include <vtkDoubleArray.h>
+#include <vtkGlyphSource2D.h>
 #include <vtkRegularPolygonSource.h>
 #include <vtkGlyph2D.h>
 #include <vtkActor2D.h>
@@ -39,8 +42,6 @@ tuple<vector<int>, vector<double>, vector<double>> readGrid() {
 }
 
 
-
-
 EGlyphLayer::EGlyphLayer() {
   this->ren = vtkSmartPointer<vtkRenderer>::New();
   this->ren->SetLayer(1);
@@ -54,53 +55,56 @@ EGlyphLayer::EGlyphLayer() {
 void EGlyphLayer::readCoordinates() {
   vtkNew<vtkPoints> points;
   auto [times, lats, lons] = readGrid(); // FIXME: import Robin's readData function and use it
+  vtkNew<vtkDoubleArray> direction;
+  direction->SetName("direction");
+  direction->SetNumberOfComponents(3);
+  direction->SetNumberOfTuples(67*116); //FIXME: use robins function to get num of points
+  points->Allocate(67*116);
 
-  double i = 0;
+  int i = 0;
   for (double lat : lats) {
     for (double lon : lons) {
-      //FIXME: hard-coded values; should update with window geometry.
-      points->InsertNextPoint((lat*1000-46125)*661/16500, (lon*1000+15875)*661/28750, 0);
+      direction->SetTuple3(i, 0.45, 0.90, 0); //FIXME: read this info from file; figure out how to update it dynamically 
+      points->InsertPoint(i++, (lat*1000-46125)/25, (lon*1000+15875)/43.5, 0); // FIXME: counts on fixed window geometry to map properly; refactor to make use of active window geometry.
+      // see also https://vtk.org/doc/nightly/html/classvtkPolyDataMapper2D.html
     }
   }
   this->data->SetPoints(points);
+  this->data->GetPointData()->AddArray(direction);
+  this->data->GetPointData()->SetActiveVectors("direction");
 
-  // vtkNew<vtkArrowSource> arrowSource;
-  vtkNew<vtkRegularPolygonSource> arrowSource;
+  vtkNew<vtkGlyphSource2D> arrowSource;
+  arrowSource->SetGlyphTypeToArrow();
+  arrowSource->SetScale(8); //TODO: set this properly
+  arrowSource->Update();
+
   vtkNew<vtkGlyph2D> glyph2D;
   glyph2D->SetSourceConnection(arrowSource->GetOutputPort());
   glyph2D->SetInputData(this->data);
+  glyph2D->OrientOn();
+  glyph2D->ClampingOn();
+  glyph2D->SetScaleModeToScaleByVector(); 
+  glyph2D->SetVectorModeToUseVector(); 
   glyph2D->Update();
 
-  vtkNew<vtkPolyDataMapper>(mapper);
+  vtkNew<vtkCoordinate> coordinate;
+  coordinate->SetCoordinateSystemToWorld();
+
+  vtkNew<vtkPolyDataMapper2D>(mapper);
+  // mapper->SetTransformCoordinate(coordinate);
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
-  vtkNew<vtkActor> actor;
+  vtkNew<vtkActor2D> actor;
   actor->SetMapper(mapper);
 
-  vtkNew<vtkNamedColors> colors;
-  actor->GetProperty()->SetColor(colors->GetColor3d("Salmon").GetData());
+  actor->GetProperty()->SetColor(0,0,0);
+  actor->GetProperty()->SetOpacity(0.2);
 
   this->ren->AddActor(actor);
-  
-  // vtkNew<vtkVertexGlyphFilter> glyphFilter;
-  // glyphFilter->SetInputData(this->data);
-  // glyphFilter->Update();
-  //
-  // vtkNew<vtkPolyDataMapper2D> mapper;
-  // mapper->SetInputConnection(glyphFilter->GetOutputPort());
-  // mapper->Update();
-  //
-  // vtkNew<vtkNamedColors> colors;
-  // vtkNew<vtkActor2D> actor;
-  // actor->SetMapper(mapper);
-  // actor->GetProperty()->SetColor(colors->GetColor3d("Gold").GetData());
-  // actor->GetProperty()->SetPointSize(3);
-  //
-  // this->ren->AddActor(actor);
 }
 
 
-void EGlyphLayer::updateData(short t) {
+void EGlyphLayer::updateData(int t) {
 
 }

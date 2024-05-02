@@ -1,5 +1,6 @@
 #include <vtkRenderWindow.h>
 #include <vtkNew.h>
+#include <vtkCallbackCommand.h>
 
 #include "Program.h"
 
@@ -7,23 +8,40 @@
 void Program::setWinProperties() {
   this->win->SetWindowName("Simulation");
   this->win->SetSize(661, 661);
+  this->win->SetDesiredUpdateRate(60);
 
   this->interact->SetRenderWindow(this->win);
+  this->interact->Initialize();
+
 }
 
-// Program::Program() : background(), euler(), lagrange(), win(), interact() {
-//   setWinProperties();
-// }
+void Program::CallbackFunction(vtkObject* caller, long unsigned int eventId, void* clientData, void* callData) {
+  cout << "timed" << endl;
+  ((Program *)clientData)->lagrange.updateData(1);
+  //FIXME: from what i understand this should call the (overriden) updateData function in LGlyphLayer. It's not - and calls the virtual(?) updateData function in Layer instead, for some reason.
+  //Im too tired to comprehend this right now.
+}
 
-Program::Program(Layer bg, Layer e, Layer l) : background(bg), euler(e), lagrange(l), win(), interact() {
+
+void Program::setupTimer() {
+  vtkNew<vtkCallbackCommand> callback;
+  callback->SetCallback(this->CallbackFunction);
+  callback->SetClientData(this);
+  this->interact->AddObserver(vtkCommand::TimerEvent, callback);
+  this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
+}
+
+
+Program::Program(Layer *bg, Layer *e, Layer *l) : background(*bg), euler(*e), lagrange(*l), win(), interact() {
   this->win = vtkSmartPointer<vtkRenderWindow>::New();
   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
 
   this->win->SetNumberOfLayers(3);
-  this->win->AddRenderer(bg.getLayer());
-  this->win->AddRenderer(e.getLayer());
-  this->win->AddRenderer(l.getLayer());
+  this->win->AddRenderer(bg->getLayer());
+  this->win->AddRenderer(e->getLayer());
+  this->win->AddRenderer(l->getLayer());
   setWinProperties();
+  setupTimer();
 }
 
 
