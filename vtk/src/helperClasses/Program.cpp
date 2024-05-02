@@ -16,10 +16,8 @@ void Program::setWinProperties() {
 }
 
 void Program::CallbackFunction(vtkObject* caller, long unsigned int eventId, void* clientData, void* callData) {
-  cout << "timed" << endl;
-  ((Program *)clientData)->lagrange.updateData(1);
-  //FIXME: from what i understand this should call the (overriden) updateData function in LGlyphLayer. It's not - and calls the virtual(?) updateData function in Layer instead, for some reason.
-  //Im too tired to comprehend this right now.
+  ((Program *)clientData)->lagrange->updateData(1);
+  ((Program *)clientData)->win->Render();
 }
 
 
@@ -32,7 +30,7 @@ void Program::setupTimer() {
 }
 
 
-Program::Program(Layer *bg, Layer *e, Layer *l) : background(*bg), euler(*e), lagrange(*l), win(), interact() {
+Program::Program(Layer *bg, Layer *e, Layer *l) : background(bg), euler(e), lagrange(l), win(), interact() {
   this->win = vtkSmartPointer<vtkRenderWindow>::New();
   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
 
@@ -45,25 +43,25 @@ Program::Program(Layer *bg, Layer *e, Layer *l) : background(*bg), euler(*e), la
 }
 
 
-void Program::setBackground(Layer bg) {
-  this->win->RemoveRenderer(this->background.getLayer());
+void Program::setBackground(Layer *bg) {
+  this->win->RemoveRenderer(this->background->getLayer());
   this->background = bg;
-  this->win->AddRenderer(bg.getLayer());
+  this->win->AddRenderer(bg->getLayer());
   
 }
 
 
-void Program::setEuler(Layer e) {
-  this->win->RemoveRenderer(this->euler.getLayer());
+void Program::setEuler(Layer *e) {
+  this->win->RemoveRenderer(this->euler->getLayer());
   this->euler = e;
-  this->win->AddRenderer(e.getLayer());
+  this->win->AddRenderer(e->getLayer());
 }
 
 
-void Program::setLagrange(Layer l) {
-  this->win->RemoveRenderer(this->lagrange.getLayer());
+void Program::setLagrange(Layer *l) {
+  this->win->RemoveRenderer(this->lagrange->getLayer());
   this->lagrange = l;
-  this->win->AddRenderer(l.getLayer());
+  this->win->AddRenderer(l->getLayer());
 }
 
 // void Program::addInteractionStyle(vtkInteractorStyle style);

@@ -9,9 +9,9 @@
 
 class Program {
 private:
-  Layer background;
-  Layer euler;
-  Layer lagrange;
+  Layer *background;
+  Layer *euler;
+  Layer *lagrange;
   vtkSmartPointer<vtkRenderWindow> win;
   vtkSmartPointer<vtkRenderWindowInteractor> interact;
 
@@ -22,9 +22,9 @@ private:
 public:
   Program(Layer *bg, Layer *e, Layer *l);
 
-  void setBackground(Layer bg);
-  void setEuler(Layer e);
-  void setLagrange(Layer l);
+  void setBackground(Layer *bg);
+  void setEuler(Layer *e);
+  void setLagrange(Layer *l);
 
   // void addInteractionStyle(vtkInteractorStyle style);
 

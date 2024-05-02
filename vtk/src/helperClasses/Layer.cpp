@@ -7,5 +7,4 @@ vtkSmartPointer<vtkRenderer> Layer::getLayer() {
 }
 
 void Layer::updateData(int t) {
-  cout << "wrong function dimwit" << endl;
 }
