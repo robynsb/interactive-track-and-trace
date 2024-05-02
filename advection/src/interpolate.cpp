@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Vel bilinearInterpolate(const UVGrid &uvGrid, int time, double lat, double lon) {
+Vel bilinearinterpolate(const UVGrid &uvGrid, int time, double lat, double lon) {
     double latStep = uvGrid.latStep();
     double lonStep = uvGrid.lonStep();
     int timeStep = uvGrid.timeStep();
@@ -36,11 +36,11 @@ Vel bilinearInterpolate(const UVGrid &uvGrid, int time, double lat, double lon) 
     return point;
 }
 
-vector<Vel> bilinearInterpolate(const UVGrid &uvGrid, vector<tuple<int, double, double>> points) {
+vector<Vel> bilinearinterpolation(const UVGrid &uvGrid, vector<tuple<int, double, double>> points) {
     vector<Vel> result;
     result.reserve(points.size());
     for (auto [time, lat, lon]: points) {
-        result.push_back(bilinearInterpolate(uvGrid, time, lat, lon));
+        result.push_back(bilinearinterpolate(uvGrid, time, lat, lon));
     }
 
     return result;

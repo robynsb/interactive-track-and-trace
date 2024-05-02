@@ -1,5 +1,5 @@
-#ifndef LINEARINTERPOLATE_INTERPOLATE_H
-#define LINEARINTERPOLATE_INTERPOLATE_H
+#ifndef ADVECTION_INTERPOLATE_H
+#define ADVECTION_INTERPOLATE_H
 
 #include <vector>
 
@@ -15,7 +15,7 @@
  * @param lon longitude of point
  * @return interpolated velocity
  */
-Vel bilinearInterpolate(const UVGrid &uvGrid, int time, double lat, double lon);
+Vel bilinearinterpolate(const UVGrid &uvGrid, int time, double lat, double lon);
 
 /**
  * Helper function for bilnearly interpolating a vector of points
@@ -23,6 +23,6 @@ Vel bilinearInterpolate(const UVGrid &uvGrid, int time, double lat, double lon);
  * @param points vector of points
  * @return interpolated velocities
  */
-std::vector<Vel> bilinearInterpolate(const UVGrid &uvGrid, std::vector<std::tuple<int, double, double>> points);
+std::vector<Vel> bilinearinterpolation(const UVGrid &uvGrid, std::vector<std::tuple<int, double, double>> points);
 
-#endif //LINEARINTERPOLATE_INTERPOLATE_H
+#endif //ADVECTION_INTERPOLATE_H

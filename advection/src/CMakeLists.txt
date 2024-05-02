@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.28)
-project (LinearInterpolate)
+project (Advection)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(netCDF REQUIRED)
 
-add_executable(LinearInterpolate main.cpp
+add_executable(Advection main.cpp
         readdata.cpp
         readdata.h
         interpolate.cpp
@@ -16,7 +16,13 @@ add_executable(LinearInterpolate main.cpp
         UVGrid.cpp
         UVGrid.h
         Vel.h
-        Vel.cpp)
+        Vel.cpp
+        AdvectionKernel.h
+        EulerAdvectionKernel.cpp
+        EulerAdvectionKernel.h
+        RK4AdvectionKernel.cpp
+        RK4AdvectionKernel.h
+)
 
 execute_process(
     COMMAND nc-config --includedir
@@ -30,7 +36,7 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-target_include_directories(LinearInterpolate PUBLIC ${netCDF_INCLUDE_DIR})
+target_include_directories(Advection PUBLIC ${netCDF_INCLUDE_DIR})
 
 find_library(NETCDF_LIB NAMES netcdf-cxx4 netcdf_c++4 PATHS ${NETCDFCXX_LIB_DIR} NO_DEFAULT_PATH)
-target_link_libraries(LinearInterpolate ${NETCDF_LIB})
+target_link_libraries(Advection ${NETCDF_LIB})
