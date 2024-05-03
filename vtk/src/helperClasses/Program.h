@@ -6,6 +6,7 @@
 #include <vtkRenderer.h>
 
 #include "Layer.h"
+#include "SpawnPointCallback.h"
 
 class Program {
 private:
@@ -25,8 +26,9 @@ public:
   void setBackground(Layer *bg);
   void setEuler(Layer *e);
   void setLagrange(Layer *l);
+  void setLagrangeInteractor(SpawnPointCallback *cb);
 
-  // void addInteractionStyle(vtkInteractorStyle style);
+//  void addObserver(vtkInteractorStyle *style);
 
   void render();
 };

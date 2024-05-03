@@ -42,6 +42,8 @@ add_executable(VtkBase MACOSX_BUNDLE main.cpp
   helperClasses/LGlyphLayer.h
   helperClasses/Program.cpp
   helperClasses/Program.h
+        helperClasses/SpawnPointCallback.h
+        helperClasses/SpawnPointCallback.cpp
 )
 
 execute_process(

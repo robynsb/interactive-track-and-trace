@@ -1,4 +1,5 @@
 #include "LGlyphLayer.h"
+#include "SpawnPointCallback.h"
 #include <vtkActor2D.h>
 #include <vtkGlyph2D.h>
 #include <vtkGlyphSource2D.h>
@@ -6,6 +7,17 @@
 #include <vtkPolyDataMapper2D.h>
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
+#include <vtkInteractorStyle.h>
+#include <vtkInteractorStyleUser.h>
+
+
+vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
+    auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
+    newPointCallBack->setData(data);
+    newPointCallBack->setPoints(points);
+    return newPointCallBack;
+}
+
 
 // TODO: add interactionStyle functionality
 // TODO: add timer + advection (probably from the program class not here)

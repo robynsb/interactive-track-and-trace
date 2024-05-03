@@ -23,6 +23,7 @@ int main() {
   l->spoofPoints();
 
   auto program = new Program(bg, e, l);
+  program->setLagrangeInteractor(l->createSpawnPointCallback());
   program->render();
 
   return EXIT_SUCCESS;
