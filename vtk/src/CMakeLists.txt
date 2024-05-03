@@ -44,6 +44,8 @@ add_executable(VtkBase MACOSX_BUNDLE main.cpp
   helperClasses/Program.h
   commands/TimerCallbackCommand.h
   commands/TimerCallbackCommand.cpp
+        helperClasses/SpawnPointCallback.h
+        helperClasses/SpawnPointCallback.cpp
 )
 
 execute_process(

@@ -15,9 +15,11 @@
 #include <vtkArrowSource.h>
 #include <vtkNew.h>
 #include <vtkCallbackCommand.h>
+#include <vtkInteractorStyleUser.h>
 
 #include "Program.h"
 #include "../commands/TimerCallbackCommand.h"
+#include "SpawnPointCallback.h"
 
 void Program::setWinProperties() {
   this->win->SetWindowName("Simulation");
@@ -27,6 +29,8 @@ void Program::setWinProperties() {
   this->interact->SetRenderWindow(this->win);
   this->interact->Initialize();
 
+  vtkNew<vtkInteractorStyleUser> style;
+  interact->SetInteractorStyle(style);
 }
 
 void Program::setupTimer() {
@@ -35,7 +39,6 @@ void Program::setupTimer() {
   this->interact->AddObserver(vtkCommand::TimerEvent, callback);
   this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
 }
-
 
 Program::Program(Layer *bg, Layer *e, Layer *l) : background(bg), euler(e), lagrange(l), win(), interact() {
   this->win = vtkSmartPointer<vtkRenderWindow>::New();
@@ -71,7 +74,11 @@ void Program::setLagrange(Layer *l) {
   this->win->AddRenderer(l->getLayer());
 }
 
-// void Program::addInteractionStyle(vtkInteractorStyle style);
+void Program::setLagrangeInteractor(SpawnPointCallback *cb){
+    interact->AddObserver(vtkCommand::LeftButtonPressEvent, cb);
+    interact->AddObserver(vtkCommand::LeftButtonReleaseEvent, cb);
+    interact->AddObserver(vtkCommand::MouseMoveEvent, cb);
+}
 
 
 
