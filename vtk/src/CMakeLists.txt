@@ -42,6 +42,8 @@ add_executable(VtkBase MACOSX_BUNDLE main.cpp
   helperClasses/LGlyphLayer.h
   helperClasses/Program.cpp
   helperClasses/Program.h
+  commands/TimerCallbackCommand.h
+  commands/TimerCallbackCommand.cpp
 )
 
 execute_process(

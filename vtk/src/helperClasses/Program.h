@@ -16,7 +16,6 @@ private:
   vtkSmartPointer<vtkRenderWindowInteractor> interact;
 
   void setWinProperties();
-  static void CallbackFunction(vtkObject* caller, long unsigned int eventId, void* clientData, void* callData);
   void setupTimer();
 
 public:
@@ -27,6 +26,7 @@ public:
   void setLagrange(Layer *l);
 
   // void addInteractionStyle(vtkInteractorStyle style);
+  void updateData(int t);
 
   void render();
 };

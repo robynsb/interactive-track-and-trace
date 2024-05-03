@@ -10,6 +10,9 @@
 class EGlyphLayer : public Layer {
 private:
   vtkSmartPointer<vtkPolyData> data;
+  vtkSmartPointer<vtkDoubleArray> direction;
+  int numLats;
+  int numLons;
 
   /** This private function sets up the initial coordinates for the glyphs in the dataset.
     * It also reads some initial data to actually display.

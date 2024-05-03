@@ -57,7 +57,7 @@ void LGlyphLayer::spoofPoints() {
 
 // returns new coords for a point; used to test the updateData function
 std::pair<double, double> advect(int time, double lat, double lon) {
-  return {lat+0.001, lon+0.001} ;
+  return {lat+0.1, lon+0.1} ;
 }
 
 

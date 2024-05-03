@@ -48,6 +48,8 @@ EGlyphLayer::EGlyphLayer() {
   this->ren->InteractiveOff();
 
   this->data = vtkSmartPointer<vtkPolyData>::New();
+  this->direction = vtkSmartPointer<vtkDoubleArray>::New();
+  this->direction->SetName("direction");
   readCoordinates();
 }
 
@@ -55,22 +57,23 @@ EGlyphLayer::EGlyphLayer() {
 void EGlyphLayer::readCoordinates() {
   vtkNew<vtkPoints> points;
   auto [times, lats, lons] = readGrid(); // FIXME: import Robin's readData function and use it
-  vtkNew<vtkDoubleArray> direction;
-  direction->SetName("direction");
-  direction->SetNumberOfComponents(3);
-  direction->SetNumberOfTuples(67*116); //FIXME: use robins function to get num of points
-  points->Allocate(67*116);
+  this->numLats = lats.size();
+  this->numLons = lons.size();
+
+  this->direction->SetNumberOfComponents(3);
+  this->direction->SetNumberOfTuples(numLats*numLons); 
+  points->Allocate(numLats*numLons);
 
   int i = 0;
   for (double lat : lats) {
     for (double lon : lons) {
-      direction->SetTuple3(i, 0.45, 0.90, 0); //FIXME: read this info from file; figure out how to update it dynamically 
+      direction->SetTuple3(i, 0.45, 0.90, 0); //FIXME: read this info from file
       points->InsertPoint(i++, (lat*1000-46125)/25, (lon*1000+15875)/43.5, 0); // FIXME: counts on fixed window geometry to map properly; refactor to make use of active window geometry.
       // see also https://vtk.org/doc/nightly/html/classvtkPolyDataMapper2D.html
     }
   }
   this->data->SetPoints(points);
-  this->data->GetPointData()->AddArray(direction);
+  this->data->GetPointData()->AddArray(this->direction);
   this->data->GetPointData()->SetActiveVectors("direction");
 
   vtkNew<vtkGlyphSource2D> arrowSource;
@@ -101,10 +104,13 @@ void EGlyphLayer::readCoordinates() {
   actor->GetProperty()->SetColor(0,0,0);
   actor->GetProperty()->SetOpacity(0.2);
 
-  this->ren->AddActor(actor);
+  this->ren->AddActor(actor)  ;
 }
 
 
 void EGlyphLayer::updateData(int t) {
-
+  for (int i=0; i < numLats*numLons; i++) {
+    this->direction->SetTuple3(i, std::cos(t), std::sin(t), 0); // FIXME: fetch data from file.
+  }
+  this->direction->Modified();
 }

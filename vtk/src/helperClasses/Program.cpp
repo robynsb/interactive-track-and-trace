@@ -1,9 +1,23 @@
 #include <vtkRenderWindow.h>
+#include <vtkPointData.h>
+#include <vtkDoubleArray.h>
+#include <vtkGlyphSource2D.h>
+#include <vtkRegularPolygonSource.h>
+#include <vtkGlyph2D.h>
+#include <vtkActor2D.h>
+#include <vtkNamedColors.h>
+#include <vtkPolyDataMapper2D.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkProperty.h>
+#include <vtkProperty2D.h>
+#include <vtkVertexGlyphFilter.h>
+#include <netcdf>
+#include <vtkArrowSource.h>
 #include <vtkNew.h>
 #include <vtkCallbackCommand.h>
 
 #include "Program.h"
-
+#include "../commands/TimerCallbackCommand.h"
 
 void Program::setWinProperties() {
   this->win->SetWindowName("Simulation");
@@ -15,15 +29,8 @@ void Program::setWinProperties() {
 
 }
 
-void Program::CallbackFunction(vtkObject* caller, long unsigned int eventId, void* clientData, void* callData) {
-  ((Program *)clientData)->lagrange->updateData(1);
-  ((Program *)clientData)->win->Render();
-}
-
-
 void Program::setupTimer() {
-  vtkNew<vtkCallbackCommand> callback;
-  callback->SetCallback(this->CallbackFunction);
+  auto callback = vtkSmartPointer<TimerCallbackCommand>::New(this);
   callback->SetClientData(this);
   this->interact->AddObserver(vtkCommand::TimerEvent, callback);
   this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
@@ -65,6 +72,14 @@ void Program::setLagrange(Layer *l) {
 }
 
 // void Program::addInteractionStyle(vtkInteractorStyle style);
+
+
+
+void Program::updateData(int t) {
+  this->win->Render();
+  this->lagrange->updateData(t);
+  this->euler->updateData(t);
+}
 
 
 void Program::render() {
