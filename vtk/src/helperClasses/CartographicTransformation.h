@@ -16,6 +16,7 @@ vtkSmartPointer<vtkCamera> createNormalisedCamera();
 /**
  * Constructs a 4x4 projection matrix that maps homogenious (longitude, latitude, 0, 1) points
  * to the normalised space.
+ * TODO: This will soon require UVGrid as a parameter after the advection code is merged properly.
  * TODO: This transformation has room for improvement see:
  * https://github.com/MakeNEnjoy/interactive-track-and-trace/issues/12
  * @return pointer to 4x4 matrix
