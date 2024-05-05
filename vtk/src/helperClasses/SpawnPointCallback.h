@@ -6,6 +6,7 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
+#include <vtkMatrix4x4.h>
 
 class SpawnPointCallback : public vtkCallbackCommand {
 
@@ -18,14 +19,12 @@ public:
     void setData(const vtkSmartPointer<vtkPolyData> &data);
 
     void setRen(const vtkSmartPointer<vtkRenderer> &ren);
-
 private:
     vtkSmartPointer<vtkPolyData> data;
     vtkSmartPointer<vtkPoints> points;
     vtkSmartPointer<vtkRenderer> ren;
-public:
+    vtkSmartPointer<vtkMatrix4x4> inverseCartographicProjection;
 
-private:
     void Execute(vtkObject *caller, unsigned long evId, void *callData) override;
     bool dragging = false;
 };

@@ -15,7 +15,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkCamera.h>
 
-#include "NormalisedCartographicCamera.h"
+#include "CartographicTransformation.h"
 
 
 vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
@@ -42,19 +42,24 @@ LGlyphLayer::LGlyphLayer() {
     this->data = vtkSmartPointer<vtkPolyData>::New();
     this->data->SetPoints(this->points);
 
+    auto camera = createNormalisedCamera();
+    ren->SetActiveCamera(camera);
+
+    auto transform = createCartographicTransformFilter();
+
+    vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter();
+    transformFilter->SetInputData(data);
+
     vtkNew<vtkGlyphSource2D> circleSource;
     circleSource->SetGlyphTypeToCircle();
-    circleSource->SetScale(1);
+    circleSource->SetScale(0.05);
     circleSource->Update();
 
     vtkNew<vtkGlyph2D> glyph2D;
     glyph2D->SetSourceConnection(circleSource->GetOutputPort());
-    glyph2D->SetInputData(this->data);
+    glyph2D->SetInputConnection(transformFilter->GetOutputPort());
     glyph2D->SetColorModeToColorByScalar();
     glyph2D->Update();
-
-    auto camera = createNormalisedCartographicCamera();
-    ren->SetActiveCamera(camera);
 
     vtkNew<vtkPolyDataMapper> mapper;
     mapper->SetInputConnection(glyph2D->GetOutputPort());
@@ -68,13 +73,11 @@ LGlyphLayer::LGlyphLayer() {
 
 // creates a few points so we can test the updateData function
 void LGlyphLayer::spoofPoints() {
-//    this->points->InsertNextPoint(200, 200 , 0);
     this->points->InsertNextPoint(-4.125, 61.375 , 0);
-    this->points->InsertNextPoint(4.896555178870355, 52.373557841669516, 0);
-//    this->points->InsertNextPoint(48.2, 111.01, 0);
-//    this->points->InsertNextPoint(331, 331, 0);
-//    this->points->InsertNextPoint(0, 50, 0);
-//    this->points->InsertNextPoint(200, 200 , 0);
+    this->points->InsertNextPoint(6.532949683882039, 53.24308582564463, 0); // Coordinates of Zernike
+    this->points->InsertNextPoint(5.315307819255385, 60.40001057122271, 0); // Coordinates of Bergen
+    this->points->InsertNextPoint( 6.646210231365825, 46.52346296009023, 0); // Coordinates of Lausanne
+    this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857, 0); // Coordinates of the top of the Faroe islands
 
     this->points->Modified();
 }

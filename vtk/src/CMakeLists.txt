@@ -46,7 +46,7 @@ add_executable(VtkBase MACOSX_BUNDLE main.cpp
   commands/TimerCallbackCommand.cpp
         helperClasses/SpawnPointCallback.h
         helperClasses/SpawnPointCallback.cpp
-        helperClasses/NormalisedCartographicCamera.cpp
+        helperClasses/CartographicTransformation.cpp
 )
 
 execute_process(
