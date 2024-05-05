@@ -37,6 +37,7 @@ void Program::setupTimer() {
   auto callback = vtkSmartPointer<TimerCallbackCommand>::New(this);
   callback->SetClientData(this);
   this->interact->AddObserver(vtkCommand::TimerEvent, callback);
+  this->interact->AddObserver(vtkCommand::KeyPressEvent, callback);
   this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
 }
 
