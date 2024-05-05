@@ -49,17 +49,6 @@ Program::Program() {
   setupTimer();
 }
 
-// Program::Program(Layer *bg, Layer *e, Layer *l) : background(bg), euler(e), lagrange(l), win(), interact() {
-//   this->win = vtkSmartPointer<vtkRenderWindow>::New();
-//   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-//
-//   this->win->SetNumberOfLayers(3);
-//   this->win->AddRenderer(bg->getLayer());
-//   this->win->AddRenderer(e->getLayer());
-//   this->win->AddRenderer(l->getLayer());
-//   setWinProperties();
-//   setupTimer();
-// }
 
 void Program::addLayer(Layer* layer) {
   this->layers.push_back(layer);
@@ -78,31 +67,11 @@ void Program::removeLayer(Layer *layer) {
 }
 
 
-// void Program::setBackground(Layer *bg) {
-//   this->win->RemoveRenderer(this->background->getLayer());
-//   this->background = bg;
-//   this->win->AddRenderer(bg->getLayer());
-//   
-// }
-//
-//
-// void Program::setEuler(Layer *e) {
-//   this->win->RemoveRenderer(this->euler->getLayer());
-//   this->euler = e;
-//   this->win->AddRenderer(e->getLayer());
-// }
-//
-//
-// void Program::setLagrange(Layer *l) {
-//   this->win->RemoveRenderer(this->lagrange->getLayer());
-//   this->lagrange = l;
-//   this->win->AddRenderer(l->getLayer());
-// // }
 
 void Program::setLagrangeInteractor(SpawnPointCallback *cb){
-    interact->AddObserver(vtkCommand::LeftButtonPressEvent, cb);
-    interact->AddObserver(vtkCommand::LeftButtonReleaseEvent, cb);
-    interact->AddObserver(vtkCommand::MouseMoveEvent, cb);
+    this->interact->AddObserver(vtkCommand::LeftButtonPressEvent, cb);
+    this->interact->AddObserver(vtkCommand::LeftButtonReleaseEvent, cb);
+    this->interact->AddObserver(vtkCommand::MouseMoveEvent, cb);
 }
 
 
@@ -112,8 +81,6 @@ void Program::updateData(int t) {
   for (Layer *l : layers) {
     l->updateData(t);
   }
-  // this->lagrange->updateData(t);
-  // this->euler->updateData(t);
 }
 
 
