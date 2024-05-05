@@ -17,23 +17,6 @@ BackgroundImage::BackgroundImage(string imagePath) : imagePath(imagePath) {
   updateImage();
 }
 
-// vtkSmartPointer<vtkMatrix4x4> getMatrix(const int w, const int h) {
-//     const double XMin = 0;
-//     const double XMax = w;
-//     const double YMin = 0;
-//     const double YMax = h;
-//
-//     double eyeTransform[] = {
-//             2/(XMax-XMin), 0, 0, -(XMax+XMin)/(XMax-XMin),
-//             0, 2/(YMax-YMin), 0, -(YMax+YMin)/(YMax-YMin),
-//             0, 0, 1, 0,
-//             0, 0, 0, 1
-//     };
-//
-//     auto matrix = vtkSmartPointer<vtkMatrix4x4>::New();
-//     matrix->DeepCopy(eyeTransform);
-//     return matrix;
-// }
 
 void BackgroundImage::updateImage() {
 
@@ -53,15 +36,6 @@ void BackgroundImage::updateImage() {
 
   vtkSmartPointer<vtkImageData> imageData = changeInformation->GetOutput();
   
-    // vtkNew<vtkTransform> transform;
-    //
-    // transform->SetMatrix(getMatrix(661, 661));
-    //
-    // vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
-    // transformFilter->SetTransform(transform);
-    // transformFilter->SetInputData(imageData);
-
-
   vtkNew<vtkImageActor> imageActor;
   imageActor->SetInputData(imageData);
 
