@@ -17,12 +17,15 @@ using namespace std;
 
 
 int main() {
-  auto bg = new BackgroundImage("../../../../data/map_661-661.png");
-  auto e = new EGlyphLayer();
   auto l = new LGlyphLayer();
   l->spoofPoints();
 
-  auto program = new Program(bg, e, l);
+  Program *program = new Program();
+  program->addLayer(new BackgroundImage("../../../../data/map_661-661.png"));
+  program->addLayer(new EGlyphLayer());
+  program->addLayer(l);
+
+  // auto program = new Program(bg, e, l);
   program->setLagrangeInteractor(l->createSpawnPointCallback());
   program->render();
 

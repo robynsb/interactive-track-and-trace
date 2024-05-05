@@ -10,9 +10,11 @@
 
 class Program {
 private:
-  Layer *background;
-  Layer *euler;
-  Layer *lagrange;
+  // Layer *background;
+  // Layer *euler;
+  // Layer *lagrange;
+
+  std::vector<Layer *> layers;
   vtkSmartPointer<vtkRenderWindow> win;
   vtkSmartPointer<vtkRenderWindowInteractor> interact;
 
@@ -20,11 +22,15 @@ private:
   void setupTimer();
 
 public:
-  Program(Layer *bg, Layer *e, Layer *l);
+  Program();
+  // Program(Layer *bg, Layer *e, Layer *l);
 
-  void setBackground(Layer *bg);
-  void setEuler(Layer *e);
-  void setLagrange(Layer *l);
+  void addLayer(Layer *layer);
+  void removeLayer(Layer *layer);
+
+  // void setBackground(Layer *bg);
+  // void setEuler(Layer *e);
+  // void setLagrange(Layer *l);
   void setLagrangeInteractor(SpawnPointCallback *cb);
 
   // void addInteractionStyle(vtkInteractorStyle style);

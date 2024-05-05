@@ -40,39 +40,64 @@ void Program::setupTimer() {
   this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
 }
 
-Program::Program(Layer *bg, Layer *e, Layer *l) : background(bg), euler(e), lagrange(l), win(), interact() {
+Program::Program() {
   this->win = vtkSmartPointer<vtkRenderWindow>::New();
   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
 
-  this->win->SetNumberOfLayers(3);
-  this->win->AddRenderer(bg->getLayer());
-  this->win->AddRenderer(e->getLayer());
-  this->win->AddRenderer(l->getLayer());
+  this->win->SetNumberOfLayers(0);
   setWinProperties();
   setupTimer();
 }
 
+// Program::Program(Layer *bg, Layer *e, Layer *l) : background(bg), euler(e), lagrange(l), win(), interact() {
+//   this->win = vtkSmartPointer<vtkRenderWindow>::New();
+//   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
+//
+//   this->win->SetNumberOfLayers(3);
+//   this->win->AddRenderer(bg->getLayer());
+//   this->win->AddRenderer(e->getLayer());
+//   this->win->AddRenderer(l->getLayer());
+//   setWinProperties();
+//   setupTimer();
+// }
 
-void Program::setBackground(Layer *bg) {
-  this->win->RemoveRenderer(this->background->getLayer());
-  this->background = bg;
-  this->win->AddRenderer(bg->getLayer());
-  
+void Program::addLayer(Layer* layer) {
+  this->layers.push_back(layer);
+  this->win->AddRenderer(layer->getLayer());
+  this->win->SetNumberOfLayers(this->win->GetNumberOfLayers()+1);
+}
+
+void Program::removeLayer(Layer *layer) {
+  this->win->RemoveRenderer(layer->getLayer());
+
+  auto it = std::find(this->layers.begin(), this->layers.end(), layer); 
+  if (it != this->layers.end()) { 
+    this->layers.erase(it); 
+    this->win->SetNumberOfLayers(this->win->GetNumberOfLayers()-1);
+  }
 }
 
 
-void Program::setEuler(Layer *e) {
-  this->win->RemoveRenderer(this->euler->getLayer());
-  this->euler = e;
-  this->win->AddRenderer(e->getLayer());
-}
-
-
-void Program::setLagrange(Layer *l) {
-  this->win->RemoveRenderer(this->lagrange->getLayer());
-  this->lagrange = l;
-  this->win->AddRenderer(l->getLayer());
-}
+// void Program::setBackground(Layer *bg) {
+//   this->win->RemoveRenderer(this->background->getLayer());
+//   this->background = bg;
+//   this->win->AddRenderer(bg->getLayer());
+//   
+// }
+//
+//
+// void Program::setEuler(Layer *e) {
+//   this->win->RemoveRenderer(this->euler->getLayer());
+//   this->euler = e;
+//   this->win->AddRenderer(e->getLayer());
+// }
+//
+//
+// void Program::setLagrange(Layer *l) {
+//   this->win->RemoveRenderer(this->lagrange->getLayer());
+//   this->lagrange = l;
+//   this->win->AddRenderer(l->getLayer());
+// // }
 
 void Program::setLagrangeInteractor(SpawnPointCallback *cb){
     interact->AddObserver(vtkCommand::LeftButtonPressEvent, cb);
@@ -84,8 +109,11 @@ void Program::setLagrangeInteractor(SpawnPointCallback *cb){
 
 void Program::updateData(int t) {
   this->win->Render();
-  this->lagrange->updateData(t);
-  this->euler->updateData(t);
+  for (Layer *l : layers) {
+    l->updateData(t);
+  }
+  // this->lagrange->updateData(t);
+  // this->euler->updateData(t);
 }
 
 
