@@ -50,8 +50,7 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
     vtkSmartPointer<vtkCellArray> vertices = vtkSmartPointer<vtkCellArray>::New();
     vertices->InsertNextCell(vertex);
     data->SetVerts(vertices);
-//    data->Modified(); // These might be needed im not sure.
-//    ren->GetRenderWindow()->Render();
+    ren->GetRenderWindow()->Render();
 }
 
 

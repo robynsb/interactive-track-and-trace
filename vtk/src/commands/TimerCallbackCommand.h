@@ -11,11 +11,13 @@ public:
   void Execute(vtkObject* caller, unsigned long eventId, void* vtkNotUsed(callData)) override;
 
   void setProgram(Program *program);
+  void setPaused(const bool val);
 
 private:
   int time;
   int dt;
   int maxTime;
+  bool paused;
   Program *program;
 };
 

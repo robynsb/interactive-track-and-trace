@@ -8,10 +8,16 @@ TimerCallbackCommand::TimerCallbackCommand() : dt(3600), maxTime(3600*24*365), t
 TimerCallbackCommand* TimerCallbackCommand::New(Program *program) {
   TimerCallbackCommand *cb = new TimerCallbackCommand();
   cb->setProgram(program);
+  cb->setPaused(false);
   return cb;
 }
 
 void TimerCallbackCommand::Execute(vtkObject* caller, unsigned long eventId, void* vtkNotUsed(callData)) {
+  auto intr = reinterpret_cast<vtkRenderWindowInteractor *>(caller);
+  
+  if (eventId == vtkCommand::KeyPressEvent and not strcmp("space", intr->GetKeySym())) {
+    this->paused = ! this->paused;
+  } else if (eventId == vtkCommand::TimerEvent and not this->paused) {
   this->time += this->dt;
 
   if (this->time >= this->maxTime) {
@@ -20,9 +26,15 @@ void TimerCallbackCommand::Execute(vtkObject* caller, unsigned long eventId, voi
   }
 
   this->program->updateData(this->time);
-}
+  }
 
+}
 
 void TimerCallbackCommand::setProgram(Program *program) {
   this->program = program;
+}
+
+
+void TimerCallbackCommand::setPaused(const bool val) {
+  this->paused = val;
 }
