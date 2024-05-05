@@ -23,7 +23,7 @@ public:
     */
   virtual void updateData(int t);
 
-  /** Adds an observer to the renderWindowinteractor within which this layer is active.
+  /** Adds observers to the renderWindowinteractor within which this layer is active.
     * @param interactor : pointer to the interactor that observers can be added to.
     */
   virtual void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor);
