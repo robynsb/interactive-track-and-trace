@@ -11,7 +11,6 @@ vtkSmartPointer<vtkRenderer> Layer::getLayer() {
 void Layer::updateData(int t) {
 }
 
-
-void Layer::addObserver(const char *event, vtkCommand *observer) {
-  this->getLayer()->GetRenderWindow()->GetInteractor()->AddObserver(event, observer);
+void Layer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
+    // By default, do nothing.
 }

@@ -2,7 +2,7 @@
 #define TIMERCALLBACKCOMMAND_H
 
 #include <vtkCallbackCommand.h>
-#include "../helperClasses/Program.h"
+#include "../Program.h"
 
 class TimerCallbackCommand : public vtkCallbackCommand {
 public:

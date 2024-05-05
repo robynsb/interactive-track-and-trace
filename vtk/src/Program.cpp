@@ -18,8 +18,8 @@
 #include <vtkInteractorStyleUser.h>
 
 #include "Program.h"
-#include "../commands/TimerCallbackCommand.h"
-#include "SpawnPointCallback.h"
+#include "commands/TimerCallbackCommand.h"
+#include "commands/SpawnPointCallback.h"
 
 void Program::setWinProperties() {
   this->win->SetWindowName("Simulation");
@@ -50,41 +50,37 @@ Program::Program() {
 }
 
 
-void Program::addLayer(Layer* layer) {
+void Program::addLayer(Layer *layer) {
   this->layers.push_back(layer);
   this->win->AddRenderer(layer->getLayer());
-  this->win->SetNumberOfLayers(this->win->GetNumberOfLayers()+1);
+  this->win->SetNumberOfLayers(this->win->GetNumberOfLayers() + 1);
 }
 
 void Program::removeLayer(Layer *layer) {
   this->win->RemoveRenderer(layer->getLayer());
 
-  auto it = std::find(this->layers.begin(), this->layers.end(), layer); 
-  if (it != this->layers.end()) { 
-    this->layers.erase(it); 
-    this->win->SetNumberOfLayers(this->win->GetNumberOfLayers()-1);
+  auto it = std::find(this->layers.begin(), this->layers.end(), layer);
+  if (it != this->layers.end()) {
+    this->layers.erase(it);
+    this->win->SetNumberOfLayers(this->win->GetNumberOfLayers() - 1);
   }
 }
 
-
-
-void Program::setLagrangeInteractor(SpawnPointCallback *cb){
-    this->interact->AddObserver(vtkCommand::LeftButtonPressEvent, cb);
-    this->interact->AddObserver(vtkCommand::LeftButtonReleaseEvent, cb);
-    this->interact->AddObserver(vtkCommand::MouseMoveEvent, cb);
-}
-
-
-
 void Program::updateData(int t) {
-  this->win->Render();
-  for (Layer *l : layers) {
+  win->Render();
+  for (Layer *l: layers) {
     l->updateData(t);
   }
 }
 
+void Program::setupInteractions() {
+  for (Layer *l: layers) {
+    l->addObservers(interact);
+  }
+}
 
 void Program::render() {
-  this->win->Render();
-  this->interact->Start();
+  setupInteractions();
+  win->Render();
+  interact->Start();
 }

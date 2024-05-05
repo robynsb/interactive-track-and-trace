@@ -13,7 +13,7 @@
 #include <vtkVertexGlyphFilter.h>
 #include <netcdf>
 #include <vtkArrowSource.h>
-#include "CartographicTransformation.h"
+#include "../CartographicTransformation.h"
 
 using namespace netCDF;
 using namespace std;

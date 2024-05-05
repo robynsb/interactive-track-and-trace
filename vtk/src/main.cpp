@@ -8,10 +8,10 @@
 #include <vtkRenderer.h>
 #include <vtkVertexGlyphFilter.h>
 
-#include "helperClasses/BackgroundImage.h"
-#include "helperClasses/EGlyphLayer.h"
-#include "helperClasses/LGlyphLayer.h"
-#include "helperClasses/Program.h"
+#include "layers/BackgroundImage.h"
+#include "layers/EGlyphLayer.h"
+#include "layers/LGlyphLayer.h"
+#include "Program.h"
 
 using namespace std;
 
@@ -25,8 +25,6 @@ int main() {
   program->addLayer(new EGlyphLayer());
   program->addLayer(l);
 
-  // auto program = new Program(bg, e, l);
-  program->setLagrangeInteractor(l->createSpawnPointCallback());
   program->render();
 
   return EXIT_SUCCESS;

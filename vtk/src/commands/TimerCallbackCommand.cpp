@@ -1,5 +1,5 @@
 #include "TimerCallbackCommand.h"
-#include "../helperClasses/Program.h"
+#include "../Program.h"
 
 
 TimerCallbackCommand::TimerCallbackCommand() : dt(3600), maxTime(3600*24*365), time(0) {}

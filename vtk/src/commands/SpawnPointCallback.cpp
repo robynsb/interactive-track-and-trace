@@ -7,7 +7,7 @@
 #include <vtkCommand.h>
 #include <vtkRenderWindow.h>
 
-#include "CartographicTransformation.h"
+#include "../CartographicTransformation.h"
 
 void convertDisplayToWorld(vtkRenderer* renderer, int x, int y, double *worldPos) {
     double displayPos[3] = {static_cast<double>(x), static_cast<double>(y), 0.0};

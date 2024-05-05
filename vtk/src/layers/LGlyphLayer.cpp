@@ -1,5 +1,5 @@
 #include "LGlyphLayer.h"
-#include "SpawnPointCallback.h"
+#include "../commands/SpawnPointCallback.h"
 #include <vtkActor2D.h>
 #include <vtkGlyph2D.h>
 #include <vtkGlyphSource2D.h>
@@ -15,7 +15,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkCamera.h>
 
-#include "CartographicTransformation.h"
+#include "../CartographicTransformation.h"
 
 
 vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
@@ -26,7 +26,6 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
     return newPointCallBack;
 }
 
-// TODO: how do we handle mapping between pixelspace and lat/lon (needed for advection)? Current idea: store the vtkPoints in lat/lon system, then apply a transformfilter to map them to the current window geometry. This should allow for a changing viewport as well - we can query the new camera position and map accordingly.
 // Further notes; current thinking is to allow tracking a particle's age by using a scalar array in the VtkPolyData. This would be incremented for every tick/updateData function call.
 // Another challenge is the concept of beaching; dead particles must not be included in the advect function call (wasted computations), but they should not be outright deleted from the vtkPoints either (we still want to display them). Working Solution: have another array of ints in the vtkPolyData, which tracks for how many calls of UpdateData a given particle has not had its position changed. If this int reaches some treshold (5? 10? 3? needs some testing), exclude the particle from the advect call.
 //
@@ -93,4 +92,14 @@ void LGlyphLayer::updateData(int t) {
         this->points->SetPoint(n, xNew, yNew, 0);
     }
     this->points->Modified();
+}
+
+void LGlyphLayer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
+    auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
+    newPointCallBack->setData(data);
+    newPointCallBack->setPoints(points);
+    newPointCallBack->setRen(ren);
+    interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
+    interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
+    interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
 }

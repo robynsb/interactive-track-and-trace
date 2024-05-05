@@ -2,7 +2,7 @@
 #define LGLYPHLAYER_H
 
 #include "Layer.h"
-#include "SpawnPointCallback.h"
+#include "../commands/SpawnPointCallback.h"
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
 
@@ -31,6 +31,8 @@ public:
   void updateData(int t) override;
 
   vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();
+
+  void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;
 };
 
 #endif

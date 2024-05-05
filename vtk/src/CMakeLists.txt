@@ -31,22 +31,22 @@ endif()
 # netcdf setup
 find_package(netCDF REQUIRED)
 
-add_executable(VtkBase MACOSX_BUNDLE main.cpp 
-  helperClasses/BackgroundImage.cpp 
-  helperClasses/BackgroundImage.h
-  helperClasses/EGlyphLayer.cpp
-  helperClasses/EGlyphLayer.h
-  helperClasses/Layer.cpp
-  helperClasses/Layer.h
-  helperClasses/LGlyphLayer.cpp
-  helperClasses/LGlyphLayer.h
-  helperClasses/Program.cpp
-  helperClasses/Program.h
+add_executable(VtkBase MACOSX_BUNDLE main.cpp
+        layers/BackgroundImage.cpp
+        layers/BackgroundImage.h
+        layers/EGlyphLayer.cpp
+        layers/EGlyphLayer.h
+        layers/Layer.cpp
+        layers/Layer.h
+        layers/LGlyphLayer.cpp
+        layers/LGlyphLayer.h
+        Program.cpp
+        Program.h
   commands/TimerCallbackCommand.h
   commands/TimerCallbackCommand.cpp
-        helperClasses/SpawnPointCallback.h
-        helperClasses/SpawnPointCallback.cpp
-        helperClasses/CartographicTransformation.cpp
+        commands/SpawnPointCallback.h
+        commands/SpawnPointCallback.cpp
+        CartographicTransformation.cpp
 )
 
 execute_process(

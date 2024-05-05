@@ -24,10 +24,9 @@ public:
   virtual void updateData(int t);
 
   /** Adds an observer to the renderWindowinteractor within which this layer is active.
-    * @param event : the specific event type to subscribe to (see the vtkCommand::EventIds enum) 
-    * @param observer : the observer to add.
+    * @param interactor : pointer to the interactor that observers can be added to.
     */
-  virtual void addObserver(const char *event, vtkCommand *observer);
+  virtual void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor);
 };
 
 #endif

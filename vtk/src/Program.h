@@ -5,8 +5,8 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
 
-#include "Layer.h"
-#include "SpawnPointCallback.h"
+#include "layers/Layer.h"
+#include "commands/SpawnPointCallback.h"
 
 /** This class manages the upper levels of the vtk pipeline; it has attributes for the vtkrenderWindow and a vector of Layers to represent a variable number of vtkRenderers.
   * It can also set up a vtkTimer by connecting an instance of TimerCallbackCommand with its contained vtkRenderWindowInteractor.
@@ -33,6 +33,8 @@ private:
     */ 
   void setupTimer();
 
+  void setupInteractions();
+
 public:
   /** Constructor.
     */ 
@@ -50,19 +52,16 @@ public:
     */
   void removeLayer(Layer *layer);
 
-  /** This function sets the given SpawnpointCallback to be used with the program.
-    * @param cb : the callback to use.
-    */
-  void setLagrangeInteractor(SpawnPointCallback *cb);
-
   /** This function updates the data for the associated layers to the given timestamp.
     * Also updates the renderWindow.
     * @param t : the timestamp to update the data to.
     */
   void updateData(int t);
 
-  /** This function renders the vtkRenderWindow for the first time.
-    */ 
+  /**
+   * This function renders the vtkRenderWindow for the first time.
+   * Only call this function once!
+   */
   void render();
 };
 
