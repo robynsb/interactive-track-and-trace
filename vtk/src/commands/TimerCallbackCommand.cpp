@@ -11,8 +11,6 @@ TimerCallbackCommand* TimerCallbackCommand::New(Program *program) {
 }
 
 void TimerCallbackCommand::Execute(vtkObject* caller, unsigned long eventId, void* vtkNotUsed(callData)) {
-  cout << this->time << " " << this->maxTime << endl;
-
   this->time += this->dt;
 
   if (this->time >= this->maxTime) {
