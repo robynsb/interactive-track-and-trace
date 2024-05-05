@@ -19,25 +19,6 @@ BackgroundImage::BackgroundImage(string imagePath) : imagePath(imagePath) {
   updateImage();
 }
 
-vtkSmartPointer<vtkMatrix4x4> getMatrix() {
-    const double XMin = 0;
-    const double XMax = 661;
-    const double YMin = 0;
-    const double YMax = 661;
-
-    double eyeTransform[] = {
-            2/(XMax-XMin), 0, 0, -(XMax+XMin)/(XMax-XMin),
-            0, 2/(YMax-YMin), 0, -(YMax+YMin)/(YMax-YMin),
-            0, 0, 1, 0,
-            0, 0, 0, 1
-    };
-
-    auto matrix = vtkSmartPointer<vtkMatrix4x4>::New();
-    matrix->DeepCopy(eyeTransform);
-    return matrix;
-}
-
-
 void BackgroundImage::updateImage() {
 
   vtkSmartPointer<vtkImageReader2> imageReader;
@@ -53,7 +34,7 @@ void BackgroundImage::updateImage() {
 
   vtkSmartPointer<vtkImageData> imageData = imageCenterer->GetOutput();
 
-  // TODO: transform the iamge to the range [-1,1]
+  // TODO: transform the image to the range [-1,1]
   // This will allow the backgorundImage to share a camera with our other layers.
   // Facilitating the cameraMovement callback.
   vtkNew<vtkImageActor> imageActor;
