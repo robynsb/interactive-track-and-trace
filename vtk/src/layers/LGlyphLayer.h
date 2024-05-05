@@ -2,7 +2,6 @@
 #define LGLYPHLAYER_H
 
 #include "Layer.h"
-#include "../advection/AdvectionKernel.h"
 #include "../commands/SpawnPointCallback.h"
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
@@ -14,14 +13,13 @@ class LGlyphLayer : public Layer {
 private:
   vtkSmartPointer<vtkPoints> points;
   vtkSmartPointer<vtkPolyData> data;
-  std::unique_ptr<AdvectionKernel> advector;
 
 
 
 public:
   /** Constructor.
     */
-  LGlyphLayer(std::unique_ptr<AdvectionKernel> advectionKernel);
+  LGlyphLayer();
 
   /** This function spoofs a few points in the dataset. Mostly used for testing.
     */

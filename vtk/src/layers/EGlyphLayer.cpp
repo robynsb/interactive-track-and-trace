@@ -11,12 +11,36 @@
 #include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
+#include <netcdf>
 #include <vtkArrowSource.h>
 #include "../CartographicTransformation.h"
-#include "../advection/readdata.h"
 
+using namespace netCDF;
 using namespace std;
 
+template <typename T>
+vector<T> getVarVector(const NcVar &var) {
+    int length = 1;
+    for (NcDim dim : var.getDims()) {
+        length *= dim.getSize();
+    }
+
+    vector<T> vec(length);
+
+    var.getVar(vec.data());
+
+    return vec;
+}
+
+tuple<vector<int>, vector<double>, vector<double>> readGrid() {
+    netCDF::NcFile data("../../../../data/grid.h5", netCDF::NcFile::read);
+    multimap< string, NcVar > vars = data.getVars();
+    vector<int> time = getVarVector<int>(vars.find("times")->second);
+    vector<double> longitude = getVarVector<double>(vars.find("longitude")->second);
+    vector<double> latitude = getVarVector<double>(vars.find("latitude")->second);
+
+    return {time, latitude, longitude};
+}
 
 
 EGlyphLayer::EGlyphLayer() {

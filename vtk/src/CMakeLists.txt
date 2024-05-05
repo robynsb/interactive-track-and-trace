@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(VtkBase)
 
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(VTK COMPONENTS 
@@ -50,19 +47,6 @@ add_executable(VtkBase MACOSX_BUNDLE main.cpp
         commands/SpawnPointCallback.h
         commands/SpawnPointCallback.cpp
         CartographicTransformation.cpp
-        advection/AdvectionKernel.h
-        advection/EulerAdvectionKernel.cpp
-        advection/EulerAdvectionKernel.h
-        advection/interpolate.cpp
-        advection/interpolate.h
-        advection/readdata.cpp
-        advection/readdata.h
-        advection/RK4AdvectionKernel.cpp
-        advection/RK4AdvectionKernel.h
-        advection/UVGrid.cpp
-        advection/UVGrid.h
-        advection/Vel.cpp
-        advection/Vel.h
 )
 
 execute_process(
