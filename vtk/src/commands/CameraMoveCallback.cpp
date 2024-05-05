@@ -12,11 +12,17 @@ using std::string;
 void CameraMoveCallback::Execute(vtkObject *caller, unsigned long evId,
                                  void *callData) {
   // Note the use of reinterpret_cast to cast the caller to the expected type.
-  auto interactor = reinterpret_cast<vtkRenderWindowInteractor *>(caller);
+  auto intr = reinterpret_cast<vtkRenderWindowInteractor *>(caller);
 
   switch (evId) {
     case vtkCommand::KeyPressEvent:
-      pan(interactor->GetKeySym());
+      if (not strcmp("minus", intr->GetKeySym())) {
+        zoom(false);
+      } else if (not strcmp("equal", intr->GetKeySym())) {
+        zoom(true);
+      } else {
+        pan(intr->GetKeySym());
+      }
       break;
     case vtkCommand::MouseWheelForwardEvent:
       zoom(true);
@@ -27,18 +33,21 @@ void CameraMoveCallback::Execute(vtkObject *caller, unsigned long evId,
     default:
       break;
   }
+
+  // also calls the render function when the camera's position has not actually changed. This is a negligble inefficiency.
+  intr->GetRenderWindow()->Render();
 }
 
 void CameraMoveCallback::zoom(const bool in) {
-  double pos[3];
-  this->cam->GetPosition(pos);
+  double scale = this->cam->GetParallelScale();
 
   if (in) {
-    pos[2] -= 50;
+    scale -= 1;
   } else {
-    pos[2] += 50;
+    scale += 1;
   }
-  this->cam->SetPosition(pos);
+
+  this->cam->SetParallelScale(scale);
 
 }
 
@@ -48,17 +57,16 @@ void CameraMoveCallback::pan(const string dir) {
 
   if (dir == "Left" or dir == "h") {
     pos[0] -= 1;
-    this->cam->SetPosition(pos);
   } else if (dir == "Up" or dir == "j" ) {
     pos[1] += 1;
-    this->cam->SetPosition(pos);
   } else if (dir == "Right" or dir == "k" ) {
     pos[0] += 1;
-    this->cam->SetPosition(pos);
   } else if (dir == "Down" or dir == "l" ) {
     pos[1] -= 1;
-    this->cam->SetPosition(pos);
   }
+
+  this->cam->SetPosition(pos);
+  this->cam->SetFocalPoint(pos[0], pos[1], 0);
 }
 
 CameraMoveCallback::CameraMoveCallback() : cam(nullptr) {}
