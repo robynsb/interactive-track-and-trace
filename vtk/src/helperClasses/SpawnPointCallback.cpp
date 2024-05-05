@@ -7,6 +7,8 @@
 #include <vtkCommand.h>
 #include <vtkRenderWindow.h>
 
+#include "CartographicTransformation.h"
+
 void convertDisplayToWorld(vtkRenderer* renderer, int x, int y, double *worldPos) {
     double displayPos[3] = {static_cast<double>(x), static_cast<double>(y), 0.0};
     renderer->SetDisplayPoint(displayPos);
@@ -31,7 +33,15 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
     int x, y;
     interactor->GetEventPosition(x, y);
 
-    vtkIdType id = points->InsertNextPoint(x, y, 0);
+    double worldPos[4] = {2, 0 ,0, 0};
+    double displayPos[3] = {static_cast<double>(x), static_cast<double>(y), 0.0};
+    ren->SetDisplayPoint(displayPos);
+    ren->DisplayToWorld();
+    ren->GetWorldPoint(worldPos);
+    inverseCartographicProjection->MultiplyPoint(worldPos, worldPos);
+    cout << "clicked on lon = " << worldPos[0] << " and lat = " << worldPos[1] << endl;
+
+    vtkIdType id = points->InsertNextPoint(worldPos[0], worldPos[1], 0);
     data->SetPoints(points);
 
     vtkSmartPointer<vtkVertex> vertex = vtkSmartPointer<vtkVertex>::New();
@@ -45,7 +55,10 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
 }
 
 
-SpawnPointCallback::SpawnPointCallback() : data(nullptr), points(nullptr) {}
+SpawnPointCallback::SpawnPointCallback() : data(nullptr), points(nullptr), inverseCartographicProjection(nullptr) {
+    inverseCartographicProjection = getCartographicTransformMatrix();
+    inverseCartographicProjection->Invert();
+}
 
 SpawnPointCallback *SpawnPointCallback::New() {
     return new SpawnPointCallback;
@@ -57,4 +70,8 @@ void SpawnPointCallback::setData(const vtkSmartPointer<vtkPolyData> &data) {
 
 void SpawnPointCallback::setPoints(const vtkSmartPointer<vtkPoints> &points) {
     this->points = points;
+}
+
+void SpawnPointCallback::setRen(const vtkSmartPointer<vtkRenderer> &ren) {
+    this->ren = ren;
 }
