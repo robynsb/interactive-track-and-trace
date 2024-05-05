@@ -9,15 +9,22 @@
 #include <vtkVertexGlyphFilter.h>
 #include <vtkInteractorStyle.h>
 #include <vtkInteractorStyleUser.h>
+#include <vtkTransform.h>
+#include <vtkTransformFilter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkRenderWindow.h>
+#include <vtkCamera.h>
+
+#include "NormalisedCartographicCamera.h"
 
 
 vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
     auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
     newPointCallBack->setData(data);
     newPointCallBack->setPoints(points);
+    newPointCallBack->setRen(ren);
     return newPointCallBack;
 }
-
 
 // TODO: add interactionStyle functionality
 // TODO: add timer + advection (probably from the program class not here)
@@ -28,74 +35,61 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
 // TODO: modelling all this in vtkClasses is workable, but ideally i would want to work with a native C++ class. See if this is doable and feasible.
 
 LGlyphLayer::LGlyphLayer() {
-  this->ren = vtkSmartPointer<vtkRenderer>::New();
-  this->ren->SetLayer(2);
+    this->ren = vtkSmartPointer<vtkRenderer>::New();
+    this->ren->SetLayer(2);
 
-  this->points = vtkSmartPointer<vtkPoints>::New();
-  this->data = vtkSmartPointer<vtkPolyData>::New();
-  this->data->SetPoints(this->points);
-  
-  vtkNew<vtkGlyphSource2D> circleSource;
-  circleSource->SetGlyphTypeToCircle();
-  circleSource->SetScale(15); 
-  circleSource->Update();
+    this->points = vtkSmartPointer<vtkPoints>::New();
+    this->data = vtkSmartPointer<vtkPolyData>::New();
+    this->data->SetPoints(this->points);
 
-  vtkNew<vtkGlyph2D> glyph2D;
-  glyph2D->SetSourceConnection(circleSource->GetOutputPort());
-  glyph2D->SetInputData(this->data);
-  glyph2D->SetColorModeToColorByScalar();
-  glyph2D->Update();
+    vtkNew<vtkGlyphSource2D> circleSource;
+    circleSource->SetGlyphTypeToCircle();
+    circleSource->SetScale(1);
+    circleSource->Update();
 
-  vtkNew<vtkPolyDataMapper2D> mapper;
-  mapper->SetInputConnection(glyph2D->GetOutputPort());
-  mapper->Update();
+    vtkNew<vtkGlyph2D> glyph2D;
+    glyph2D->SetSourceConnection(circleSource->GetOutputPort());
+    glyph2D->SetInputData(this->data);
+    glyph2D->SetColorModeToColorByScalar();
+    glyph2D->Update();
 
-  vtkNew<vtkActor2D> actor;
-  actor->SetMapper(mapper);
-  actor->GetProperty()->SetColor(1,1,1);
+    auto camera = createNormalisedCartographicCamera();
+    ren->SetActiveCamera(camera);
 
-  this->ren->AddActor(actor);
+    vtkNew<vtkPolyDataMapper> mapper;
+    mapper->SetInputConnection(glyph2D->GetOutputPort());
+    mapper->Update();
+
+    vtkNew<vtkActor> actor;
+    actor->SetMapper(mapper);
+
+    this->ren->AddActor(actor);
 }
 
 // creates a few points so we can test the updateData function
 void LGlyphLayer::spoofPoints() {
-  this->points->InsertNextPoint(53, 2, 0);
-  this->points->InsertNextPoint(48.2, 111.01, 0);
-  this->points->InsertNextPoint(331, 331, 0);
+//    this->points->InsertNextPoint(200, 200 , 0);
+    this->points->InsertNextPoint(-4.125, 61.375 , 0);
+    this->points->InsertNextPoint(4.896555178870355, 52.373557841669516, 0);
+//    this->points->InsertNextPoint(48.2, 111.01, 0);
+//    this->points->InsertNextPoint(331, 331, 0);
+//    this->points->InsertNextPoint(0, 50, 0);
+//    this->points->InsertNextPoint(200, 200 , 0);
 
-  this->points->Modified();
+    this->points->Modified();
 }
-
 
 // returns new coords for a point; used to test the updateData function
 std::pair<double, double> advect(int time, double lat, double lon) {
-  return {lat+0.1, lon+0.1} ;
+    return {lat + 0., lon + 0.};
 }
 
-
-// converts a x,y pair from pixel coordinates to real world latitude and longitude.
-// TODO: make this more modular by having it interact with the backgroundImage layer (and possibly the camera panning/zooming logic when that is implemented).
-std::pair<double, double> pixelToReal(double x, double y) {
-  //assumes a 661x661 window with a range of [46.125, 62.625] lat and [-15.875, 12.875] lon.
-  return {(x*25+46125)/1000, (y*43.5-15875)/1000};
-}
-
-// converts a lat,lon pair from real world values to pixel coordinates.
-// TODO: see above.
-std::pair<double, double> realToPixel(double lat, double lon) {
-  //assumes a 661x661 window with a range of [46.125, 62.625] lat and [-15.875, 12.875] lon.
-  return {(lat*1000-46125)/25, (lon*1000+15875)/43.5};
-}
-
-// FIXME: actually the above functions are a bit of a naive way of modelling these. Much better would be to have the points at the real-world latitude and longitude, and apply a filter in the pipeline to convert them to the appropriate window geometry.
- void LGlyphLayer::updateData(int t) {
-  double point[3];
-  for (vtkIdType n=0; n < this->points->GetNumberOfPoints(); n++) {
-    this->points->GetPoint(n, point);
-    auto grads = pixelToReal(point[0], point[1]);
-    auto newGrads = advect(n, grads.first, grads.second);
-    auto newPixs = realToPixel(newGrads.first, newGrads.second);
-    this->points->SetPoint(n, newPixs.first, newPixs.second, 0);
-  }
-  this->points->Modified();
+void LGlyphLayer::updateData(int t) {
+    double point[3];
+    for (vtkIdType n = 0; n < this->points->GetNumberOfPoints(); n++) {
+        this->points->GetPoint(n, point);
+        auto [xNew, yNew] = advect(n, point[0], point[1]);
+        this->points->SetPoint(n, xNew, yNew, 0);
+    }
+    this->points->Modified();
 }

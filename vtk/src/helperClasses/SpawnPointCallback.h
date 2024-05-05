@@ -17,9 +17,12 @@ public:
 
     void setData(const vtkSmartPointer<vtkPolyData> &data);
 
+    void setRen(const vtkSmartPointer<vtkRenderer> &ren);
+
 private:
     vtkSmartPointer<vtkPolyData> data;
     vtkSmartPointer<vtkPoints> points;
+    vtkSmartPointer<vtkRenderer> ren;
 public:
 
 private:
