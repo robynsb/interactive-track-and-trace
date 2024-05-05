@@ -1,0 +1,7 @@
+.DS_Store
+src/.DS_Store
+src/.cache
+src/build
+.idea
+src/cmake-build-debug
+compile_commands.json
