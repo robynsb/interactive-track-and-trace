@@ -1,3 +1,16 @@
+## Vtk
+This folder contains the Vtk program which actually displays the simulated data. The code is driven by the `Program` class, which contains the upper level of the vtk pipeline: the class has attributes for a vtkRenderWindow and vtkRenderWindowInteractor. vtkRenderers are managed through an abstract `Layer` class, which the program keeps track of trough a vector attribute.
+
+Each layer implementation contains and manages one vtkRenderer, this includes managing which layer of the vtkrenderwindow ths layer renders to. Currently implemented are three such layers:
+ * the `BackgroundImage` class reads in image data and displays this to the screen on the 0th layer - the background.
+ * the `EGlyphLayer` class renders a visualization of the Eulerian flow-velocities as a grid of arrow-glyphs (in which the direction and length of the glyph represents the direction and strength of the velocity at that point). Right now it spoofs the data for these glyphs, but this class will interface with the code for reading h5 data to accurately display the velocities at a given timestamp.
+ * the `LGlyphLayer` class renders a given set of particles as circular glyphs. These particles are advected according to an advection function, which in this implementation is spoofed. Like the EglyphLayer class, this layer will interact with the code for advecting particles according to the actual dataset, to accurately simulate its particles.
+
+The `LGlyphLayer` deserves some more explanation, as it depends on the `SpawnpointCallback` class to place particles in its dataset. The `SpawnpointCallback` makes use of the vtkCallbackCommand class and the vtk observer pattern to create new particles on mouseclick. It does so through a shared reference to the LGlyphLayer's `data` and `points` attributes, which the SpawnpointCallback then edits directlr. 
+
+The program also adds a second observer to the vtk pattern through the `TimerCallbackCommand`. This class subscribes to a vtkTimerEvent to manage the simulation of the program. To this end the TimerCallbackCommand has attributes for a timestep (dt) and current time (time). On every callback, the current time is updated according to the dt attribute, and this change is propagated to the layers containing the data by use of the program and layer's `updateData()` functions.
+
+
 ## Location of data
 The data path is hardcoded such that the following tree structure is assumed:
 ```
@@ -19,21 +32,3 @@ cmake ..
 make
 ```
 
-### Building with Linux
-Makes use of `mdspan` which is not supported by glibc++ at time of writing. See [compiler support](https://en.cppreference.com/w/cpp/compiler_support/23) for `mdspan`. The solution to this is to use Clang and libc++; this is configured in our CMake setup, however the default installation of the `netcdf-cxx` package on at least Arch linux (and suspectedly Debian derivatives as well) specifically builds for the glibc implementation. To get the netcdf C++ bindings functional with the libc++ implementation, one needs to build from source. On Linux, this requires a few changes to the CMake file included with the netcdf-cxx source code, which are detailed below.
-
-Step-by-step to build the program using clang++ and libc++ on linux:
- 1. Download the source code of netcdf-cxx, found at 'https://github.com/Unidata/netcdf-cxx4/releases/tag/v4.3.1' (make sure to download the release source code, as the master branch contains non-compilable code).
- 2. Edit the CMakeLists.txt file, by appending '-stdlib=libc++' to the `CMAKE_CXX_FLAGS` variable in line 430. This means line 430 should read: 
-    ```cmake 
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wno-unused-variable -Wno-unused-parameter -stdlib=libc++")
-    ```
- 2. Build the source code with the following: 
-  ```sh 
-    mkdir build && cd build
-    cmake .. -DCMAKE_CXX_COMPILER=/usr/bin/clang++
-    make
-    ctest
-    sudo make install
-  ```
- 3. Now the code should compile through the standard steps described in the Compiling section.
