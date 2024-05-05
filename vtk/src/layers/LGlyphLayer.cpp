@@ -31,13 +31,15 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
 //
 // TODO: modelling all this in vtkClasses is workable, but ideally i would want to work with a native C++ class. See if this is doable and feasible.
 
-LGlyphLayer::LGlyphLayer() {
+LGlyphLayer::LGlyphLayer(std::unique_ptr<AdvectionKernel> advectionKernel) {
     this->ren = vtkSmartPointer<vtkRenderer>::New();
     this->ren->SetLayer(2);
 
     this->points = vtkSmartPointer<vtkPoints>::New();
     this->data = vtkSmartPointer<vtkPolyData>::New();
     this->data->SetPoints(this->points);
+
+    advector = std::move(advectionKernel);
 
     auto camera = createNormalisedCamera();
     ren->SetActiveCamera(camera);
@@ -88,7 +90,7 @@ void LGlyphLayer::updateData(int t) {
     double point[3];
     for (vtkIdType n = 0; n < this->points->GetNumberOfPoints(); n++) {
         this->points->GetPoint(n, point);
-        auto [xNew, yNew] = advect(n, point[0], point[1]);
+        auto [yNew, xNew] = advector->advect(t, point[1], point[0]);
         this->points->SetPoint(n, xNew, yNew, 0);
     }
     this->points->Modified();

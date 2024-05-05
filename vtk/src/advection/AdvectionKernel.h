@@ -11,7 +11,7 @@
  */
 class AdvectionKernel {
 public:
-    const static int DT = 60 * 15; // 60 sec/min * 15 mins
+    const static int DT = 15 * 60 * 15; // 60 sec/min * 15 mins
     /**
      * This function must take a time, latitude and longitude of a particle and must output
      * a new latitude and longitude after being advected once for AdvectionKernel::DT time as defined above.
