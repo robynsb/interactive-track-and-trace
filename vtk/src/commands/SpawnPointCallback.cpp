@@ -39,7 +39,7 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
     ren->DisplayToWorld();
     ren->GetWorldPoint(worldPos);
     inverseCartographicProjection->MultiplyPoint(worldPos, worldPos);
-    cout << "clicked on lon = " << worldPos[0] << " and lat = " << worldPos[1] << endl;
+    // cout << "clicked on lon = " << worldPos[0] << " and lat = " << worldPos[1] << endl;
 
     vtkIdType id = points->InsertNextPoint(worldPos[0], worldPos[1], 0);
     data->SetPoints(points);

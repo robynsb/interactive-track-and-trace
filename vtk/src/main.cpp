@@ -12,6 +12,8 @@
 #include "layers/EGlyphLayer.h"
 #include "layers/LGlyphLayer.h"
 #include "Program.h"
+#include "CartographicTransformation.h"
+
 
 using namespace std;
 
@@ -19,6 +21,7 @@ using namespace std;
 int main() {
   auto l = new LGlyphLayer();
   l->spoofPoints();
+
 
   Program *program = new Program();
   program->addLayer(new BackgroundImage("../../../../data/map_661-661.png"));

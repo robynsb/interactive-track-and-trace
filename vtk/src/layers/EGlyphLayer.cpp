@@ -65,13 +65,13 @@ void EGlyphLayer::readCoordinates() {
   this->direction->SetNumberOfTuples(numLats*numLons); 
   points->Allocate(numLats*numLons);
 
-  auto camera = createNormalisedCamera();
-  ren->SetActiveCamera(camera);
+  // auto camera = createNormalisedCamera();
+  // ren->SetActiveCamera(camera);
 
   int i = 0;
   for (double lat : lats) {
     for (double lon : lons) {
-        cout << "lon: " << lon << " lat: " << lat << endl;
+        // cout << "lon: " << lon << " lat: " << lat << endl;
       direction->SetTuple3(i, 0.45, 0.90, 0); //FIXME: read this info from file
       points->InsertPoint(i++, lon, lat, 0);
       // see also https://vtk.org/doc/nightly/html/classvtkPolyDataMapper2D.html

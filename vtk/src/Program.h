@@ -6,7 +6,6 @@
 #include <vtkRenderer.h>
 
 #include "layers/Layer.h"
-#include "commands/SpawnPointCallback.h"
 
 /** This class manages the upper levels of the vtk pipeline; it has attributes for the vtkrenderWindow and a vector of Layers to represent a variable number of vtkRenderers.
   * It can also set up a vtkTimer by connecting an instance of TimerCallbackCommand with its contained vtkRenderWindowInteractor.
@@ -25,6 +24,11 @@ private:
     */ 
   vtkSmartPointer<vtkRenderWindowInteractor> interact;
 
+
+  /** The camera used by all layers for this program.
+    */
+  vtkSmartPointer<vtkCamera> cam;
+
   /** This function sets some default properties on the vtkRenderWindow. Extracted to its' own function to keep the constructor from becoming cluttered.
     */ 
   void setWinProperties();
@@ -33,7 +37,13 @@ private:
     */ 
   void setupTimer();
 
+  /** This function adds all interactors of each layer to the interactor/window
+    */ 
   void setupInteractions();
+
+  /** This function sets up the camera's associated movement callbacks..
+    */ 
+  void setupCameraCallback();
 
 public:
   /** Constructor.

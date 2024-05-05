@@ -2,6 +2,7 @@
 #include "../Program.h"
 
 
+// TODO: add getter/setters to attributes for customizability.
 TimerCallbackCommand::TimerCallbackCommand() : dt(3600), maxTime(3600*24*365), time(0) {}
 
 TimerCallbackCommand* TimerCallbackCommand::New(Program *program) {
@@ -20,7 +21,6 @@ void TimerCallbackCommand::Execute(vtkObject* caller, unsigned long eventId, voi
 
   this->program->updateData(this->time);
 }
-
 
 
 void TimerCallbackCommand::setProgram(Program *program) {

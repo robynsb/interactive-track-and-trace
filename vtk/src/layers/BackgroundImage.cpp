@@ -3,6 +3,7 @@
 #include <vtkImageActor.h>
 #include <vtkImageData.h>
 #include <vtkImageReader2.h>
+#include <vtkTransformFilter.h>
 
 using std::string;
 
@@ -23,6 +24,13 @@ void BackgroundImage::updateImage() {
   imageReader->SetFileName(this->imagePath.c_str());
   imageReader->Update();
   imageData = imageReader->GetOutput();
+
+  // TODO: transform the iamge to the range [-1,1] and center it on (0,0)/
+  // This will allow the backgorundImage to share a camera with our other layers.
+  // Facilitating the cameraMovement callback.
+  
+  // vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter();
+  // transformFilter->SetInputData(imageData);
 
   vtkNew<vtkImageActor> imageActor;
   imageActor->SetInputData(imageData);
@@ -59,4 +67,9 @@ string BackgroundImage::getImagePath() {
 void BackgroundImage::setImagePath(string imagePath) {
   this->imagePath = imagePath;
   updateImage();
+}
+
+
+void BackgroundImage::setCamera(vtkCamera *cam) {
+  // TODO: fix the camera for this layer so this intentionally empty override can be removed.
 }

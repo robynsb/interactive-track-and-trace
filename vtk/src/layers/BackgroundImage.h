@@ -32,6 +32,9 @@ public:
     * @param imagePath : String to the path of the new image to use.
     */
   void setImagePath(std::string imagePath);
+
+
+  void setCamera(vtkCamera *cam) override;
 };
 
 #endif
