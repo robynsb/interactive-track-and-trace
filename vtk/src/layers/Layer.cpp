@@ -9,8 +9,9 @@ vtkSmartPointer<vtkRenderer> Layer::getLayer() {
 }
 
 void Layer::updateData(int t) {
+  // By default, do nothing
 }
 
 void Layer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-    // By default, do nothing.
+    // By default, do nothing
 }
