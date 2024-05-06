@@ -19,7 +19,7 @@ data/
   hydrodynamic_U.h5
   hydrodynamic_V.h5
 interactive-track-and-trace/
-  opening-hdf5/
+  particle-track-and-trace/
      ...
 ```
 

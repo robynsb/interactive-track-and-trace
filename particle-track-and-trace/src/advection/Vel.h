@@ -1,5 +1,5 @@
-#ifndef ADVECTION_VEL_H
-#define ADVECTION_VEL_H
+#ifndef VEL_H
+#define VEL_H
 
 #include <utility>
 #include <stdexcept>
@@ -41,4 +41,4 @@ Vel operator*(Scalar scalar, const Vel& p) {
     return Vel(p.u * scalar, p.v * scalar);
 }
 
-#endif //ADVECTION_VEL_H
+#endif //VEL_H

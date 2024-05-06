@@ -1,5 +1,5 @@
-#ifndef VTKBASE_SPAWNPOINTCALLBACK_H
-#define VTKBASE_SPAWNPOINTCALLBACK_H
+#ifndef SPAWNPOINTCALLBACK_H
+#define SPAWNPOINTCALLBACK_H
 
 
 #include <vtkCallbackCommand.h>
@@ -37,4 +37,4 @@ private:
 };
 
 
-#endif //VTKBASE_SPAWNPOINTCALLBACK_H
+#endif //SPAWNPOINTCALLBACK_H

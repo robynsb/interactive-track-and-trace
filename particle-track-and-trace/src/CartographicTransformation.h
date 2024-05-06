@@ -2,10 +2,9 @@
 #include <vtkTransformFilter.h>
 #include "advection/UVGrid.h"
 
-#ifndef VTKBASE_NORMALISEDCARTOGRAPHICCAMERA_H
-#define VTKBASE_NORMALISEDCARTOGRAPHICCAMERA_H
+#ifndef NORMALISEDCARTOGRAPHICCAMERA_H
+#define NORMALISEDCARTOGRAPHICCAMERA_H
 
-#endif //VTKBASE_NORMALISEDCARTOGRAPHICCAMERA_H
 
 /**
  * Constructs a orthographically projected camera that looks at the square x,y in [-1, 1] with z = 0 and w = 1.
@@ -28,3 +27,5 @@ vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix(const std::shared_p
  * @return pointer to transform filter
  */
 vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid);
+
+#endif //NORMALISEDCARTOGRAPHICCAMERA_H

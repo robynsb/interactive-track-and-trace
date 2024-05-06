@@ -1,5 +1,5 @@
-#ifndef ADVECTION_UVGRID_H
-#define ADVECTION_UVGRID_H
+#ifndef UVGRID_H
+#define UVGRID_H
 
 #include <vector>
 #include "Vel.h"
@@ -62,4 +62,4 @@ public:
     void streamSlice(std::ostream &os, size_t t);
 };
 
-#endif //ADVECTION_UVGRID_H
+#endif //UVGRID_H
