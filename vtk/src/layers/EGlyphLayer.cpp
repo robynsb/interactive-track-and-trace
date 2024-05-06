@@ -100,7 +100,7 @@ void EGlyphLayer::updateData(int t) {
   for (int lat = 0; lat < uvGrid->latSize; lat++) {
     for (int lon = 0; lon < uvGrid->lonSize; lon++) {
       auto [u, v] = (*uvGrid)[t/3600, lat, lon];
-      // TODO: The 5*v stuff should really be a filter transform
+      // TODO: 5*v scaling stuff should really be a filter transform
       this->direction->SetTuple3(i, 5*u, 5*v, 0);
       i++;
     }

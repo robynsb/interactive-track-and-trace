@@ -75,8 +75,7 @@ void LGlyphLayer::spoofPoints() {
   this->points->InsertNextPoint(6.532949683882039, 53.24308582564463, 0); // Coordinates of Zernike
   this->points->InsertNextPoint(5.315307819255385, 60.40001057122271, 0); // Coordinates of Bergen
   this->points->InsertNextPoint(6.646210231365825, 46.52346296009023, 0); // Coordinates of Lausanne
-  this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857,
-                                0); // Coordinates of the top of the Faroe islands
+  this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857,0); // Coordinates of the top of the Faroe islands
 
   this->points->Modified();
 }

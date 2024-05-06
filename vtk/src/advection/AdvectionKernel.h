@@ -26,6 +26,7 @@ public:
         return metre / 1000. / 1.852 / 60.;
     }
 
+    virtual ~AdvectionKernel() = default; // Apparently I need this, idk why
 };
 
 #endif //ADVECTION_ADVECTIONKERNEL_H

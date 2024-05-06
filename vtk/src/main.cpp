@@ -24,7 +24,7 @@ int main() {
   shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
   auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid);
 
-  auto l = new LGlyphLayer(uvGrid, move(kernelRK4));
+  auto l = new LGlyphLayer(uvGrid, std::move(kernelRK4));
 
   Program *program = new Program(DT);
   program->addLayer(new BackgroundImage("../../../../data/map_661-661.png"));
