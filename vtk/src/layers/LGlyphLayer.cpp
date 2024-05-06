@@ -40,12 +40,6 @@ LGlyphLayer::LGlyphLayer() {
     this->data = vtkSmartPointer<vtkPolyData>::New();
     this->data->SetPoints(this->points);
 
-    auto camera = createNormalisedCamera();
-    ren->SetActiveCamera(camera);
-
-    // TODO: this line seemed to do nothing?
-    // auto transform = createCartographicTransformFilter();
-
     vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter();
     transformFilter->SetInputData(data);
 

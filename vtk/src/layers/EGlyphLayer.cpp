@@ -65,9 +65,6 @@ void EGlyphLayer::readCoordinates() {
   this->direction->SetNumberOfTuples(numLats*numLons); 
   points->Allocate(numLats*numLons);
 
-  // auto camera = createNormalisedCamera();
-  // ren->SetActiveCamera(camera);
-
   int i = 0;
   for (double lat : lats) {
     for (double lon : lons) {
