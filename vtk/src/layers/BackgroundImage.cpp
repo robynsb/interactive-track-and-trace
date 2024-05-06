@@ -1,8 +1,17 @@
 #include "BackgroundImage.h"
+#include <vtkImageDataGeometryFilter.h>
+#include <vtkImageChangeInformation.h>
+#include <vtkImageSliceMapper.h>
 #include <vtkCamera.h>
 #include <vtkImageActor.h>
 #include <vtkImageData.h>
+#include <vtkImageMapper3D.h>
 #include <vtkImageReader2.h>
+#include <vtkImageShiftScale.h>
+#include <vtkMatrix4x4.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkTransform.h>
+#include <vtkTransformFilter.h>
 
 using std::string;
 
@@ -14,41 +23,61 @@ BackgroundImage::BackgroundImage(string imagePath) : imagePath(imagePath) {
 }
 
 
-void BackgroundImage::updateImage() {
-  vtkSmartPointer<vtkImageData> imageData;
+vtkSmartPointer<vtkMatrix4x4> BackgroundImage::getMatrix(const double x0, const double y0, const int xMax, const int yMax) {
+    double eyeTransform[] = {
+            2/(xMax-x0), 0, 0, -(xMax+x0)/(xMax-x0),
+            0, 2/(yMax-y0), 0, -(yMax+y0)/(yMax-y0),
+            0, 0, 1, 0,
+            0, 0, 0, 1
+    };
+    auto matrix = vtkSmartPointer<vtkMatrix4x4>::New();
+    matrix->DeepCopy(eyeTransform);
+    return matrix;
+}
 
+
+void BackgroundImage::updateImage() {
+
+  // read image data
   vtkSmartPointer<vtkImageReader2> imageReader;
-  
   imageReader.TakeReference(this->readerFactory->CreateImageReader2(this->imagePath.c_str()));
   imageReader->SetFileName(this->imagePath.c_str());
   imageReader->Update();
-  imageData = imageReader->GetOutput();
 
-  vtkNew<vtkImageActor> imageActor;
-  imageActor->SetInputData(imageData);
+  // translate image such that the middle is at (0,0)
+  vtkNew<vtkImageChangeInformation> imageCenterer;
+  imageCenterer->SetInputConnection(imageReader->GetOutputPort());
+  imageCenterer->CenterImageOn();
+  imageCenterer->Update();
 
-  this->ren->AddActor(imageActor);
-
-
-  // camera stuff
-  // essentially sets the camera to the middle of the background, and points it at the background
-  // TODO: extract this to its own function, separate from the background class.
-  double origin[3], spacing[3];
+  // get some info from the data we'll need in a second
+  vtkSmartPointer<vtkImageData> imageData = imageCenterer->GetOutput();
+  double origin[3];
   int extent[6];
   imageData->GetOrigin(origin);
-  imageData->GetSpacing(spacing);
   imageData->GetExtent(extent);
 
-  vtkCamera *camera = this->ren->GetActiveCamera();
-  camera->ParallelProjectionOn();
+  // map the imageData to a vtkPolydata so we can use a vtkTransform
+  vtkNew<vtkImageDataGeometryFilter> imageDataGeometryFilter;
+  imageDataGeometryFilter->SetInputData(imageData);
+  imageDataGeometryFilter->Update();
 
-  double xc = origin[0] + 0.5 * (extent[0] + extent[1]) * spacing[0];
-  double yc = origin[1] + 0.5 * (extent[2] + extent[3]) * spacing[1];
-  double yd = (extent[3] - extent[2] + 1) * spacing[1];
-  double d = camera->GetDistance();
-  camera->SetParallelScale(0.5 * yd);
-  camera->SetFocalPoint(xc, yc, 0.0);
-  camera->SetPosition(xc, yc, d);
+  // setup the vtkTransform - this is where use the data from imageData we got earlier
+  vtkNew<vtkTransform> transform;
+  transform->SetMatrix(getMatrix(origin[0], origin[1], extent[1]+origin[0], extent[3]+origin[1]));
+  vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
+  transformFilter->SetTransform(transform);
+  transformFilter->SetInputConnection(imageDataGeometryFilter->GetOutputPort());
+  transformFilter->Update();
+
+  // Create a mapper and actor
+  vtkNew<vtkPolyDataMapper> mapper;
+  mapper->SetInputConnection(transformFilter->GetOutputPort());
+
+  vtkNew<vtkActor> actor;
+  actor->SetMapper(mapper);
+    
+  this->ren->AddActor(actor);
 }
 
 
@@ -60,3 +89,4 @@ void BackgroundImage::setImagePath(string imagePath) {
   this->imagePath = imagePath;
   updateImage();
 }
+

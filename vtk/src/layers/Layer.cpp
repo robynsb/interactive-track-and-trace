@@ -15,3 +15,8 @@ void Layer::updateData(int t) {
 void Layer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
     // By default, do nothing
 }
+
+
+void Layer::setCamera(vtkCamera *camera) {
+  this->getLayer()->SetActiveCamera(camera);
+}

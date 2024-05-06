@@ -16,6 +16,15 @@ private:
    */
   void updateImage();
 
+  /** This function returns a 4x4matrix which maps the given square of [x0,w] x [y0,h] to the range [-1,1].
+    * @param x0 : x coordinate of leftmost edge of image
+    * @param y0 : y coordinate of bottommost edge of image
+    * @param xMax : x coordinate of rightmost edge of image
+    * @param yMax : y coordinate of topmost edge of image
+    * @return a 4x4 matrix which transforms the image from its original geometry to the range [-1,1]
+    */
+  vtkSmartPointer<vtkMatrix4x4> getMatrix(const double x0, const double y0, const int xMax, const int yMax);
+  
 
 public:
   /** Constructor.

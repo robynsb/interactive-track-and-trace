@@ -17,6 +17,8 @@ find_package(VTK COMPONENTS
   FiltersProgrammable
   FiltersSources
   ImagingSources
+  ImagingGeneral
+  ImagingCore
   InteractionStyle
   IOImage
   RenderingContextOpenGL2
@@ -35,20 +37,23 @@ endif()
 find_package(netCDF REQUIRED)
 
 add_executable(VtkBase MACOSX_BUNDLE main.cpp
-        layers/BackgroundImage.cpp
-        layers/BackgroundImage.h
-        layers/EGlyphLayer.cpp
-        layers/EGlyphLayer.h
-        layers/Layer.cpp
-        layers/Layer.h
-        layers/LGlyphLayer.cpp
-        layers/LGlyphLayer.h
-        Program.cpp
-        Program.h
-  commands/TimerCallbackCommand.h
+  CartographicTransformation.cpp
+  commands/CameraMoveCallback.cpp
+  commands/CameraMoveCallback.h
+  commands/SpawnPointCallback.cpp
+  commands/SpawnPointCallback.h
   commands/TimerCallbackCommand.cpp
-        commands/SpawnPointCallback.h
-        commands/SpawnPointCallback.cpp
+  commands/TimerCallbackCommand.h
+  layers/BackgroundImage.cpp
+  layers/BackgroundImage.h
+  layers/EGlyphLayer.cpp
+  layers/EGlyphLayer.h
+  layers/Layer.cpp
+  layers/Layer.h
+  layers/LGlyphLayer.cpp
+  layers/LGlyphLayer.h
+  Program.cpp
+  Program.h
         CartographicTransformation.cpp
         advection/AdvectionKernel.h
         advection/EulerAdvectionKernel.cpp

@@ -41,9 +41,6 @@ void EGlyphLayer::readCoordinates() {
   this->direction->SetNumberOfTuples(numLats * numLons);
   points->Allocate(numLats * numLons);
 
-  auto camera = createNormalisedCamera();
-  ren->SetActiveCamera(camera);
-
   int i = 0;
   int latIndex = 0;
   for (double lat: uvGrid->lats) {
@@ -77,11 +74,7 @@ void EGlyphLayer::readCoordinates() {
   glyph2D->SetVectorModeToUseVector();
   glyph2D->Update();
 
-//  vtkNew<vtkCoordinate> coordinate;
-//  coordinate->SetCoordinateSystemToWorld();
-
   vtkNew<vtkPolyDataMapper>(mapper);
-  // mapper->SetTransformCoordinate(coordinate);
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
