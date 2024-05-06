@@ -1,5 +1,5 @@
-#ifndef ADVECTION_ADVECTIONKERNEL_H
-#define ADVECTION_ADVECTIONKERNEL_H
+#ifndef ADVECTIONKERNEL_H
+#define ADVECTIONKERNEL_H
 
 #include <tuple>
 
@@ -28,4 +28,4 @@ public:
     virtual ~AdvectionKernel() = default; // Apparently I need this, idk why
 };
 
-#endif //ADVECTION_ADVECTIONKERNEL_H
+#endif //ADVECTIONKERNEL_H

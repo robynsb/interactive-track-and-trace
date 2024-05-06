@@ -1,5 +1,5 @@
-#ifndef ADVECTION_RK4ADVECTIONKERNEL_H
-#define ADVECTION_RK4ADVECTIONKERNEL_H
+#ifndef RK4ADVECTIONKERNEL_H
+#define RK4ADVECTIONKERNEL_H
 
 #include "AdvectionKernel.h"
 #include "UVGrid.h"
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif //ADVECTION_RK4ADVECTIONKERNEL_H
+#endif //RK4ADVECTIONKERNEL_H

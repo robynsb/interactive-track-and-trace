@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
-project(VtkBase)
+project(ParticleTrackTrace)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,24 +36,23 @@ endif()
 # netcdf setup
 find_package(netCDF REQUIRED)
 
-add_executable(VtkBase MACOSX_BUNDLE main.cpp
-  CartographicTransformation.cpp
-  commands/CameraMoveCallback.cpp
-  commands/CameraMoveCallback.h
-  commands/SpawnPointCallback.cpp
-  commands/SpawnPointCallback.h
-  commands/TimerCallbackCommand.cpp
-  commands/TimerCallbackCommand.h
-  layers/BackgroundImage.cpp
-  layers/BackgroundImage.h
-  layers/EGlyphLayer.cpp
-  layers/EGlyphLayer.h
-  layers/Layer.cpp
-  layers/Layer.h
-  layers/LGlyphLayer.cpp
-  layers/LGlyphLayer.h
-  Program.cpp
-  Program.h
+add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
+        layers/BackgroundImage.cpp
+        layers/BackgroundImage.h
+        layers/EGlyphLayer.cpp
+        layers/EGlyphLayer.h
+        layers/Layer.cpp
+        layers/Layer.h
+        layers/LGlyphLayer.cpp
+        layers/LGlyphLayer.h
+        Program.cpp
+        Program.h
+        commands/TimerCallbackCommand.h
+        commands/TimerCallbackCommand.cpp
+        commands/SpawnPointCallback.h
+        commands/SpawnPointCallback.cpp
+        commands/CameraMoveCallback.cpp
+        commands/CameraMoveCallback.h
         CartographicTransformation.cpp
         advection/AdvectionKernel.h
         advection/EulerAdvectionKernel.cpp
@@ -82,16 +81,16 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-target_include_directories(VtkBase PUBLIC ${netCDF_INCLUDE_DIR})
+target_include_directories(ParticleTrackTrace PUBLIC ${netCDF_INCLUDE_DIR})
 
 find_library(NETCDF_LIB NAMES netcdf-cxx4 netcdf_c++4 PATHS ${NETCDFCXX_LIB_DIR} NO_DEFAULT_PATH)
 
 # Prevent a "command line is too long" failure in Windows.
 set(CMAKE_NINJA_FORCE_RESPONSE_FILE "ON" CACHE BOOL "Force Ninja to use response files.")
-target_link_libraries(VtkBase ${NETCDF_LIB} ${VTK_LIBRARIES})
+target_link_libraries(ParticleTrackTrace ${NETCDF_LIB} ${VTK_LIBRARIES})
 
 # vtk_module_autoinit is needed
 vtk_module_autoinit(
-  TARGETS VtkBase
+  TARGETS ParticleTrackTrace
   MODULES ${VTK_LIBRARIES}
 )

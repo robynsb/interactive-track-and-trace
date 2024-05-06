@@ -1,5 +1,5 @@
-#ifndef ADVECTION_INTERPOLATE_H
-#define ADVECTION_INTERPOLATE_H
+#ifndef INTERPOLATE_H
+#define INTERPOLATE_H
 
 #include <vector>
 
@@ -25,4 +25,4 @@ Vel bilinearinterpolate(const UVGrid &uvGrid, int time, double lat, double lon);
  */
 std::vector<Vel> bilinearinterpolation(const UVGrid &uvGrid, std::vector<std::tuple<int, double, double>> points);
 
-#endif //ADVECTION_INTERPOLATE_H
+#endif //INTERPOLATE_H
