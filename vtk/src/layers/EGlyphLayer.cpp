@@ -11,42 +11,19 @@
 #include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
-#include <netcdf>
 #include <vtkArrowSource.h>
 #include "../CartographicTransformation.h"
+#include "../advection/readdata.h"
+#include "../advection/interpolate.h"
 
-using namespace netCDF;
 using namespace std;
 
-template <typename T>
-vector<T> getVarVector(const NcVar &var) {
-    int length = 1;
-    for (NcDim dim : var.getDims()) {
-        length *= dim.getSize();
-    }
-
-    vector<T> vec(length);
-
-    var.getVar(vec.data());
-
-    return vec;
-}
-
-tuple<vector<int>, vector<double>, vector<double>> readGrid() {
-    netCDF::NcFile data("../../../../data/grid.h5", netCDF::NcFile::read);
-    multimap< string, NcVar > vars = data.getVars();
-    vector<int> time = getVarVector<int>(vars.find("times")->second);
-    vector<double> longitude = getVarVector<double>(vars.find("longitude")->second);
-    vector<double> latitude = getVarVector<double>(vars.find("latitude")->second);
-
-    return {time, latitude, longitude};
-}
-
-
-EGlyphLayer::EGlyphLayer() {
+EGlyphLayer::EGlyphLayer(std::shared_ptr<UVGrid> uvGrid) {
   this->ren = vtkSmartPointer<vtkRenderer>::New();
   this->ren->SetLayer(1);
   this->ren->InteractiveOff();
+
+  this->uvGrid = uvGrid;
 
   this->data = vtkSmartPointer<vtkPolyData>::New();
   this->direction = vtkSmartPointer<vtkDoubleArray>::New();
@@ -57,28 +34,30 @@ EGlyphLayer::EGlyphLayer() {
 
 void EGlyphLayer::readCoordinates() {
   vtkNew<vtkPoints> points;
-  auto [times, lats, lons] = readGrid(); // FIXME: import Robin's readData function and use it
-  this->numLats = lats.size();
-  this->numLons = lons.size();
+  this->numLats = uvGrid->lats.size();
+  this->numLons = uvGrid->lons.size();
 
   this->direction->SetNumberOfComponents(3);
-  this->direction->SetNumberOfTuples(numLats*numLons); 
-  points->Allocate(numLats*numLons);
+  this->direction->SetNumberOfTuples(numLats * numLons);
+  points->Allocate(numLats * numLons);
 
   int i = 0;
-  for (double lat : lats) {
-    for (double lon : lons) {
-        // cout << "lon: " << lon << " lat: " << lat << endl;
-      direction->SetTuple3(i, 0.45, 0.90, 0); //FIXME: read this info from file
+  int latIndex = 0;
+  for (double lat: uvGrid->lats) {
+    int lonIndex = 0;
+    for (double lon: uvGrid->lons) {
+      auto [u, v] = (*uvGrid)[0, latIndex, lonIndex];
+      direction->SetTuple3(i, 5*u, 5*v, 0);
       points->InsertPoint(i++, lon, lat, 0);
-      // see also https://vtk.org/doc/nightly/html/classvtkPolyDataMapper2D.html
+      lonIndex++;
     }
+    latIndex++;
   }
   this->data->SetPoints(points);
   this->data->GetPointData()->AddArray(this->direction);
   this->data->GetPointData()->SetActiveVectors("direction");
 
-  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter();
+  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
   transformFilter->SetInputData(data);
 
   vtkNew<vtkGlyphSource2D> arrowSource;
@@ -91,31 +70,33 @@ void EGlyphLayer::readCoordinates() {
   glyph2D->SetInputConnection(transformFilter->GetOutputPort());
   glyph2D->OrientOn();
   glyph2D->ClampingOn();
-  glyph2D->SetScaleModeToScaleByVector(); 
-  glyph2D->SetVectorModeToUseVector(); 
+  glyph2D->SetScaleModeToScaleByVector();
+  glyph2D->SetVectorModeToUseVector();
   glyph2D->Update();
 
-//  vtkNew<vtkCoordinate> coordinate;
-//  coordinate->SetCoordinateSystemToWorld();
-
   vtkNew<vtkPolyDataMapper>(mapper);
-  // mapper->SetTransformCoordinate(coordinate);
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
   vtkNew<vtkActor> actor;
   actor->SetMapper(mapper);
 
-  actor->GetProperty()->SetColor(0,0,0);
+  actor->GetProperty()->SetColor(0, 0, 0);
   actor->GetProperty()->SetOpacity(0.2);
 
-  this->ren->AddActor(actor)  ;
+  this->ren->AddActor(actor);
 }
 
 
 void EGlyphLayer::updateData(int t) {
-  for (int i=0; i < numLats*numLons; i++) {
-    this->direction->SetTuple3(i, std::cos(t), std::sin(t), 0); // FIXME: fetch data from file.
+  int i = 0;
+  for (int lat = 0; lat < uvGrid->latSize; lat++) {
+    for (int lon = 0; lon < uvGrid->lonSize; lon++) {
+      auto [u, v] = (*uvGrid)[t/3600, lat, lon];
+      // TODO: 5*v scaling stuff should really be a filter transform
+      this->direction->SetTuple3(i, 5*u, 5*v, 0);
+      i++;
+    }
   }
   this->direction->Modified();
 }

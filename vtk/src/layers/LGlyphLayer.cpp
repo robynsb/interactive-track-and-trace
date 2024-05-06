@@ -18,13 +18,13 @@
 
 #include "../CartographicTransformation.h"
 
-
 vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
-    auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
-    newPointCallBack->setData(data);
-    newPointCallBack->setPoints(points);
-    newPointCallBack->setRen(ren);
-    return newPointCallBack;
+  auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
+  newPointCallBack->setData(data);
+  newPointCallBack->setPoints(points);
+  newPointCallBack->setRen(ren);
+  newPointCallBack->setUVGrid(uvGrid);
+  return newPointCallBack;
 }
 
 // Further notes; current thinking is to allow tracking a particle's age by using a scalar array in the VtkPolyData. This would be incremented for every tick/updateData function call.
@@ -32,37 +32,39 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
 //
 // TODO: modelling all this in vtkClasses is workable, but ideally i would want to work with a native C++ class. See if this is doable and feasible.
 
-LGlyphLayer::LGlyphLayer() {
-    this->ren = vtkSmartPointer<vtkRenderer>::New();
-    this->ren->SetLayer(2);
+LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel) {
+  this->ren = vtkSmartPointer<vtkRenderer>::New();
+  this->ren->SetLayer(2);
 
-    this->points = vtkSmartPointer<vtkPoints>::New();
-    this->data = vtkSmartPointer<vtkPolyData>::New();
-    this->data->SetPoints(this->points);
+  this->points = vtkSmartPointer<vtkPoints>::New();
+  this->data = vtkSmartPointer<vtkPolyData>::New();
+  this->data->SetPoints(this->points);
 
-    vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter();
-    transformFilter->SetInputData(data);
+  advector = std::move(advectionKernel);
+  this->uvGrid = uvGrid;
 
-    vtkNew<vtkGlyphSource2D> circleSource;
-    circleSource->SetGlyphTypeToCircle();
-    circleSource->SetScale(0.01);
-    circleSource->Update();
+  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
+  transformFilter->SetInputData(data);
 
-    vtkNew<vtkGlyph2D> glyph2D;
-    glyph2D->SetSourceConnection(circleSource->GetOutputPort());
-    glyph2D->SetInputConnection(transformFilter->GetOutputPort());
-    glyph2D->SetColorModeToColorByScalar();
-    glyph2D->Update();
+  vtkNew<vtkGlyphSource2D> circleSource;
+  circleSource->SetGlyphTypeToCircle();
+  circleSource->SetScale(0.05);
+  circleSource->Update();
 
-    vtkNew<vtkPolyDataMapper> mapper;
-    mapper->SetInputConnection(glyph2D->GetOutputPort());
-    mapper->Update();
+  vtkNew<vtkGlyph2D> glyph2D;
+  glyph2D->SetSourceConnection(circleSource->GetOutputPort());
+  glyph2D->SetInputConnection(transformFilter->GetOutputPort());
+  glyph2D->SetColorModeToColorByScalar();
+  glyph2D->Update();
 
-    vtkNew<vtkActor> actor;
-    actor->SetMapper(mapper);
-  actor->GetProperty()->SetOpacity(0.8);
+  vtkNew<vtkPolyDataMapper> mapper;
+  mapper->SetInputConnection(glyph2D->GetOutputPort());
+  mapper->Update();
+  
+  vtkNew<vtkActor> actor;
+  actor->SetMapper(mapper);
 
-    this->ren->AddActor(actor);
+  this->ren->AddActor(actor);
 }
 
 // creates a few points so we can test the updateData function
@@ -82,27 +84,23 @@ void LGlyphLayer::spoofPoints() {
   this->points->Modified();
 }
 
-// returns new coords for a point; used to test the updateData function
-std::pair<double, double> advect(int time, double lat, double lon) {
-    return {lat + 0.01, lon + 0.01};
-}
-
 void LGlyphLayer::updateData(int t) {
-    double point[3];
-    for (vtkIdType n = 0; n < this->points->GetNumberOfPoints(); n++) {
-        this->points->GetPoint(n, point);
-        auto [xNew, yNew] = advect(n, point[0], point[1]);
-        this->points->SetPoint(n, xNew, yNew, 0);
+  const int SUPERSAMPLINGRATE = 4;
+  double point[3];
+  for (vtkIdType n = 0; n < this->points->GetNumberOfPoints(); n++) {
+    this->points->GetPoint(n, point);
+    for (int i = 0; i < SUPERSAMPLINGRATE; i++) {
+      std::tie(point[1], point[0]) = advector->advect(t, point[1], point[0], (t-lastT)/SUPERSAMPLINGRATE);
     }
-    this->points->Modified();
+    this->points->SetPoint(n, point[0], point[1], 0);
+  }
+  lastT = t;
+  this->points->Modified();
 }
 
 void LGlyphLayer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-    auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
-    newPointCallBack->setData(data);
-    newPointCallBack->setPoints(points);
-    newPointCallBack->setRen(ren);
-    interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
-    interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
-    interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
+  auto newPointCallBack = createSpawnPointCallback();
+  interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
+  interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
+  interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
 }

@@ -34,9 +34,10 @@ void Program::setWinProperties() {
   interact->SetInteractorStyle(style);
 }
 
-void Program::setupTimer() {
+void Program::setupTimer(int dt) {
   auto callback = vtkSmartPointer<TimerCallbackCommand>::New(this);
   callback->SetClientData(this);
+  callback->setDt(dt);
   this->interact->AddObserver(vtkCommand::TimerEvent, callback);
   this->interact->AddObserver(vtkCommand::KeyPressEvent, callback);
   this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
@@ -49,14 +50,15 @@ void Program::setupCameraCallback() {
   this->interact->AddObserver(vtkCommand::KeyPressEvent, callback);
 }
 
-Program::Program() {
+
+Program::Program(int timerDT) {
   this->win = vtkSmartPointer<vtkRenderWindow>::New();
   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
   this->cam = createNormalisedCamera();
 
   this->win->SetNumberOfLayers(0);
   setWinProperties();
-  setupTimer();
+  setupTimer(timerDT);
   setupCameraCallback();
 }
 

@@ -9,11 +9,11 @@
 
 #include "../CartographicTransformation.h"
 
-void convertDisplayToWorld(vtkRenderer* renderer, int x, int y, double *worldPos) {
-    double displayPos[3] = {static_cast<double>(x), static_cast<double>(y), 0.0};
-    renderer->SetDisplayPoint(displayPos);
-    renderer->DisplayToWorld();
-    renderer->GetWorldPoint(worldPos);
+void convertDisplayToWorld(vtkRenderer *renderer, int x, int y, double *worldPos) {
+  double displayPos[3] = {static_cast<double>(x), static_cast<double>(y), 0.0};
+  renderer->SetDisplayPoint(displayPos);
+  renderer->DisplayToWorld();
+  renderer->GetWorldPoint(worldPos);
 }
 
 void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *callData) {
@@ -54,23 +54,29 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
 }
 
 
-SpawnPointCallback::SpawnPointCallback() : data(nullptr), points(nullptr), inverseCartographicProjection(nullptr) {
-    inverseCartographicProjection = getCartographicTransformMatrix();
-    inverseCartographicProjection->Invert();
-}
+SpawnPointCallback::SpawnPointCallback() : data(nullptr),
+                                           points(nullptr),
+                                           inverseCartographicProjection(nullptr),
+                                           uvGrid(nullptr) { }
 
 SpawnPointCallback *SpawnPointCallback::New() {
     return new SpawnPointCallback;
 }
 
 void SpawnPointCallback::setData(const vtkSmartPointer<vtkPolyData> &data) {
-    this->data = data;
+  this->data = data;
 }
 
 void SpawnPointCallback::setPoints(const vtkSmartPointer<vtkPoints> &points) {
-    this->points = points;
+  this->points = points;
 }
 
 void SpawnPointCallback::setRen(const vtkSmartPointer<vtkRenderer> &ren) {
-    this->ren = ren;
+  this->ren = ren;
+}
+
+void SpawnPointCallback::setUVGrid(const std::shared_ptr<UVGrid> &uvGrid) {
+  this->uvGrid = uvGrid;
+  inverseCartographicProjection = getCartographicTransformMatrix(uvGrid);
+  inverseCartographicProjection->Invert();
 }

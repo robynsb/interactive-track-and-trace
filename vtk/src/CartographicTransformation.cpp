@@ -15,11 +15,11 @@ vtkSmartPointer<vtkCamera> createNormalisedCamera() {
     return camera;
 }
 
-vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix() {
-    const double XMin = -15.875;
-    const double XMax = 12.875;
-    const double YMin = 46.125;
-    const double YMax = 62.625;
+vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix(const std::shared_ptr<UVGrid> uvGrid) {
+    const double XMin = uvGrid->lons.front();
+    const double XMax = uvGrid->lons.back();
+    const double YMin = uvGrid->lats.front();
+    const double YMax = uvGrid->lats.back();
 
     double eyeTransform[] = {
             2/(XMax-XMin), 0, 0, -(XMax+XMin)/(XMax-XMin),
@@ -34,10 +34,10 @@ vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix() {
 }
 
 // Assumes Normalised camera is used
-vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter() {
+vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid) {
     vtkNew<vtkTransform> transform;
 
-    transform->SetMatrix(getCartographicTransformMatrix());
+    transform->SetMatrix(getCartographicTransformMatrix(uvGrid));
 
     vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
     transformFilter->SetTransform(transform);

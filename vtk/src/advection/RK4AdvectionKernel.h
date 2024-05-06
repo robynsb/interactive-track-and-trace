@@ -3,6 +3,7 @@
 
 #include "AdvectionKernel.h"
 #include "UVGrid.h"
+#include <memory>
 
 /**
  * Implementation of Advection kernel using RK4 integration
@@ -14,7 +15,7 @@ private:
     std::shared_ptr<UVGrid> grid;
 public:
     explicit RK4AdvectionKernel(std::shared_ptr<UVGrid> grid);
-    std::pair<double, double> advect(int time, double latitude, double longitude) const override;
+    std::pair<double, double> advect(int time, double latitude, double longitude, int dt) const override;
 
 };
 

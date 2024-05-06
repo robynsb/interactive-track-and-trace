@@ -35,7 +35,7 @@ private:
 
   /** This function sets up and connects a TimerCallbackCommand with the program.
     */ 
-  void setupTimer();
+  void setupTimer(int dt);
 
   /** This function adds all interactors of each layer to the interactor/window
     */ 
@@ -48,7 +48,7 @@ private:
 public:
   /** Constructor.
     */ 
-  Program();
+  Program(int timerDT);
 
   /** This function adds a new layer (and thus vtkRenderer) to the program.
     * The layer is expected to set its own position in the vtkRenderWindow layer system.
