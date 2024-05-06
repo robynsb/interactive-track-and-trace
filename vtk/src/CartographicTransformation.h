@@ -1,3 +1,4 @@
+#include <memory>
 #include <vtkCamera.h>
 #include <vtkTransformFilter.h>
 #include "advection/UVGrid.h"

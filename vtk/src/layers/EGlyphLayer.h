@@ -2,6 +2,7 @@
 #define EGLYPHLAYER_H
 
 #include "Layer.h"
+#include <memory>
 #include <vtkPolyData.h>
 
 #include "../advection/UVGrid.h"
