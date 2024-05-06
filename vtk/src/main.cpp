@@ -18,15 +18,16 @@
 
 using namespace std;
 
+#define DT 60 * 60 // 60 sec/min * 60 mins
 
 int main() {
   shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
-  auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid);
+  auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid, DT);
 
-  auto l = new LGlyphLayer(move(kernelRK4));
+  auto l = new LGlyphLayer(uvGrid, move(kernelRK4));
 //  l->spoofPoints();
 
-  Program *program = new Program();
+  Program *program = new Program(DT);
   program->addLayer(new BackgroundImage("../../../../data/map_661-661.png"));
   program->addLayer(new EGlyphLayer(uvGrid));
   program->addLayer(l);

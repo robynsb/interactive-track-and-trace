@@ -15,13 +15,12 @@ private:
   vtkSmartPointer<vtkPoints> points;
   vtkSmartPointer<vtkPolyData> data;
   std::unique_ptr<AdvectionKernel> advector;
-
-
+  std::shared_ptr<UVGrid> uvGrid;
 
 public:
   /** Constructor.
     */
-  LGlyphLayer(std::unique_ptr<AdvectionKernel> advectionKernel);
+  LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel);
 
   /** This function spoofs a few points in the dataset. Mostly used for testing.
     */

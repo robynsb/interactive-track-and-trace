@@ -1,5 +1,6 @@
 #include <vtkCamera.h>
 #include <vtkTransformFilter.h>
+#include "advection/UVGrid.h"
 
 #ifndef VTKBASE_NORMALISEDCARTOGRAPHICCAMERA_H
 #define VTKBASE_NORMALISEDCARTOGRAPHICCAMERA_H
@@ -16,15 +17,14 @@ vtkSmartPointer<vtkCamera> createNormalisedCamera();
 /**
  * Constructs a 4x4 projection matrix that maps homogenious (longitude, latitude, 0, 1) points
  * to the normalised space.
- * TODO: This will soon require UVGrid as a parameter after the advection code is merged properly.
  * TODO: This transformation has room for improvement see:
  * https://github.com/MakeNEnjoy/interactive-track-and-trace/issues/12
  * @return pointer to 4x4 matrix
  */
-vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix();
+vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix(const std::shared_ptr<UVGrid> uvGrid);
 
 /**
  * Convenience function that converts the 4x4 projection matrix into a vtkTransformFilter
  * @return pointer to transform filter
  */
-vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter();
+vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid);

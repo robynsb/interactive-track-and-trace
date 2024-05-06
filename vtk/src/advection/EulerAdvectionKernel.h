@@ -15,8 +15,9 @@
 class EulerAdvectionKernel: public AdvectionKernel {
 private:
     std::shared_ptr<UVGrid> grid;
+    int dt;
 public:
-    explicit EulerAdvectionKernel(std::shared_ptr<UVGrid> grid);
+    explicit EulerAdvectionKernel(std::shared_ptr<UVGrid> grid, int dt);
     std::pair<double, double> advect(int time, double latitude, double longitude) const override;
 
 };

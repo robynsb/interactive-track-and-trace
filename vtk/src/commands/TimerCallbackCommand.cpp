@@ -38,3 +38,7 @@ void TimerCallbackCommand::setProgram(Program *program) {
 void TimerCallbackCommand::setPaused(const bool val) {
   this->paused = val;
 }
+
+void TimerCallbackCommand::setDt(int dt) {
+  this->dt = dt;
+}

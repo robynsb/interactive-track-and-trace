@@ -50,9 +50,8 @@ void EGlyphLayer::readCoordinates() {
     int lonIndex = 0;
     for (double lon: uvGrid->lons) {
       auto [u, v] = (*uvGrid)[0, latIndex, lonIndex];
-      direction->SetTuple3(i, 2*v, 2*u, 0);
+      direction->SetTuple3(i, 5*u, 5*v, 0);
       points->InsertPoint(i++, lon, lat, 0);
-      // see also https://vtk.org/doc/nightly/html/classvtkPolyDataMapper2D.html
       lonIndex++;
     }
     latIndex++;
@@ -61,7 +60,7 @@ void EGlyphLayer::readCoordinates() {
   this->data->GetPointData()->AddArray(this->direction);
   this->data->GetPointData()->SetActiveVectors("direction");
 
-  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter();
+  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
   transformFilter->SetInputData(data);
 
   vtkNew<vtkGlyphSource2D> arrowSource;
@@ -101,7 +100,8 @@ void EGlyphLayer::updateData(int t) {
   for (int lat = 0; lat < uvGrid->latSize; lat++) {
     for (int lon = 0; lon < uvGrid->lonSize; lon++) {
       auto [u, v] = (*uvGrid)[t/3600, lat, lon];
-      this->direction->SetTuple3(i, 5*v, 5*u, 0); // FIXME: fetch data from file.
+      // TODO: The 5*v stuff should really be a filter transform
+      this->direction->SetTuple3(i, 5*u, 5*v, 0);
       i++;
     }
   }

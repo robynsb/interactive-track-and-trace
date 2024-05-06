@@ -23,6 +23,7 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
     newPointCallBack->setData(data);
     newPointCallBack->setPoints(points);
     newPointCallBack->setRen(ren);
+    newPointCallBack->setUVGrid(uvGrid);
     return newPointCallBack;
 }
 
@@ -31,7 +32,7 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
 //
 // TODO: modelling all this in vtkClasses is workable, but ideally i would want to work with a native C++ class. See if this is doable and feasible.
 
-LGlyphLayer::LGlyphLayer(std::unique_ptr<AdvectionKernel> advectionKernel) {
+LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel) {
     this->ren = vtkSmartPointer<vtkRenderer>::New();
     this->ren->SetLayer(2);
 
@@ -40,13 +41,12 @@ LGlyphLayer::LGlyphLayer(std::unique_ptr<AdvectionKernel> advectionKernel) {
     this->data->SetPoints(this->points);
 
     advector = std::move(advectionKernel);
+    this->uvGrid = uvGrid;
 
     auto camera = createNormalisedCamera();
     ren->SetActiveCamera(camera);
 
-    auto transform = createCartographicTransformFilter();
-
-    vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter();
+    vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
     transformFilter->SetInputData(data);
 
     vtkNew<vtkGlyphSource2D> circleSource;
@@ -97,10 +97,7 @@ void LGlyphLayer::updateData(int t) {
 }
 
 void LGlyphLayer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-    auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
-    newPointCallBack->setData(data);
-    newPointCallBack->setPoints(points);
-    newPointCallBack->setRen(ren);
+    auto newPointCallBack = createSpawnPointCallback();
     interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
     interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
     interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
