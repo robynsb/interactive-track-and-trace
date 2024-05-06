@@ -14,7 +14,8 @@
 #include "layers/LGlyphLayer.h"
 #include "Program.h"
 #include "advection/UVGrid.h"
-#include "advection/RK4AdvectionKernel.h"
+#include "advection/kernel/RK4AdvectionKernel.h"
+#include "advection/kernel/SnapBoundaryConditionKernel.h"
 
 using namespace std;
 
@@ -22,13 +23,14 @@ using namespace std;
 
 int main() {
   cout << "reading data..." << endl;
-  shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
+  shared_ptr<UVGrid> uvGrid = make_shared<UVGrid>();
   auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid);
+  auto kernelRK4BoundaryChecked = make_unique<SnapBoundaryConditionKernel>(std::move(kernelRK4), uvGrid);
   cout << "Starting vtk..." << endl;
 
-  auto l = new LGlyphLayer(uvGrid, std::move(kernelRK4));
+  auto l = new LGlyphLayer(uvGrid, std::move(kernelRK4BoundaryChecked));
 
-  Program *program = new Program(DT);
+  unique_ptr<Program> program = make_unique<Program>(DT);
   program->addLayer(new BackgroundImage("../../../../data/map_661-661.png"));
   program->addLayer(new EGlyphLayer(uvGrid));
   program->addLayer(l);

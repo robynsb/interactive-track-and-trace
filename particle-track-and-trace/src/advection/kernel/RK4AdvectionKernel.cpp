@@ -1,5 +1,5 @@
 #include "RK4AdvectionKernel.h"
-#include "interpolate.h"
+#include "../interpolate.h"
 
 using namespace std;
 

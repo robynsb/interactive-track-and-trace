@@ -1,6 +1,6 @@
 
 #include "EulerAdvectionKernel.h"
-#include "interpolate.h"
+#include "../interpolate.h"
 
 using namespace std;
 
