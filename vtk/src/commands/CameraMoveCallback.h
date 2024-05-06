@@ -21,6 +21,7 @@ private:
     void Execute(vtkObject *caller, unsigned long evId, void *callData) override;
     void zoom(const bool in);
     void pan(const std::string dir);
+    void clampCamera(double *pos);
 };
 
 

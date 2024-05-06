@@ -38,17 +38,40 @@ void CameraMoveCallback::Execute(vtkObject *caller, unsigned long evId,
   intr->GetRenderWindow()->Render();
 }
 
+
+void CameraMoveCallback::clampCamera(double pos[3]) {
+  double scale = this->cam->GetParallelScale();
+
+  // only check the x,y coords of the camera; we don't care about z
+  for (int i=0; i < 2; i++) {
+    //boundary cond: scale+|pos| < 1.
+    if (abs(pos[i])+scale > 1.01) { 
+      if (pos[i] >= 0) {
+        pos[i] = 1 - scale;
+      } else {
+        pos[i] = scale - 1;
+      }
+    }
+  }
+
+  this->cam->SetPosition(pos);
+  this->cam->SetFocalPoint(pos[0], pos[1], 0);
+}
+
 void CameraMoveCallback::zoom(const bool in) {
   double scale = this->cam->GetParallelScale();
 
   if (in) {
-    scale -= 1;
+    if (scale >= 0.2) {
+    scale -= 0.1;
+    }
   } else {
-    scale += 1;
+    if (scale <= 0.9)
+    scale += 0.1;
   }
-
+  
   this->cam->SetParallelScale(scale);
-
+  clampCamera(this->cam->GetPosition());
 }
 
 void CameraMoveCallback::pan(const string dir) {
@@ -56,17 +79,16 @@ void CameraMoveCallback::pan(const string dir) {
   this->cam->GetPosition(pos);
 
   if (dir == "Left" or dir == "h") {
-    pos[0] -= 1;
+    pos[0] -= 0.1;
   } else if (dir == "Up" or dir == "j" ) {
-    pos[1] += 1;
+    pos[1] += 0.1;
   } else if (dir == "Right" or dir == "k" ) {
-    pos[0] += 1;
+    pos[0] += 0.1;
   } else if (dir == "Down" or dir == "l" ) {
-    pos[1] -= 1;
+    pos[1] -= 0.1;
   }
 
-  this->cam->SetPosition(pos);
-  this->cam->SetFocalPoint(pos[0], pos[1], 0);
+  clampCamera(pos);
 }
 
 CameraMoveCallback::CameraMoveCallback() : cam(nullptr) {}
