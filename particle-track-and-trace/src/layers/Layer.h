@@ -27,6 +27,11 @@ public:
     * @param interactor : pointer to the interactor that observers can be added to.
     */
   virtual void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor);
+
+  /** Sets the active camera for the vtkRenderer associated with this layer.
+    * Used to share one camera between multiple layers.
+    */ 
+  virtual void setCamera(vtkCamera *camera);
 };
 
 #endif

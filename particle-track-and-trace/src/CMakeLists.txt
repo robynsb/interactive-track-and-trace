@@ -17,6 +17,8 @@ find_package(VTK COMPONENTS
   FiltersProgrammable
   FiltersSources
   ImagingSources
+  ImagingGeneral
+  ImagingCore
   InteractionStyle
   IOImage
   RenderingContextOpenGL2
@@ -45,10 +47,12 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/LGlyphLayer.h
         Program.cpp
         Program.h
-  commands/TimerCallbackCommand.h
-  commands/TimerCallbackCommand.cpp
+        commands/TimerCallbackCommand.h
+        commands/TimerCallbackCommand.cpp
         commands/SpawnPointCallback.h
         commands/SpawnPointCallback.cpp
+        commands/CameraMoveCallback.cpp
+        commands/CameraMoveCallback.h
         CartographicTransformation.cpp
         advection/AdvectionKernel.h
         advection/EulerAdvectionKernel.cpp

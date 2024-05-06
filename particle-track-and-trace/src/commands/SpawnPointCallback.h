@@ -2,6 +2,7 @@
 #define SPAWNPOINTCALLBACK_H
 
 
+#include <memory>
 #include <vtkCallbackCommand.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkPoints.h>

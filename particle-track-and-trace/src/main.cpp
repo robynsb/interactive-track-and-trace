@@ -21,8 +21,10 @@ using namespace std;
 #define DT 60 * 60 // 60 sec/min * 60 mins
 
 int main() {
+  cout << "reading data..." << endl;
   shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
   auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid);
+  cout << "Starting vtk..." << endl;
 
   auto l = new LGlyphLayer(uvGrid, std::move(kernelRK4));
 

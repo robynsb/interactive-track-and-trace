@@ -5,6 +5,7 @@
 #include <vtkGlyphSource2D.h>
 #include <vtkNamedColors.h>
 #include <vtkPolyDataMapper2D.h>
+#include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
 #include <vtkInteractorStyle.h>
@@ -41,9 +42,6 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
   advector = std::move(advectionKernel);
   this->uvGrid = uvGrid;
 
-  auto camera = createNormalisedCamera();
-  ren->SetActiveCamera(camera);
-
   vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
   transformFilter->SetInputData(data);
 
@@ -61,7 +59,7 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
   vtkNew<vtkPolyDataMapper> mapper;
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
-
+  
   vtkNew<vtkActor> actor;
   actor->SetMapper(mapper);
 
@@ -70,11 +68,17 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
 
 // creates a few points so we can test the updateData function
 void LGlyphLayer::spoofPoints() {
-  this->points->InsertNextPoint(-4.125, 61.375, 0);
-  this->points->InsertNextPoint(6.532949683882039, 53.24308582564463, 0); // Coordinates of Zernike
-  this->points->InsertNextPoint(5.315307819255385, 60.40001057122271, 0); // Coordinates of Bergen
-  this->points->InsertNextPoint(6.646210231365825, 46.52346296009023, 0); // Coordinates of Lausanne
-  this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857,0); // Coordinates of the top of the Faroe islands
+    this->points->InsertNextPoint(-4.125, 61.375 , 0);
+    // this->points->InsertNextPoint(6.532949683882039, 53.24308582564463, 0); // Coordinates of Zernike
+    // this->points->InsertNextPoint(5.315307819255385, 60.40001057122271, 0); // Coordinates of Bergen
+    // this->points->InsertNextPoint( 6.646210231365825, 46.52346296009023, 0); // Coordinates of Lausanne
+    // this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857, 0); // Coordinates of the top of the Faroe islands
+
+  for (int i=0; i < 330; i+=5) {
+    for (int j=0; j < 330; j+=5) {
+    this->points->InsertNextPoint(-15.875+(12.875+15.875)/330*j, 46.125+(62.625-46.125)/330*i, 0);
+    }
+  }
 
   this->points->Modified();
 }

@@ -19,7 +19,8 @@
 
 #include "Program.h"
 #include "commands/TimerCallbackCommand.h"
-#include "commands/SpawnPointCallback.h"
+#include "CartographicTransformation.h"
+#include "commands/CameraMoveCallback.h"
 
 void Program::setWinProperties() {
   this->win->SetWindowName("Simulation");
@@ -42,17 +43,29 @@ void Program::setupTimer(int dt) {
   this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
 }
 
+void Program::setupCameraCallback() {
+  auto callback = vtkSmartPointer<CameraMoveCallback>::New(this->cam);
+  this->interact->AddObserver(vtkCommand::MouseWheelForwardEvent, callback);
+  this->interact->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
+  this->interact->AddObserver(vtkCommand::KeyPressEvent, callback);
+}
+
+
 Program::Program(int timerDT) {
   this->win = vtkSmartPointer<vtkRenderWindow>::New();
   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
+  this->cam = createNormalisedCamera();
 
   this->win->SetNumberOfLayers(0);
   setWinProperties();
   setupTimer(timerDT);
+  setupCameraCallback();
 }
 
 
 void Program::addLayer(Layer *layer) {
+  layer->setCamera(this->cam);
+
   this->layers.push_back(layer);
   this->win->AddRenderer(layer->getLayer());
   this->win->SetNumberOfLayers(this->win->GetNumberOfLayers() + 1);
@@ -67,6 +80,7 @@ void Program::removeLayer(Layer *layer) {
     this->win->SetNumberOfLayers(this->win->GetNumberOfLayers() - 1);
   }
 }
+
 
 void Program::updateData(int t) {
   win->Render();

@@ -17,40 +17,40 @@ void convertDisplayToWorld(vtkRenderer *renderer, int x, int y, double *worldPos
 }
 
 void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *callData) {
-  // Note the use of reinterpret_cast to cast the caller to the expected type.
-  auto interactor = reinterpret_cast<vtkRenderWindowInteractor *>(caller);
+    // Note the use of reinterpret_cast to cast the caller to the expected type.
+    auto interactor = reinterpret_cast<vtkRenderWindowInteractor *>(caller);
 
-  if (evId == vtkCommand::LeftButtonPressEvent) {
-    dragging = true;
-  }
-  if (evId == vtkCommand::LeftButtonReleaseEvent) {
-    dragging = false;
-  }
-  if (!dragging) {
-    return;
-  }
+    if (evId == vtkCommand::LeftButtonPressEvent) {
+        dragging = true;
+    }
+    if (evId == vtkCommand::LeftButtonReleaseEvent) {
+        dragging = false;
+    }
+    if (!dragging) {
+        return;
+    }
 
-  int x, y;
-  interactor->GetEventPosition(x, y);
+    int x, y;
+    interactor->GetEventPosition(x, y);
 
-  double worldPos[4] = {2, 0, 0, 0};
-  double displayPos[3] = {static_cast<double>(x), static_cast<double>(y), 0.0};
-  ren->SetDisplayPoint(displayPos);
-  ren->DisplayToWorld();
-  ren->GetWorldPoint(worldPos);
-  inverseCartographicProjection->MultiplyPoint(worldPos, worldPos);
-  cout << "clicked on lon = " << worldPos[0] << " and lat = " << worldPos[1] << endl;
+    double worldPos[4] = {2, 0 ,0, 0};
+    double displayPos[3] = {static_cast<double>(x), static_cast<double>(y), 0.0};
+    ren->SetDisplayPoint(displayPos);
+    ren->DisplayToWorld();
+    ren->GetWorldPoint(worldPos);
+    inverseCartographicProjection->MultiplyPoint(worldPos, worldPos);
+    // cout << "clicked on lon = " << worldPos[0] << " and lat = " << worldPos[1] << endl;
 
-  vtkIdType id = points->InsertNextPoint(worldPos[0], worldPos[1], 0);
-  data->SetPoints(points);
+    vtkIdType id = points->InsertNextPoint(worldPos[0], worldPos[1], 0);
+    data->SetPoints(points);
 
-  vtkSmartPointer<vtkVertex> vertex = vtkSmartPointer<vtkVertex>::New();
-  vertex->GetPointIds()->SetId(0, id);
+    vtkSmartPointer<vtkVertex> vertex = vtkSmartPointer<vtkVertex>::New();
+    vertex->GetPointIds()->SetId(0, id);
 
-  vtkSmartPointer<vtkCellArray> vertices = vtkSmartPointer<vtkCellArray>::New();
-  vertices->InsertNextCell(vertex);
-  data->SetVerts(vertices);
-  ren->GetRenderWindow()->Render();
+    vtkSmartPointer<vtkCellArray> vertices = vtkSmartPointer<vtkCellArray>::New();
+    vertices->InsertNextCell(vertex);
+    data->SetVerts(vertices);
+    ren->GetRenderWindow()->Render();
 }
 
 

@@ -3,6 +3,7 @@
 
 #include "AdvectionKernel.h"
 #include "UVGrid.h"
+#include <memory>
 
 /**
  * Implementation of AdvectionKernel.
