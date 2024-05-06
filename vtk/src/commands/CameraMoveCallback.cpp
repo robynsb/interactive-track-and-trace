@@ -74,6 +74,7 @@ void CameraMoveCallback::zoom(const bool in) {
   clampCamera(this->cam->GetPosition());
 }
 
+// we use the interactor's getKeySym instead of getKeyCode because getKeyCode is platform-dependent.
 void CameraMoveCallback::pan(const string dir) {
   double pos[3];
   this->cam->GetPosition(pos);
