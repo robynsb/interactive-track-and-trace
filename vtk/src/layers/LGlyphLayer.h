@@ -16,6 +16,7 @@ private:
   vtkSmartPointer<vtkPolyData> data;
   std::unique_ptr<AdvectionKernel> advector;
   std::shared_ptr<UVGrid> uvGrid;
+  int lastT = 1000;
 
 public:
   /** Constructor.

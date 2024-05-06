@@ -22,10 +22,9 @@ using namespace std;
 
 int main() {
   shared_ptr<UVGrid> uvGrid = std::make_shared<UVGrid>();
-  auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid, DT);
+  auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid);
 
   auto l = new LGlyphLayer(uvGrid, move(kernelRK4));
-//  l->spoofPoints();
 
   Program *program = new Program(DT);
   program->addLayer(new BackgroundImage("../../../../data/map_661-661.png"));

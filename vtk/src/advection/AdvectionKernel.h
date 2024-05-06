@@ -19,7 +19,7 @@ public:
      * @param longitude Longitude of particle
      * @return A pair of latitude and longitude of particle.
      */
-    virtual std::pair<double, double> advect(int time, double latitude, double longitude) const = 0;
+    virtual std::pair<double, double> advect(int time, double latitude, double longitude, int dt) const = 0;
 
     // Taken from Parcels https://github.com/OceanParcels/parcels/blob/daa4b062ed8ae0b2be3d87367d6b45599d6f95db/parcels/tools/converters.py#L155
     const static double metreToDegrees(double metre) {

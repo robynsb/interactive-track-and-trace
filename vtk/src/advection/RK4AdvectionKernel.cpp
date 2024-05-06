@@ -3,9 +3,9 @@
 
 using namespace std;
 
-RK4AdvectionKernel::RK4AdvectionKernel(std::shared_ptr<UVGrid> grid, int dt): grid(grid), dt(dt) { }
+RK4AdvectionKernel::RK4AdvectionKernel(std::shared_ptr<UVGrid> grid): grid(grid) { }
 
-std::pair<double, double> RK4AdvectionKernel::advect(int time, double latitude, double longitude) const {
+std::pair<double, double> RK4AdvectionKernel::advect(int time, double latitude, double longitude, int dt) const {
     auto [u1, v1] = bilinearinterpolate(*grid, time, latitude, longitude);
 //    lon1, lat1 = (particle.lon + u1*.5*particle.dt, particle.lat + v1*.5*particle.dt);
     double lon1 = longitude + metreToDegrees(u1 * 0.5*dt);

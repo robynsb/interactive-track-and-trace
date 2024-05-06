@@ -12,10 +12,9 @@
 class RK4AdvectionKernel: public AdvectionKernel {
 private:
     std::shared_ptr<UVGrid> grid;
-    int dt;
 public:
-    explicit RK4AdvectionKernel(std::shared_ptr<UVGrid> grid, int dt);
-    std::pair<double, double> advect(int time, double latitude, double longitude) const override;
+    explicit RK4AdvectionKernel(std::shared_ptr<UVGrid> grid);
+    std::pair<double, double> advect(int time, double latitude, double longitude, int dt) const override;
 
 };
 
