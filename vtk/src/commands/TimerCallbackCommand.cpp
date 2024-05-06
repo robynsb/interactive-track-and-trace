@@ -8,7 +8,7 @@ TimerCallbackCommand::TimerCallbackCommand() : dt(3600), maxTime(3600*24*365), t
 TimerCallbackCommand* TimerCallbackCommand::New(Program *program) {
   TimerCallbackCommand *cb = new TimerCallbackCommand();
   cb->setProgram(program);
-  cb->setPaused(false);
+  cb->setPaused(true);
   return cb;
 }
 

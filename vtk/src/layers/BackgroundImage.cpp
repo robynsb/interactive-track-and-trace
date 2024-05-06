@@ -1,5 +1,7 @@
 #include "BackgroundImage.h"
+#include <vtkImageDataGeometryFilter.h>
 #include <vtkImageChangeInformation.h>
+#include <vtkImageSliceMapper.h>
 #include <vtkCamera.h>
 #include <vtkImageActor.h>
 #include <vtkImageData.h>
@@ -7,6 +9,7 @@
 #include <vtkImageReader2.h>
 #include <vtkImageShiftScale.h>
 #include <vtkMatrix4x4.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkTransform.h>
 #include <vtkTransformFilter.h>
 
@@ -19,56 +22,62 @@ BackgroundImage::BackgroundImage(string imagePath) : imagePath(imagePath) {
   updateImage();
 }
 
+
+vtkSmartPointer<vtkMatrix4x4> BackgroundImage::getMatrix(const double x0, const double y0, const int xMax, const int yMax) {
+    double eyeTransform[] = {
+            2/(xMax-x0), 0, 0, -(xMax+x0)/(xMax-x0),
+            0, 2/(yMax-y0), 0, -(yMax+y0)/(yMax-y0),
+            0, 0, 1, 0,
+            0, 0, 0, 1
+    };
+    auto matrix = vtkSmartPointer<vtkMatrix4x4>::New();
+    matrix->DeepCopy(eyeTransform);
+    return matrix;
+}
+
+
 void BackgroundImage::updateImage() {
 
+  // read image data
   vtkSmartPointer<vtkImageReader2> imageReader;
-  
   imageReader.TakeReference(this->readerFactory->CreateImageReader2(this->imagePath.c_str()));
   imageReader->SetFileName(this->imagePath.c_str());
   imageReader->Update();
 
+  // translate image such that the middle is at (0,0)
   vtkNew<vtkImageChangeInformation> imageCenterer;
   imageCenterer->SetInputConnection(imageReader->GetOutputPort());
   imageCenterer->CenterImageOn();
   imageCenterer->Update();
 
+  // get some info from the data we'll need in a second
   vtkSmartPointer<vtkImageData> imageData = imageCenterer->GetOutput();
+  double origin[3];
+  int extent[6];
+  imageData->GetOrigin(origin);
+  imageData->GetExtent(extent);
 
-  // TODO: transform the image to the range [-1,1]
-  // This will allow the backgorundImage to share a camera with our other layers.
-  // Facilitating the cameraMovement callback.
-  vtkNew<vtkImageActor> imageActor;
-  imageActor->SetInputData(imageData);
+  // map the imageData to a vtkPolydata so we can use a vtkTransform
+  vtkNew<vtkImageDataGeometryFilter> imageDataGeometryFilter;
+  imageDataGeometryFilter->SetInputData(imageData);
+  imageDataGeometryFilter->Update();
 
-  this->ren->AddActor(imageActor);
+  // setup the vtkTransform - this is where use the data from imageData we got earlier
+  vtkNew<vtkTransform> transform;
+  transform->SetMatrix(getMatrix(origin[0], origin[1], extent[1]+origin[0], extent[3]+origin[1]));
+  vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
+  transformFilter->SetTransform(transform);
+  transformFilter->SetInputConnection(imageDataGeometryFilter->GetOutputPort());
+  transformFilter->Update();
 
+  // Create a mapper and actor
+  vtkNew<vtkPolyDataMapper> mapper;
+  mapper->SetInputConnection(transformFilter->GetOutputPort());
 
-  // // camera stuff
-  // // essentially sets the camera to the middle of the background, and points it at the background
-  // // TODO: extract this to its own function, separate from the background class.
-  // double origin[3], spacing[3];
-  // int extent[6];
-  // imageData->GetOrigin(origin);
-  // imageData->GetSpacing(spacing);
-  // imageData->GetExtent(extent);
-  //
-  // printf("%lf, %lf, %lf\n", origin[0], origin[1], origin[2]);
-  // printf("%lf, %lf, %lf\n", spacing[0], spacing[1], spacing[2]);
-  // printf("%d, %d, %d, ", extent[0], extent[1], extent[2]);
-  // printf("%d, %d, %d\n", extent[3], extent[4], extent[5]);
-  //
-  // vtkCamera *camera = this->ren->GetActiveCamera();
-  // camera->ParallelProjectionOn();
-  //
-  // double xc = origin[0] + 0.5 * (extent[0] + extent[1]) * spacing[0];
-  // double yc = origin[1] + 0.5 * (extent[2] + extent[3]) * spacing[1];
-  // double yd = (extent[3] - extent[2] + 1) * spacing[1];
-  //
-  // printf("%lf, %lf, %lf\n", xc, yc, yd);
-  //
-  // camera->SetParallelScale(0.5 * yd); // sets to 330; should be 1 ->  transform
-  // camera->SetFocalPoint(xc, yc, 0.0); // sets to 0,0,0; isnice
-  // camera->SetPosition(xc, yc, 1000); // sets to 0,0,1000; isnice
+  vtkNew<vtkActor> actor;
+  actor->SetMapper(mapper);
+    
+  this->ren->AddActor(actor);
 }
 
 
@@ -81,8 +90,3 @@ void BackgroundImage::setImagePath(string imagePath) {
   updateImage();
 }
 
-
-void BackgroundImage::setCamera(vtkCamera *cam) {
-  this->getLayer()->SetActiveCamera(cam);
-  // TODO: fix the camera for this layer so this intentionally empty override can be removed.
-}

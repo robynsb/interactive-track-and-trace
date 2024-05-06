@@ -62,12 +62,11 @@ void CameraMoveCallback::zoom(const bool in) {
   double scale = this->cam->GetParallelScale();
 
   if (in) {
-    if (scale >= 0.2) {
-    scale -= 0.1;
-    }
+    if (scale >= 0.2) 
+      scale -= 0.1;
   } else {
     if (scale <= 0.9)
-    scale += 0.1;
+      scale += 0.1;
   }
   
   this->cam->SetParallelScale(scale);
