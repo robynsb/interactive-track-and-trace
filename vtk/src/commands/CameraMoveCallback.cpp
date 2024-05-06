@@ -80,11 +80,11 @@ void CameraMoveCallback::pan(const string dir) {
 
   if (dir == "Left" or dir == "h") {
     pos[0] -= 0.1;
-  } else if (dir == "Up" or dir == "j" ) {
+  } else if (dir == "Up" or dir == "k" ) {
     pos[1] += 0.1;
-  } else if (dir == "Right" or dir == "k" ) {
+  } else if (dir == "Right" or dir == "l" ) {
     pos[0] += 0.1;
-  } else if (dir == "Down" or dir == "l" ) {
+  } else if (dir == "Down" or dir == "j" ) {
     pos[1] -= 0.1;
   }
 
