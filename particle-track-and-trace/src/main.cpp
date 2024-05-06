@@ -22,7 +22,7 @@ using namespace std;
 #define DT 60 * 60 // 60 sec/min * 60 mins
 
 int main() {
-  cout << "reading data..." << endl;
+  cout << "Reading data..." << endl;
   shared_ptr<UVGrid> uvGrid = make_shared<UVGrid>();
   auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid);
   auto kernelRK4BoundaryChecked = make_unique<SnapBoundaryConditionKernel>(std::move(kernelRK4), uvGrid);
