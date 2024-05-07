@@ -17,6 +17,7 @@ void convertDisplayToWorld(vtkRenderer *renderer, int x, int y, double *worldPos
 }
 
 void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *callData) {
+
     // Note the use of reinterpret_cast to cast the caller to the expected type.
     auto interactor = reinterpret_cast<vtkRenderWindowInteractor *>(caller);
 
@@ -39,17 +40,12 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
     ren->DisplayToWorld();
     ren->GetWorldPoint(worldPos);
     inverseCartographicProjection->MultiplyPoint(worldPos, worldPos);
-    // cout << "clicked on lon = " << worldPos[0] << " and lat = " << worldPos[1] << endl;
 
-    vtkIdType id = points->InsertNextPoint(worldPos[0], worldPos[1], 0);
-    data->SetPoints(points);
+    points->InsertNextPoint(worldPos[0], worldPos[1], 0);
 
-    vtkSmartPointer<vtkVertex> vertex = vtkSmartPointer<vtkVertex>::New();
-    vertex->GetPointIds()->SetId(0, id);
-
-    vtkSmartPointer<vtkCellArray> vertices = vtkSmartPointer<vtkCellArray>::New();
-    vertices->InsertNextCell(vertex);
-    data->SetVerts(vertices);
+    // FIXME:  The below lines cause some weird interaction with our vtkTimer. 
+    // see github issue  https://github.com/MakeNEnjoy/interactive-track-and-trace/issues/28
+    this->points->Modified();
     ren->GetRenderWindow()->Render();
 }
 
@@ -60,7 +56,7 @@ SpawnPointCallback::SpawnPointCallback() : data(nullptr),
                                            uvGrid(nullptr) { }
 
 SpawnPointCallback *SpawnPointCallback::New() {
-    return new SpawnPointCallback;
+  return new SpawnPointCallback;
 }
 
 void SpawnPointCallback::setData(const vtkSmartPointer<vtkPolyData> &data) {
