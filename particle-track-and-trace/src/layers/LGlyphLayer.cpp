@@ -129,7 +129,7 @@ void LGlyphLayer::updateData(int t) {
     if (beachedFor < this->beachedAtNumberOfTimes) {
       this->points->GetPoint(n, point);
       // second check: only update points within our grid's boundary.
-      if (point[0] < this->uvGrid->lonMin() or point[0] > this->uvGrid->lonMax() or point[1] < this->uvGrid->latMin() or point[1] > this->uvGrid->latMax()) {
+      if (point[0] <= this->uvGrid->lonMin() or point[0] >= this->uvGrid->lonMax() or point[1] <= this->uvGrid->latMin() or point[1] >= this->uvGrid->latMax()) {
         // sets any particle out of bounds to be beached - so it gets assigned the right colour in the lookup table.
         this->particlesBeached->SetValue(n, this->beachedAtNumberOfTimes);
         continue;
