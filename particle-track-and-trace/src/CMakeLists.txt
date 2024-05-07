@@ -54,19 +54,21 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         commands/CameraMoveCallback.cpp
         commands/CameraMoveCallback.h
         CartographicTransformation.cpp
-        advection/AdvectionKernel.h
-        advection/EulerAdvectionKernel.cpp
-        advection/EulerAdvectionKernel.h
+        advection/kernel/AdvectionKernel.h
+        advection/kernel/EulerAdvectionKernel.cpp
+        advection/kernel/EulerAdvectionKernel.h
         advection/interpolate.cpp
         advection/interpolate.h
         advection/readdata.cpp
         advection/readdata.h
-        advection/RK4AdvectionKernel.cpp
-        advection/RK4AdvectionKernel.h
+        advection/kernel/RK4AdvectionKernel.cpp
+        advection/kernel/RK4AdvectionKernel.h
         advection/UVGrid.cpp
         advection/UVGrid.h
         advection/Vel.cpp
         advection/Vel.h
+        advection/kernel/SnapBoundaryConditionKernel.h
+        advection/kernel/SnapBoundaryConditionKernel.cpp
 )
 
 execute_process(

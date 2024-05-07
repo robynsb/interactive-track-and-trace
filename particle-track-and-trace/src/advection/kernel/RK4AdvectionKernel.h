@@ -2,7 +2,7 @@
 #define RK4ADVECTIONKERNEL_H
 
 #include "AdvectionKernel.h"
-#include "UVGrid.h"
+#include "../UVGrid.h"
 #include <memory>
 
 /**

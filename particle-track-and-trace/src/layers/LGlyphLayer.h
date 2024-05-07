@@ -2,7 +2,7 @@
 #define LGLYPHLAYER_H
 
 #include "Layer.h"
-#include "../advection/AdvectionKernel.h"
+#include "../advection/kernel/AdvectionKernel.h"
 #include "../commands/SpawnPointCallback.h"
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
