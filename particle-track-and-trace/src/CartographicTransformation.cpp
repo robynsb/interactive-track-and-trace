@@ -16,10 +16,10 @@ vtkSmartPointer<vtkCamera> createNormalisedCamera() {
 }
 
 vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix(const std::shared_ptr<UVGrid> uvGrid) {
-    const double XMin = uvGrid->lons.front();
-    const double XMax = uvGrid->lons.back();
-    const double YMin = uvGrid->lats.front();
-    const double YMax = uvGrid->lats.back();
+    const double XMin = uvGrid->lonMin();
+    const double XMax = uvGrid->lonMax();
+    const double YMin = uvGrid->latMin();
+    const double YMax = uvGrid->latMax();
 
     double eyeTransform[] = {
             2/(XMax-XMin), 0, 0, -(XMax+XMin)/(XMax-XMin),
