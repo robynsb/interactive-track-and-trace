@@ -45,6 +45,9 @@ void EGlyphLayer::readCoordinates() {
   points->Allocate(numLats * numLons);
 
 
+  auto transform = createCartographicTransformFilter(uvGrid)->GetTransform();
+  double *out = (double *)malloc(3*sizeof(double));
+
   int i = 0;
   int latIndex = 0;
   for (double lat: uvGrid->lats) {
@@ -52,18 +55,20 @@ void EGlyphLayer::readCoordinates() {
     for (double lon: uvGrid->lons) {
       auto [u, v] = (*uvGrid)[0, latIndex, lonIndex];
       direction->SetTuple3(i, 5*u, 5*v, 0);
-      points->InsertPoint(i++, lon, lat, 0);
-
+      // pre-transform the points, so we don't have to include the cartographic transform while running the program.
+      out = transform->TransformPoint(lon, lat, 0);
+      points->InsertPoint(i++, out[0], out[1], 0);
       lonIndex++;
     }
     latIndex++;
   }
+  // free(out); //FIXME: causes a segfault for some reason? 
+
   this->data->SetPoints(points);
   this->data->GetPointData()->AddArray(this->direction);
   this->data->GetPointData()->SetActiveVectors("direction");
 
-  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
-  transformFilter->SetInputData(data);
+  // transformFilter->SetInputData(data);
 
   vtkNew<vtkGlyphSource2D> arrowSource;
   arrowSource->SetGlyphTypeToArrow();
@@ -72,7 +77,7 @@ void EGlyphLayer::readCoordinates() {
 
   vtkNew<vtkGlyph2D> glyph2D;
   glyph2D->SetSourceConnection(arrowSource->GetOutputPort());
-  glyph2D->SetInputConnection(transformFilter->GetOutputPort());
+  glyph2D->SetInputData(data);
   glyph2D->OrientOn();
   glyph2D->ClampingOn();
   glyph2D->SetScaleModeToScaleByVector();
@@ -98,8 +103,8 @@ void EGlyphLayer::updateData(int t) {
   for (int lat = 0; lat < uvGrid->latSize; lat++) {
     for (int lon = 0; lon < uvGrid->lonSize; lon++) {
       auto [u, v] = (*uvGrid)[t/3600, lat, lon];
-      // TODO: 5*v scaling stuff should really be a filter transform
-      this->direction->SetTuple3(i, 5*u, 5*v, 0);
+      // TODO: might want to multiple the u,v by some factor.
+      this->direction->SetTuple3(i, u, v, 0);
       i++;
     }
   }
