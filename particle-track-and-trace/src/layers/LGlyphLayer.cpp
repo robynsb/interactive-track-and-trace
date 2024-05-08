@@ -32,7 +32,7 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
 
 // Further notes; current thinking is to allow tracking a particle's age by using a scalar array in the VtkPolyData. This would be incremented for every tick/updateData function call.
 
-/** 
+/**
  * Build and returns a vtkLookupTable for the given number of colours in grayscale.
  * @param n : number of colours to add to the SetTableRange
  * @return : a vtkLookupTable with grayscale colours from [1,1,1,1] to [0.5,0.5,0.5,0.5] in n steps.
@@ -94,7 +94,6 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
 
   this->ren->AddActor(actor);
 }
-
 
 // creates a few points so we can test the updateData function
 void LGlyphLayer::spoofPoints() {

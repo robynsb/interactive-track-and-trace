@@ -25,13 +25,15 @@ public:
     */
   LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel);
 
-  /** This function spoofs a few points in the dataset. Mostly used for testing.
-    */
+  /**
+   * This function spoofs a few points in the dataset. Mostly used for testing.
+   */
   void spoofPoints();
 
-  /** updates the glyphs to reflect the given timestamp in the dataset.
-    * @param t : the time at which to fetch the data.
-    */
+  /**
+   * updates the glyphs to reflect the given timestamp in the dataset.
+   * @param t : the time at which to fetch the data.
+   */
   void updateData(int t) override;
 
   vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();

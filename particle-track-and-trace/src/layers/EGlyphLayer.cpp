@@ -12,9 +12,12 @@
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
 #include <vtkArrowSource.h>
+
 #include "../CartographicTransformation.h"
 #include "../advection/readdata.h"
 #include "../advection/interpolate.h"
+
+#include "vtkTransform.h"
 
 using namespace std;
 
@@ -41,24 +44,28 @@ void EGlyphLayer::readCoordinates() {
   this->direction->SetNumberOfTuples(numLats * numLons);
   points->Allocate(numLats * numLons);
 
+  vtkSmartPointer<vtkTransformFilter> filter = createCartographicTransformFilter(uvGrid);
+  auto transform = filter->GetTransform();
+
   int i = 0;
   int latIndex = 0;
   for (double lat: uvGrid->lats) {
     int lonIndex = 0;
     for (double lon: uvGrid->lons) {
       auto [u, v] = (*uvGrid)[0, latIndex, lonIndex];
-      direction->SetTuple3(i, 5*u, 5*v, 0);
-      points->InsertPoint(i++, lon, lat, 0);
+      direction->SetTuple3(i, u/2, v/2, 0);
+      // pre-transform the points, so we don't have to include the cartographic transform while running the program.
+      double out[3] = {lon, lat, 0};
+      transform->TransformPoint(out, out);
+      points->InsertPoint(i++, out[0], out[1], 0);
       lonIndex++;
     }
     latIndex++;
   }
+
   this->data->SetPoints(points);
   this->data->GetPointData()->AddArray(this->direction);
   this->data->GetPointData()->SetActiveVectors("direction");
-
-  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
-  transformFilter->SetInputData(data);
 
   vtkNew<vtkGlyphSource2D> arrowSource;
   arrowSource->SetGlyphTypeToArrow();
@@ -67,7 +74,7 @@ void EGlyphLayer::readCoordinates() {
 
   vtkNew<vtkGlyph2D> glyph2D;
   glyph2D->SetSourceConnection(arrowSource->GetOutputPort());
-  glyph2D->SetInputConnection(transformFilter->GetOutputPort());
+  glyph2D->SetInputData(data);
   glyph2D->OrientOn();
   glyph2D->ClampingOn();
   glyph2D->SetScaleModeToScaleByVector();
@@ -94,7 +101,7 @@ void EGlyphLayer::updateData(int t) {
     for (int lon = 0; lon < uvGrid->lonSize; lon++) {
       auto [u, v] = (*uvGrid)[t/3600, lat, lon];
       // TODO: 5*v scaling stuff should really be a filter transform
-      this->direction->SetTuple3(i, 5*u, 5*v, 0);
+      this->direction->SetTuple3(i, u/2, v/2, 0);
       i++;
     }
   }
