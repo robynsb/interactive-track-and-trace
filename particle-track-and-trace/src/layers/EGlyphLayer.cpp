@@ -44,10 +44,8 @@ void EGlyphLayer::readCoordinates() {
   this->direction->SetNumberOfTuples(numLats * numLons);
   points->Allocate(numLats * numLons);
 
-  // auto transform = createCartographicTransformFilter(uvGrid)->GetTransform();
   vtkSmartPointer<vtkTransformFilter> filter = createCartographicTransformFilter(uvGrid);
   auto transform = filter->GetTransform();
-  double *out;
 
   int i = 0;
   int latIndex = 0;
@@ -57,7 +55,8 @@ void EGlyphLayer::readCoordinates() {
       auto [u, v] = (*uvGrid)[0, latIndex, lonIndex];
       direction->SetTuple3(i, u/2, v/2, 0);
       // pre-transform the points, so we don't have to include the cartographic transform while running the program.
-      out = transform->TransformPoint(lon, lat, 0.0);
+      double out[3] = {lon, lat, 0};
+      transform->TransformPoint(out, out);
       points->InsertPoint(i++, out[0], out[1], 0);
       lonIndex++;
     }
@@ -68,8 +67,6 @@ void EGlyphLayer::readCoordinates() {
   this->data->GetPointData()->AddArray(this->direction);
   this->data->GetPointData()->SetActiveVectors("direction");
 
-  // transformFilter->SetInputData(data);
-
   vtkNew<vtkGlyphSource2D> arrowSource;
   arrowSource->SetGlyphTypeToArrow();
   arrowSource->SetScale(0.2); //TODO: set this properly
@@ -78,7 +75,6 @@ void EGlyphLayer::readCoordinates() {
   vtkNew<vtkGlyph2D> glyph2D;
   glyph2D->SetSourceConnection(arrowSource->GetOutputPort());
   glyph2D->SetInputData(data);
-  // glyph2D->SetInputConnection(transformFilter->GetOutputPort());
   glyph2D->OrientOn();
   glyph2D->ClampingOn();
   glyph2D->SetScaleModeToScaleByVector();
