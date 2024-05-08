@@ -44,47 +44,6 @@ int main() {
 
   program->render();
 
-//  auto proj = vtkSmartPointer<vtkGeoProjection>::New(); proj->SetName("merc"); auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New(); geoTransform->SetDestinationProjection(proj);
-//  const double XMin = -15.875;
-//  const double XMax = 12.875;
-//  const double YMin = 46.125;
-//  const double YMax = 62.625;
-//
-//  double bottomLeft[3] = {XMin, YMin, 0};
-//  double topRight[3] = {XMax, YMax, 0};
-//  geoTransform->TransformPoint(bottomLeft, bottomLeft);
-//  geoTransform->TransformPoint(topRight, topRight);
-//
-//  double width = topRight[0] - bottomLeft[0];
-//  double height = topRight[1] - bottomLeft[1];
-//
-//  auto scaleIntoNormalisedSpace = vtkSmartPointer<vtkTransform>::New();
-//  scaleIntoNormalisedSpace->Scale(2/(width), 2/(height), 1);
-//  scaleIntoNormalisedSpace->Translate(-(bottomLeft[0]+topRight[0])/2, -(bottomLeft[1] + topRight[1])/2, 0);
-//
-//  auto totalProjection = vtkSmartPointer<vtkGeneralTransform>::New();
-//  totalProjection->PostMultiply();
-//  totalProjection->Identity();
-//  totalProjection->Concatenate(geoTransform);
-//  totalProjection->Concatenate(scaleIntoNormalisedSpace);
-//
-//  double in[3] = {4.846871030623073, 52.364810061968335, 0};
-//  geoTransform->TransformPoint(in, in);
-//  cout << "in[3] = {" << in[0] << "," << in[1] << "," << in[2] << "}" << endl;
-//  scaleIntoNormalisedSpace->TransformPoint(in, in);
-//  cout << "in[3] = {" << in[0] << "," << in[1] << "," << in[2] << "}" << endl;
-//  scaleIntoNormalisedSpace->Inverse();
-//  scaleIntoNormalisedSpace->TransformPoint(in, in);
-//  cout << "in[3] = {" << in[0] << "," << in[1] << "," << in[2] << "}" << endl;
-//  geoTransform->Inverse();
-//  geoTransform->TransformPoint(in, in);
-//  cout << "in[3] = {" << in[0] << "," << in[1] << "," << in[2] << "}" << endl;
-////  totalProjection->TransformPoint(in, in);
-////  cout << "in[3] = {" << in[0] << "," << in[1] << "," << in[2] << "}" << endl;
-////  totalProjection->Inverse();
-////  totalProjection->TransformPoint(in, in);
-////  cout << "in[3] = {" << in[0] << "," << in[1] << "," << in[2] << "}" << endl;
-
   return EXIT_SUCCESS;
 }
 
