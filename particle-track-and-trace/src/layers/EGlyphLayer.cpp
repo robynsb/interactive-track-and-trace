@@ -12,9 +12,12 @@
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
 #include <vtkArrowSource.h>
+
 #include "../CartographicTransformation.h"
 #include "../advection/readdata.h"
 #include "../advection/interpolate.h"
+
+#include "vtkTransform.h"
 
 using namespace std;
 
@@ -41,6 +44,7 @@ void EGlyphLayer::readCoordinates() {
   this->direction->SetNumberOfTuples(numLats * numLons);
   points->Allocate(numLats * numLons);
 
+
   int i = 0;
   int latIndex = 0;
   for (double lat: uvGrid->lats) {
@@ -49,6 +53,7 @@ void EGlyphLayer::readCoordinates() {
       auto [u, v] = (*uvGrid)[0, latIndex, lonIndex];
       direction->SetTuple3(i, 5*u, 5*v, 0);
       points->InsertPoint(i++, lon, lat, 0);
+
       lonIndex++;
     }
     latIndex++;

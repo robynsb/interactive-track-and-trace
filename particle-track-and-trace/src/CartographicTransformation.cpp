@@ -7,34 +7,16 @@
 #include <vtkGeneralTransform.h>
 
 vtkSmartPointer<vtkCamera> createNormalisedCamera() {
-    vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
-    camera->ParallelProjectionOn();  // Enable parallel projection
+  vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
+  camera->ParallelProjectionOn(); // Enable parallel projection
 
-    camera->SetPosition(0, 0, 1000);  // Place the camera above the center
-    camera->SetFocalPoint(0, 0, 0);  // Look at the center
-    camera->SetViewUp(0, 1, 0); // Set the up vector to be along the Y-axis
-    camera->SetParallelScale(1); // x,y in [-1, 1]
+  camera->SetPosition(0, 0, 1000);  // Place the camera above the center
+  camera->SetFocalPoint(0, 0, 0);  // Look at the center
+  camera->SetViewUp(0, 1, 0); // Set the up vector to be along the Y-axis
+  camera->SetParallelScale(1); // x,y in [-1, 1]
 
-    return camera;
+  return camera;
 }
-
-//vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix(const std::shared_ptr<UVGrid> uvGrid) {
-//    const double XMin = uvGrid->lons.front();
-//    const double XMax = uvGrid->lons.back();
-//    const double YMin = uvGrid->lats.front();
-//    const double YMax = uvGrid->lats.back();
-//
-//    double eyeTransform[] = {
-//            2/(XMax-XMin), 0, 0, -(XMax+XMin)/(XMax-XMin),
-//            0, 2/(YMax-YMin), 0, -(YMax+YMin)/(YMax-YMin),
-//            0, 0, 1, 0,
-//            0, 0, 0, 1
-//    };
-//
-//    auto matrix = vtkSmartPointer<vtkMatrix4x4>::New();
-//    matrix->DeepCopy(eyeTransform);
-//    return matrix;
-//}
 
 // Assumes Normalised camera is used
 vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid) {
@@ -44,10 +26,10 @@ vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std:
   auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
   geoTransform->SetDestinationProjection(proj);
 
-  const double XMin = -15.875;
-  const double XMax = 12.875;
-  const double YMin = 46.125;
-  const double YMax = 62.625;
+  const double XMin = uvGrid->lons.front();
+  const double XMax = uvGrid->lons.back();
+  const double YMin = uvGrid->lats.front();
+  const double YMax = uvGrid->lats.back();
 
   double bottomLeft[3] = {XMin, YMin, 0};
   double topRight[3] = {XMax, YMax, 0};
@@ -58,8 +40,8 @@ vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std:
   double height = topRight[1] - bottomLeft[1];
 
   auto scaleIntoNormalisedSpace = vtkSmartPointer<vtkTransform>::New();
-  scaleIntoNormalisedSpace->Scale(2/(width), 2/(height), 1);
-  scaleIntoNormalisedSpace->Translate(-(bottomLeft[0]+topRight[0])/2, -(bottomLeft[1] + topRight[1])/2, 0);
+  scaleIntoNormalisedSpace->Scale(2 / (width), 2 / (height), 1);
+  scaleIntoNormalisedSpace->Translate(-(bottomLeft[0] + topRight[0]) / 2, -(bottomLeft[1] + topRight[1]) / 2, 0);
 
   auto totalProjection = vtkSmartPointer<vtkGeneralTransform>::New();
   totalProjection->Identity();
@@ -79,10 +61,10 @@ vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(con
   auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
   geoTransform->SetDestinationProjection(proj);
 
-  const double XMin = -15.875;
-  const double XMax = 12.875;
-  const double YMin = 46.125;
-  const double YMax = 62.625;
+  const double XMin = uvGrid->lons.front();
+  const double XMax = uvGrid->lons.back();
+  const double YMin = uvGrid->lats.front();
+  const double YMax = uvGrid->lats.back();
 
   double bottomLeft[3] = {XMin, YMin, 0};
   double topRight[3] = {XMax, YMax, 0};
@@ -94,8 +76,8 @@ vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(con
   double height = topRight[1] - bottomLeft[1];
 
   auto scaleIntoNormalisedSpace = vtkSmartPointer<vtkTransform>::New();
-  scaleIntoNormalisedSpace->Scale(2/(width), 2/(height), 1);
-  scaleIntoNormalisedSpace->Translate(-(bottomLeft[0]+topRight[0])/2, -(bottomLeft[1] + topRight[1])/2, 0);
+  scaleIntoNormalisedSpace->Scale(2 / (width), 2 / (height), 1);
+  scaleIntoNormalisedSpace->Translate(-(bottomLeft[0] + topRight[0]) / 2, -(bottomLeft[1] + topRight[1]) / 2, 0);
   scaleIntoNormalisedSpace->Inverse();
 
   auto totalProjection = vtkSmartPointer<vtkGeneralTransform>::New();
@@ -108,3 +90,33 @@ vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(con
 
   return transformFilter;
 }
+
+//vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix(const std::shared_ptr<UVGrid> uvGrid) {
+//    const double XMin = uvGrid->lons.front();
+//    const double XMax = uvGrid->lons.back();
+//    const double YMin = uvGrid->lats.front();
+//    const double YMax = uvGrid->lats.back();
+//
+//    double eyeTransform[] = {
+//            2/(XMax-XMin), 0, 0, -(XMax+XMin)/(XMax-XMin),
+//            0, 2/(YMax-YMin), 0, -(YMax+YMin)/(YMax-YMin),
+//            0, 0, 1, 0,
+//            0, 0, 0, 1
+//    };
+//
+//    auto matrix = vtkSmartPointer<vtkMatrix4x4>::New();
+//    matrix->DeepCopy(eyeTransform);
+//    return matrix;
+//}
+//
+//// Assumes Normalised camera is used
+//vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid) {
+//    vtkNew<vtkTransform> transform;
+//
+//    transform->SetMatrix(getCartographicTransformMatrix(uvGrid));
+//
+//    vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
+//    transformFilter->SetTransform(transform);
+//
+//    return transformFilter;
+//}
