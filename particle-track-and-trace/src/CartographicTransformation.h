@@ -28,4 +28,6 @@ vtkSmartPointer<vtkMatrix4x4> getCartographicTransformMatrix(const std::shared_p
  * @return pointer to transform filter
  */
 vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid);
+
+vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid);
 #endif //NORMALISEDCARTOGRAPHICCAMERA_H

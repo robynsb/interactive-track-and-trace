@@ -59,7 +59,7 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
   vtkNew<vtkPolyDataMapper> mapper;
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
-  
+
   vtkNew<vtkActor> actor;
   actor->SetMapper(mapper);
 
@@ -68,17 +68,11 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
 
 // creates a few points so we can test the updateData function
 void LGlyphLayer::spoofPoints() {
-    this->points->InsertNextPoint(-4.125, 61.375 , 0);
-    // this->points->InsertNextPoint(6.532949683882039, 53.24308582564463, 0); // Coordinates of Zernike
-    // this->points->InsertNextPoint(5.315307819255385, 60.40001057122271, 0); // Coordinates of Bergen
-    // this->points->InsertNextPoint( 6.646210231365825, 46.52346296009023, 0); // Coordinates of Lausanne
-    // this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857, 0); // Coordinates of the top of the Faroe islands
-
-  for (int i=0; i < 330; i+=5) {
-    for (int j=0; j < 330; j+=5) {
-    this->points->InsertNextPoint(-15.875+(12.875+15.875)/330*j, 46.125+(62.625-46.125)/330*i, 0);
-    }
-  }
+  this->points->InsertNextPoint(6.532949683882039, 53.24308582564463, 0); // Coordinates of Zernike
+  this->points->InsertNextPoint(5.315307819255385, 60.40001057122271, 0); // Coordinates of Bergen
+  this->points->InsertNextPoint(6.646210231365825, 46.52346296009023, 0); // Coordinates of Lausanne
+  this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857,
+                                0); // Coordinates of the top of the Faroe islands
 
   this->points->Modified();
 }
@@ -89,7 +83,7 @@ void LGlyphLayer::updateData(int t) {
   for (vtkIdType n = 0; n < this->points->GetNumberOfPoints(); n++) {
     this->points->GetPoint(n, point);
     for (int i = 0; i < SUPERSAMPLINGRATE; i++) {
-      std::tie(point[1], point[0]) = advector->advect(t, point[1], point[0], (t-lastT)/SUPERSAMPLINGRATE);
+      std::tie(point[1], point[0]) = advector->advect(t, point[1], point[0], (t - lastT) / SUPERSAMPLINGRATE);
     }
     this->points->SetPoint(n, point[0], point[1], 0);
   }

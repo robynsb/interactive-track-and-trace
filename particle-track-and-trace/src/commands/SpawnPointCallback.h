@@ -1,13 +1,13 @@
 #ifndef SPAWNPOINTCALLBACK_H
 #define SPAWNPOINTCALLBACK_H
 
-
 #include <memory>
 #include <vtkCallbackCommand.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
-#include <vtkMatrix4x4.h>
+#include <vtkAbstractTransform.h>
+
 #include "../advection/UVGrid.h"
 
 class SpawnPointCallback : public vtkCallbackCommand {
@@ -30,7 +30,7 @@ private:
   vtkSmartPointer<vtkPoints> points;
   vtkSmartPointer<vtkRenderer> ren;
   std::shared_ptr<UVGrid> uvGrid;
-  vtkSmartPointer<vtkMatrix4x4> inverseCartographicProjection;
+  vtkSmartPointer<vtkAbstractTransform> inverseCartographicProjection;
 
   void Execute(vtkObject *caller, unsigned long evId, void *callData) override;
 

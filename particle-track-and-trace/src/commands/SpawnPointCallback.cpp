@@ -38,8 +38,8 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
     ren->SetDisplayPoint(displayPos);
     ren->DisplayToWorld();
     ren->GetWorldPoint(worldPos);
-    inverseCartographicProjection->MultiplyPoint(worldPos, worldPos);
-    // cout << "clicked on lon = " << worldPos[0] << " and lat = " << worldPos[1] << endl;
+    cout << "clicked on " << worldPos[1] << ", " << worldPos[0] << endl;
+    inverseCartographicProjection->TransformPoint(worldPos, worldPos);
 
     vtkIdType id = points->InsertNextPoint(worldPos[0], worldPos[1], 0);
     data->SetPoints(points);
@@ -77,6 +77,5 @@ void SpawnPointCallback::setRen(const vtkSmartPointer<vtkRenderer> &ren) {
 
 void SpawnPointCallback::setUVGrid(const std::shared_ptr<UVGrid> &uvGrid) {
   this->uvGrid = uvGrid;
-  inverseCartographicProjection = getCartographicTransformMatrix(uvGrid);
-  inverseCartographicProjection->Invert();
+  inverseCartographicProjection = createInverseCartographicTransformFilter(uvGrid)->GetTransform();
 }
