@@ -17,12 +17,6 @@
 #include "advection/kernel/RK4AdvectionKernel.h"
 #include "advection/kernel/SnapBoundaryConditionKernel.h"
 
-#include <vtkTransform.h>
-#include <vtkTransformFilter.h>
-#include <vtkGeoProjection.h>
-#include <vtkGeoTransform.h>
-#include <vtkGeneralTransform.h>
-
 using namespace std;
 
 #define DT 60 * 60 // 60 sec/min * 60 mins
