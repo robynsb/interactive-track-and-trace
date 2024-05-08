@@ -55,6 +55,22 @@ int UVGrid::timeStep() const {
   return times[1] - times[0];
 }
 
+double UVGrid::lonMin() const {
+  return this->lons.front();
+}
+
+double UVGrid::lonMax() const {
+  return this->lons.back();
+}
+
+double UVGrid::latMin() const {
+  return this->lats.front();
+}
+
+double UVGrid::latMax() const {
+  return this->lats.back();
+}
+
 void UVGrid::streamSlice(ostream &os, size_t t) {
   for (int x = 0; x < latSize; x++) {
     for (int y = 0; y < lonSize; y++) {

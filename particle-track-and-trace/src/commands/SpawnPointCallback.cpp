@@ -41,15 +41,13 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
     cout << "clicked on " << worldPos[1] << ", " << worldPos[0] << endl;
     inverseCartographicProjection->TransformPoint(worldPos, worldPos);
 
-    vtkIdType id = points->InsertNextPoint(worldPos[0], worldPos[1], 0);
-    data->SetPoints(points);
+    points->InsertNextPoint(worldPos[0], worldPos[1], 0);
+    this->particlesBeached->InsertNextValue(0);
 
-    vtkSmartPointer<vtkVertex> vertex = vtkSmartPointer<vtkVertex>::New();
-    vertex->GetPointIds()->SetId(0, id);
-
-    vtkSmartPointer<vtkCellArray> vertices = vtkSmartPointer<vtkCellArray>::New();
-    vertices->InsertNextCell(vertex);
-    data->SetVerts(vertices);
+    // FIXME:  The below lines cause some weird interaction with our vtkTimer.
+    // see github issue  https://github.com/MakeNEnjoy/interactive-track-and-trace/issues/28
+    this->particlesBeached->Modified();
+    this->points->Modified();
     ren->GetRenderWindow()->Render();
 }
 
@@ -60,7 +58,7 @@ SpawnPointCallback::SpawnPointCallback() : data(nullptr),
                                            uvGrid(nullptr) { }
 
 SpawnPointCallback *SpawnPointCallback::New() {
-    return new SpawnPointCallback;
+  return new SpawnPointCallback;
 }
 
 void SpawnPointCallback::setData(const vtkSmartPointer<vtkPolyData> &data) {
@@ -78,4 +76,8 @@ void SpawnPointCallback::setRen(const vtkSmartPointer<vtkRenderer> &ren) {
 void SpawnPointCallback::setUVGrid(const std::shared_ptr<UVGrid> &uvGrid) {
   this->uvGrid = uvGrid;
   inverseCartographicProjection = createInverseCartographicTransformFilter(uvGrid)->GetTransform();
+}
+
+void SpawnPointCallback::setBeached(const vtkSmartPointer<vtkIntArray> &ints) {
+  this->particlesBeached = ints;
 }

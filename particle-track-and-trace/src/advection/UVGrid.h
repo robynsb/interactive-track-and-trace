@@ -38,6 +38,30 @@ public:
      */
     int timeStep() const;
 
+  /**
+   * Returns the lowest longitudinal value of grid.
+   * @return minimum longitude
+   */
+    double lonMin() const;
+
+  /**
+   * Returns the highest longitudinal value of grid.
+   * @return maximum longitude
+   */
+    double lonMax() const;
+
+  /**
+   * Returns the lowest latitudinal value of grid.
+   * @return minimum latitude
+   */
+    double latMin() const;
+
+  /**
+   * Returns the higehst latitudinal value of grid.
+   * @return maximum latitude
+   */
+    double latMax() const;
+
     /**
      * times, lats, lons are vector of length timeSize, latSize, lonSize respectively.
      * The maintain the following invariant:

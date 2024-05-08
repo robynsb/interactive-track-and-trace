@@ -26,10 +26,10 @@ vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std:
   auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
   geoTransform->SetDestinationProjection(proj);
 
-  const double XMin = uvGrid->lons.front();
-  const double XMax = uvGrid->lons.back();
-  const double YMin = uvGrid->lats.front();
-  const double YMax = uvGrid->lats.back();
+  const double XMin = uvGrid->lonMin();
+  const double XMax = uvGrid->lonMax();
+  const double YMin = uvGrid->latMin();
+  const double YMax = uvGrid->latMax();
 
   double bottomLeft[3] = {XMin, YMin, 0};
   double topRight[3] = {XMax, YMax, 0};
@@ -61,10 +61,10 @@ vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(con
   auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
   geoTransform->SetDestinationProjection(proj);
 
-  const double XMin = uvGrid->lons.front();
-  const double XMax = uvGrid->lons.back();
-  const double YMin = uvGrid->lats.front();
-  const double YMax = uvGrid->lats.back();
+  const double XMin = uvGrid->lonMin();
+  const double XMax = uvGrid->lonMax();
+  const double YMin = uvGrid->latMin();
+  const double YMax = uvGrid->latMax();
 
   double bottomLeft[3] = {XMin, YMin, 0};
   double topRight[3] = {XMax, YMax, 0};
