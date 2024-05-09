@@ -11,7 +11,7 @@ private:
      */
     std::vector<Vel> uvData;
 public:
-    UVGrid();
+    UVGrid(std::string path);
 
     /**
      * The matrix has shape (timeSize, latSize, lonSize)
