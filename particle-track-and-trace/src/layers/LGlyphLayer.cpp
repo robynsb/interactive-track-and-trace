@@ -40,14 +40,26 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
 vtkSmartPointer<vtkLookupTable> buildLut(int n) {
   vtkNew<vtkLookupTable> lut;
   lut->SetNumberOfColors(n);
-  lut->SetTableRange(0, n-1);
+  lut->SetTableRange(0, n - 1);
   lut->SetScaleToLinear();
   lut->Build();
-  for (int i=0; i < n; i++) {
-    lut->SetTableValue(i, 1-(0.5*i/(n-1)), 1-(0.5*i/(n-1)), 1-(0.5*i/(n-1)),  1-(0.5*i/(n-1)));
+
+  double lightColor[3] = {44/255, 61/255, 85/255}; // #2c3d55
+  double blackColor[3] = {0.0, 0.0, 0.0}; // Black
+
+  // Interpolate colors between light and black
+  for (int i = 0; i < n; i++) {
+    double t = static_cast<double>(i) / (n - 1); // Interpolation factor
+    double color[3];
+    for (int j = 0; j < 3; j++) {
+      color[j] = (1.0 - t) * lightColor[j] + t * blackColor[j];
+    }
+    lut->SetTableValue(i, color[0], color[1], color[2], 1.0);
   }
-  // set the last value to separate fully beached particles from those that have simply not moved in a bit.
-  lut->SetTableValue(n-1, 0, 0, 0, 0.25);
+
+  // Set the last value to fully black
+  lut->SetTableValue(n - 1, blackColor[0], blackColor[1], blackColor[2], 1.0);
+
   return lut;
 }
 

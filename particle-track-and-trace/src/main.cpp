@@ -34,6 +34,7 @@ int main() {
 
   unique_ptr<Program> program = make_unique<Program>(DT);
   program->addLayer(new BackgroundImage(dataPath + "/map_661-661.png"));
+//  program->addLayer(new BackgroundImage(dataPath + "/map_2071-2067.png"));
   program->addLayer(new EGlyphLayer(uvGrid));
   program->addLayer(l);
 

@@ -62,7 +62,7 @@ void BackgroundImage::updateImage() {
   imageDataGeometryFilter->SetInputData(imageData);
   imageDataGeometryFilter->Update();
 
-  // setup the vtkTransform - this is where use the data from imageData we got earlier
+//   setup the vtkTransform - this is where use the data from imageData we got earlier
   vtkNew<vtkTransform> transform;
   transform->SetMatrix(getMatrix(origin[0], origin[1], extent[1]+origin[0], extent[3]+origin[1]));
   vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
