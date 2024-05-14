@@ -27,7 +27,7 @@ private:
       */ 
     vtkSmartPointer<vtkCamera> cam;
 
-    /** Event callback. Should be subscribed to keyPressEvent and MouseWheelForward/MouseWheelBackward events.
+    /** Event controller. Should be subscribed to keyPressEvent and MouseWheelForward/MouseWheelBackward events.
       */ 
     void Execute(vtkObject *caller, unsigned long evId, void *callData) override;
 

@@ -70,6 +70,10 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         advection/Vel.h
         advection/kernel/SnapBoundaryConditionKernel.h
         advection/kernel/SnapBoundaryConditionKernel.cpp
+        layers/Character.h
+        layers/Character.cpp
+        commands/CharacterMoveCallback.h
+        commands/CharacterMoveCallback.cpp
 )
 
 execute_process(

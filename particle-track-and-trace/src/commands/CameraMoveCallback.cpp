@@ -75,20 +75,21 @@ void CameraMoveCallback::zoom(const bool in) {
 
 // we use the interactor's getKeySym instead of getKeyCode because getKeyCode is platform-dependent.
 void CameraMoveCallback::pan(const string dir) {
-  double pos[3];
-  this->cam->GetPosition(pos);
-
-  if (dir == "Left" or dir == "h") {
-    pos[0] -= 0.1;
-  } else if (dir == "Up" or dir == "k" ) {
-    pos[1] += 0.1;
-  } else if (dir == "Right" or dir == "l" ) {
-    pos[0] += 0.1;
-  } else if (dir == "Down" or dir == "j" ) {
-    pos[1] -= 0.1;
-  }
-
-  clampCamera(pos);
+//  double pos[3];
+//  this->cam->GetPosition(pos);
+//
+//  if (dir == "Left" or dir == "h") {
+//    pos[0] -= 0.1;
+//  } else if (dir == "Up" or dir == "k" ) {
+//    pos[1] += 0.1;
+//  } else if (dir == "Right" or dir == "l" ) {
+//    pos[0] += 0.1;
+//  } else if (dir == "Down" or dir == "j" ) {
+//    pos[1] -= 0.1;
+//  }
+//
+//  clampCamera(pos);
+  clampCamera(this->cam->GetPosition());
 }
 
 CameraMoveCallback::CameraMoveCallback() : cam(nullptr) {}

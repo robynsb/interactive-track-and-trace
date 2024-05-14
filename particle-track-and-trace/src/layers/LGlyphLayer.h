@@ -7,9 +7,11 @@
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
 
-/** Implements the Layer class for the case of a Lagrangian visualization.
-  * Specifically, this class models the Lagrangian particles in the simulation using the 'glyph' mark and 'transparency' channel to denote age.
-  */
+/**
+ * Implements the Layer class for the case of a Lagrangian visualization.
+ * Specifically, this class models the Lagrangian particles in the simulation
+ * using the 'glyph' mark and 'transparency' channel to denote age.
+ */
 class LGlyphLayer : public Layer {
 private:
   vtkSmartPointer<vtkPoints> points;
@@ -21,8 +23,11 @@ private:
   int beachedAtNumberOfTimes = 20;
 
 public:
-  /** Constructor.
-    */
+  /**
+   * Constructor.
+   * @param uvGrid UVGrid used for boundary conditions calculations
+   * @param advectionKernel advects particles using given kernel
+   */
   LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel);
 
   /**

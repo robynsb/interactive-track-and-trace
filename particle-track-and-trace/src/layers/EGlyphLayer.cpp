@@ -81,7 +81,7 @@ void EGlyphLayer::readCoordinates() {
   glyph2D->SetVectorModeToUseVector();
   glyph2D->Update();
 
-  vtkNew<vtkPolyDataMapper>(mapper);
+  vtkNew<vtkPolyDataMapper>mapper;
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
