@@ -39,8 +39,8 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
  */
 vtkSmartPointer<vtkLookupTable> buildLut(int n) {
   vtkNew<vtkLookupTable> lut;
-  lut->SetNumberOfColors(n);
-  lut->SetTableRange(0, n-1);
+  lut->SetNumberOfColors(n+1);
+  lut->SetTableRange(0, n);
   lut->SetScaleToLinear();
   lut->Build();
   for (int i=0; i < n; i++) {
@@ -48,6 +48,7 @@ vtkSmartPointer<vtkLookupTable> buildLut(int n) {
   }
   // set the last value to separate fully beached particles from those that have simply not moved in a bit.
   lut->SetTableValue(n-1, 0, 0, 0, 0.25);
+  lut->SetTableValue(n, 0, 0, 0, 0);
   return lut;
 }
 
@@ -86,7 +87,7 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
   vtkNew<vtkPolyDataMapper> mapper;
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->SetLookupTable(buildLut(this->beachedAtNumberOfTimes));
-  mapper->SetScalarRange(0, this->beachedAtNumberOfTimes);
+  mapper->SetScalarRange(0, this->beachedAtNumberOfTimes+1);
   mapper->Update();
   
   vtkNew<vtkActor> actor;
@@ -130,7 +131,7 @@ void LGlyphLayer::updateData(int t) {
       // second check: only update points within our grid's boundary.
       if (point[0] <= this->uvGrid->lonMin() or point[0] >= this->uvGrid->lonMax() or point[1] <= this->uvGrid->latMin() or point[1] >= this->uvGrid->latMax()) {
         // sets any particle out of bounds to be beached - so it gets assigned the right colour in the lookup table.
-        this->particlesBeached->SetValue(n, this->beachedAtNumberOfTimes);
+        this->particlesBeached->SetValue(n, this->beachedAtNumberOfTimes+1);
         continue;
       }
 
