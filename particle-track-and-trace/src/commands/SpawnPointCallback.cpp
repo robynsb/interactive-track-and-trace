@@ -38,7 +38,6 @@ void SpawnPointCallback::Execute(vtkObject *caller, unsigned long evId, void *ca
     ren->SetDisplayPoint(displayPos);
     ren->DisplayToWorld();
     ren->GetWorldPoint(worldPos);
-    cout << "clicked on " << worldPos[1] << ", " << worldPos[0] << endl;
     inverseCartographicProjection->TransformPoint(worldPos, worldPos);
 
     points->InsertNextPoint(worldPos[0], worldPos[1], 0);

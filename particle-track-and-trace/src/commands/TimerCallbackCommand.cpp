@@ -21,8 +21,7 @@ void TimerCallbackCommand::Execute(vtkObject* caller, unsigned long eventId, voi
     this->time += this->dt;
   
     if (this->time >= this->maxTime) {
-      return;
-      // TODO: how do we deal with reaching the end of the simulated dataset? Do we just stop simulating, loop back around? What about the location of the particles in this case? Just some ideas to consider, but we should iron this out pretty soon.
+      this->time = 0;
     }
   
     this->program->updateData(this->time);
