@@ -126,7 +126,7 @@ void LGlyphLayer::updateData(int t) {
   for (vtkIdType n=0; n < this->points->GetNumberOfPoints(); n++) {
     int beachedFor = this->particlesBeached->GetValue(n);
     // first check: only update non-beached particles.
-    if (beachedFor < this->beachedAtNumberOfTimes) {
+    if (beachedFor < this->beachedAtNumberOfTimes-1) {
       this->points->GetPoint(n, point);
       // second check: only update points within our grid's boundary.
       if (point[0] <= this->uvGrid->lonMin() or point[0] >= this->uvGrid->lonMax() or point[1] <= this->uvGrid->latMin() or point[1] >= this->uvGrid->latMax()) {
