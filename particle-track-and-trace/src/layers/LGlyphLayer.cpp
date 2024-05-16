@@ -139,7 +139,7 @@ void LGlyphLayer::updateData(int t) {
 
       // supersampling
       for (int i=0; i < SUPERSAMPLINGRATE; i++) {
-        std::tie(point[1], point[0]) = advector->advect(t, point[1], point[0], (t-this->lastT)/SUPERSAMPLINGRATE);
+        std::tie(point[1], point[0]) = advector->advect(t, point[1], point[0], this->dt/SUPERSAMPLINGRATE);
       }
 
       // if the particle's location remains unchanged, increase beachedFor number. Else, decrease it and update point position.
@@ -153,7 +153,6 @@ void LGlyphLayer::updateData(int t) {
     }
   }
   if (modifiedData) this->points->Modified();
-  this->lastT = t;
 }
 
 void LGlyphLayer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
@@ -161,4 +160,9 @@ void LGlyphLayer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> intera
   interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
   interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
   interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
+}
+
+
+void LGlyphLayer::setDt(int dt) {
+  this->dt = dt;
 }

@@ -30,6 +30,7 @@ int main() {
 
   auto l = new LGlyphLayer(uvGrid, std::move(kernelRK4BoundaryChecked));
   l->spoofPoints();
+  l->setDt(DT);
 
   unique_ptr<Program> program = make_unique<Program>(DT);
   program->addLayer(new BackgroundImage("../../../../data/map_661-661.png"));

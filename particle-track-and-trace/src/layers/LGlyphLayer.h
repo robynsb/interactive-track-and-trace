@@ -17,7 +17,7 @@ private:
   vtkSmartPointer<vtkIntArray> particlesBeached;
   std::unique_ptr<AdvectionKernel> advector;
   std::shared_ptr<UVGrid> uvGrid;
-  int lastT = 1000;
+  int dt = 3600;
   int beachedAtNumberOfTimes = 20;
 
 public:
@@ -39,6 +39,12 @@ public:
   vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();
 
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;
+
+
+  /** 
+   * Sets a custom DT value, needed for advect calls to the simulation logic.
+   */ 
+  void setDt(int dt);
 };
 
 #endif
