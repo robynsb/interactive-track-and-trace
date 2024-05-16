@@ -8,14 +8,14 @@
 
 using namespace std;
 
-UVGrid::UVGrid() {
-  auto us = readHydrodynamicU();
-  auto vs = readHydrodynamicV();
+UVGrid::UVGrid(string path) {
+  auto us = readHydrodynamicU(path);
+  auto vs = readHydrodynamicV(path);
   if (us.size() != vs.size()) {
     throw domain_error(sizeError2);
   }
 
-  tie(times, lats, lons) = readGrid();
+  tie(times, lats, lons) = readGrid(path);
 
   timeSize = times.size();
   latSize = lats.size();
