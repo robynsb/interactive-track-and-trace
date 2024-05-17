@@ -15,9 +15,6 @@
 using namespace std;
 
 Character::Character() {
-  ren = vtkSmartPointer<vtkRenderer>::New();
-  ren->SetLayer(2);
-
   controller = vtkSmartPointer<CharacterMoveCallback>::New();
 
   position = vtkSmartPointer<vtkPoints>::New();
@@ -140,4 +137,8 @@ void Character::clampCamera(double pos[3]) {
 
   cam->SetPosition(pos[0], pos[1], ogpos[2]);
   cam->SetFocalPoint(pos[0], pos[1], 0);
+}
+
+vtkSmartPointer<vtkPoints> Character::getPosition() {
+  return position;
 }

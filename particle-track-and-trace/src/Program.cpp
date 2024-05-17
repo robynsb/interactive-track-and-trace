@@ -11,6 +11,7 @@
 #include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
+#include <vtkCamera.h>
 #include <netcdf>
 #include <vtkArrowSource.h>
 #include <vtkNew.h>
@@ -21,6 +22,8 @@
 #include "commands/TimerCallbackCommand.h"
 #include "CartographicTransformation.h"
 #include "commands/CameraMoveCallback.h"
+
+using namespace std;
 
 void Program::setWinProperties() {
   this->win->SetWindowName("Simulation");
@@ -62,16 +65,16 @@ Program::Program(int timerDT) {
   setupCameraCallback();
 }
 
-
-void Program::addLayer(Layer *layer) {
+void Program::addLayer(shared_ptr<Layer> layer) {
   layer->setCamera(this->cam);
+  layer->getLayer()->SetLayer(this->win->GetNumberOfLayers());
 
   this->layers.push_back(layer);
   this->win->AddRenderer(layer->getLayer());
   this->win->SetNumberOfLayers(this->win->GetNumberOfLayers() + 1);
 }
 
-void Program::removeLayer(Layer *layer) {
+void Program::removeLayer(std::shared_ptr<Layer> layer) {
   this->win->RemoveRenderer(layer->getLayer());
 
   auto it = std::find(this->layers.begin(), this->layers.end(), layer);
@@ -84,13 +87,13 @@ void Program::removeLayer(Layer *layer) {
 
 void Program::updateData(int t) {
   win->Render();
-  for (Layer *l: layers) {
+  for (shared_ptr<Layer> l: layers) {
     l->updateData(t);
   }
 }
 
 void Program::setupInteractions() {
-  for (Layer *l: layers) {
+  for (shared_ptr<Layer> l: layers) {
     l->addObservers(interact);
   }
 }

@@ -12,6 +12,8 @@ protected:
   vtkSmartPointer<vtkRenderer> ren;
 
 public:
+  Layer();
+
   /** gets the vtkRenderer to assign it to the vtkRenderWindow of the program class.
    * @return pointer to the vtkRenderer of this class.
    */

@@ -22,6 +22,7 @@ private:
   int lastT = 1000;
   int beachedAtNumberOfTimes = 20;
 
+  vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();
 public:
   /**
    * Constructor.
@@ -41,9 +42,9 @@ public:
    */
   void updateData(int t) override;
 
-  vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();
-
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;
+
+  vtkSmartPointer<vtkPoints> getPoints();
 };
 
 #endif

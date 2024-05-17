@@ -13,6 +13,8 @@
 #include "layers/EGlyphLayer.h"
 #include "layers/LGlyphLayer.h"
 #include "layers/Character.h"
+#include "layers/collisions/DummyCollisionHandler.h"
+#include "layers/collisions/ParticleCollision.h"
 #include "Program.h"
 #include "advection/UVGrid.h"
 #include "advection/kernel/RK4AdvectionKernel.h"
@@ -30,14 +32,21 @@ int main() {
   auto kernelRK4BoundaryChecked = make_unique<SnapBoundaryConditionKernel>(std::move(kernelRK4), uvGrid);
   cout << "Starting vtk..." << endl;
 
-  auto l = new LGlyphLayer(uvGrid, std::move(kernelRK4BoundaryChecked));
+  auto lagrange = make_shared<LGlyphLayer>(uvGrid, std::move(kernelRK4BoundaryChecked));
 //  l->spoofPoints();
+  auto euler = make_shared<EGlyphLayer>(uvGrid);
+  auto character = make_shared<Character>();
+  auto collisionCallback = make_unique<DummyCollisionHandler>();
+  auto collisionHandler = make_shared<ParticleCollision>();
+  collisionHandler->addPointSet(lagrange->getPoints(), std::move(collisionCallback));
+  collisionHandler->setPosition(character->getPosition());
 
   unique_ptr<Program> program = make_unique<Program>(DT);
-  program->addLayer(new BackgroundImage(dataPath + "/map_2071-2067.png"));
-  program->addLayer(new EGlyphLayer(uvGrid));
-  program->addLayer(l);
-  program->addLayer(new Character());
+  program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
+  program->addLayer(lagrange);
+  program->addLayer(euler);
+  program->addLayer(character);
+  program->addLayer(collisionHandler);
 
   program->render();
 

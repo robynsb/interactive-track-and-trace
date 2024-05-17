@@ -20,3 +20,7 @@ void Layer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) 
 void Layer::setCamera(vtkCamera *camera) {
   this->getLayer()->SetActiveCamera(camera);
 }
+
+Layer::Layer() {
+  ren = vtkSmartPointer<vtkRenderer>::New();
+}

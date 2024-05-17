@@ -16,7 +16,7 @@
 
 class Character : public Layer {
 private:
-  vtkSmartPointer<vtkPoints> position;
+  vtkSmartPointer<vtkPoints> position; // TODO: Make this position in latlon instead of normalised coords
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<vtkDoubleArray> direction;
   vtkSmartPointer<CharacterMoveCallback> controller;
@@ -35,6 +35,8 @@ public:
   void updateData(int t) override;
 
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;
+
+  vtkSmartPointer<vtkPoints> getPosition();
 };
 
 

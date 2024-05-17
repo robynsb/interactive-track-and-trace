@@ -64,8 +64,8 @@ vtkSmartPointer<vtkLookupTable> buildLut(int n) {
 }
 
 LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel) {
-  this->ren = vtkSmartPointer<vtkRenderer>::New();
-  this->ren->SetLayer(2);
+//  this->ren = vtkSmartPointer<vtkRenderer>::New();
+//  this->ren->SetLayer(2);
 
   this->points = vtkSmartPointer<vtkPoints>::New();
   this->data = vtkSmartPointer<vtkPolyData>::New();
@@ -172,4 +172,8 @@ void LGlyphLayer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> intera
   interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
   interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
   interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
+}
+
+vtkSmartPointer<vtkPoints> LGlyphLayer::getPoints() {
+  return points;
 }

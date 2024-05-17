@@ -74,6 +74,11 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/Character.cpp
         commands/CharacterMoveCallback.h
         commands/CharacterMoveCallback.cpp
+        layers/collisions/ParticleCollision.h
+        layers/collisions/ParticleCollision.cpp
+        layers/collisions/ParticleCollisionCallback.h
+        layers/collisions/DummyCollisionHandler.h
+        layers/collisions/DummyCollisionHandler.cpp
 )
 
 execute_process(

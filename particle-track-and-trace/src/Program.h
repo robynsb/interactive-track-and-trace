@@ -14,7 +14,7 @@ class Program {
 private:
   /** This attribute models a variable number of vtkRenderers, managed through the abstract Layer class.
     */ 
-  std::vector<Layer *> layers;
+  std::vector<std::shared_ptr<Layer>> layers;
 
   /** The window this program's layers render to.
     */ 
@@ -54,13 +54,13 @@ public:
     * The layer is expected to set its own position in the vtkRenderWindow layer system.
     * @param layer : pointer to the layer to add.
     */ 
-  void addLayer(Layer *layer);
+  void addLayer(std::shared_ptr<Layer> layer);
 
   /** This function removes a given layer from the vtkRenderWindow and layers vector.
     * If the given layer is not actually in the program, nothing happens.
     * @param layer : the layer to removeLayer
     */
-  void removeLayer(Layer *layer);
+  void removeLayer(std::shared_ptr<Layer> layer);
 
   /** This function updates the data for the associated layers to the given timestamp.
     * Also updates the renderWindow.

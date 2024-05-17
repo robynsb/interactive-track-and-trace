@@ -22,8 +22,8 @@
 using namespace std;
 
 EGlyphLayer::EGlyphLayer(std::shared_ptr<UVGrid> uvGrid) {
-  this->ren = vtkSmartPointer<vtkRenderer>::New();
-  this->ren->SetLayer(1);
+//  this->ren = vtkSmartPointer<vtkRenderer>::New();
+//  this->ren->SetLayer(1);
   this->ren->InteractiveOff();
 
   this->uvGrid = uvGrid;
