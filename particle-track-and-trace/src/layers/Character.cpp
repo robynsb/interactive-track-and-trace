@@ -8,42 +8,53 @@
 #include <vtkPointData.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkCamera.h>
+#include <vtkTransformFilter.h>
+#include <vtkAppendFilter.h>
 
 #include "Character.h"
 #include "../commands/CharacterMoveCallback.h"
+#include "../CartographicTransformation.h"
 
 using namespace std;
 
-Character::Character() {
+Character::Character(std::shared_ptr<UVGrid> uvGrid) {
   controller = vtkSmartPointer<CharacterMoveCallback>::New();
 
   position = vtkSmartPointer<vtkPoints>::New();
-  position->InsertPoint(0, 0, 0, 0);
+  position->InsertPoint(0, 6.513089433595266, 53.44059997086552, 0); // Groningen
+//  position->InsertPoint(0, 0, 0, 0);
 
   direction = vtkSmartPointer<vtkDoubleArray>::New();
   direction->SetNumberOfComponents(3);
   direction->SetNumberOfTuples(1);
   direction->SetName("direction");
-  direction->SetTuple3(0, 0, 1, 0);
+  direction->SetTuple3(0, 1, 0, 0);
 
   data = vtkSmartPointer<vtkPolyData>::New();
   data->SetPoints(position);
   data->GetPointData()->AddArray(this->direction);
-  data->GetPointData()->SetActiveVectors("direction");
+//  data->GetPointData()->SetActiveVectors("direction");
 
-  vtkNew<vtkGlyphSource2D> arrowSource;
+  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
+  transformFilter->SetInputData(data);
+//  transformFilter->SetInputData(data);
+//  transformFilter->SetInputConnection(glyph2D->GetOutputPort());
+  transformFilter->GetPolyDataOutput()->GetPointData()->SetActiveVectors("direction");
+  transformFilter->Update();
+  cameraTransform.TakeReference(transformFilter->GetTransform());
+
+  arrowSource = vtkSmartPointer<vtkGlyphSource2D>::New();
   arrowSource->SetGlyphTypeToArrow();
   arrowSource->SetScale(0.02);
   arrowSource->Update();
 
   vtkNew<vtkGlyph2D> glyph2D;
   glyph2D->SetSourceConnection(arrowSource->GetOutputPort());
-  glyph2D->SetInputData(data);
+  glyph2D->SetInputConnection(transformFilter->GetOutputPort());
   glyph2D->OrientOn();
   glyph2D->ClampingOn();
-  glyph2D->SetScaleModeToScaleByVector();
-  glyph2D->SetVectorModeToUseVector();
   glyph2D->Update();
+
 
   vtkNew<vtkPolyDataMapper>mapper;
   mapper->SetInputConnection(glyph2D->GetOutputPort());
@@ -82,9 +93,8 @@ void Character::updateData(int t) {
   }
   updateVelocity();
   updatePosition();
-  clampCamera(position->GetPoint(0));
+  clampCamera(cameraTransform->TransformPoint(position->GetPoint(0)));
 //  position->SetPoint(0, sin(time), cos(time), 0);
-  direction->Modified();
 }
 
 double easingFunction(double t) {
@@ -105,10 +115,14 @@ void Character::updatePosition() {
   double point[3];
   position->GetPoint(0, point);
   position->SetPoint(0, point[0] + cos(angleRadians)*velocity, point[1] + sin(angleRadians)*velocity, 0);
+  position->Modified();
 }
 
 void Character::updateDirection() {
   direction->SetTuple3(0, cos(angleRadians), sin(angleRadians), 0);
+  direction->Modified();
+  arrowSource->SetRotationAngle(angleRadians * (180.0 / M_PI));
+  arrowSource->Update();
 }
 
 void Character::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {

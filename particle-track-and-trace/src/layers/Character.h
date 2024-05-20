@@ -6,13 +6,16 @@
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
 #include <vtkDoubleArray.h>
+#include <vtkTransform.h>
+#include <vtkGlyphSource2D.h>
 #include "Layer.h"
 #include "../commands/CharacterMoveCallback.h"
+#include "../advection/UVGrid.h"
 
 #define ROTATIONSTEP 0.1
 #define ACCELERATESTEP 0.05
 #define DECELLERATION 0.1
-#define MAXVELOCITY 0.005
+#define MAXVELOCITY 0.01
 
 class Character : public Layer {
 private:
@@ -20,6 +23,8 @@ private:
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<vtkDoubleArray> direction;
   vtkSmartPointer<CharacterMoveCallback> controller;
+  vtkSmartPointer<vtkAbstractTransform> cameraTransform;
+  vtkSmartPointer<vtkGlyphSource2D> arrowSource;
 
   double velocity = 0;
   double throttle = 0;
@@ -31,7 +36,7 @@ private:
 
 public:
 
-  Character();
+  Character(std::shared_ptr<UVGrid> uvGrid);
   void updateData(int t) override;
 
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;

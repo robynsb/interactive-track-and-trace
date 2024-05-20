@@ -23,7 +23,6 @@ void ParticleCollision::updateData(int t) {
   position->GetPoint(0, pos);
   for (auto&& [points, cb] : pointsets) {
     for (int i = 0; i < points->GetNumberOfPoints(); i++) {
-      cout << "test" << endl;
       double point[3];
       points->GetPoint(i, point);
       if(isInRange(pos, point)) {

@@ -35,18 +35,18 @@ int main() {
   auto lagrange = make_shared<LGlyphLayer>(uvGrid, std::move(kernelRK4BoundaryChecked));
 //  l->spoofPoints();
   auto euler = make_shared<EGlyphLayer>(uvGrid);
-  auto character = make_shared<Character>();
+  auto character = make_shared<Character>(uvGrid);
   auto collisionCallback = make_unique<DummyCollisionHandler>();
-  auto collisionHandler = make_shared<ParticleCollision>();
-  collisionHandler->addPointSet(lagrange->getPoints(), std::move(collisionCallback));
-  collisionHandler->setPosition(character->getPosition());
+//  auto collisionHandler = make_shared<ParticleCollision>();
+//  collisionHandler->addPointSet(lagrange->getPoints(), std::move(collisionCallback));
+//  collisionHandler->setPosition(character->getPosition());
 
   unique_ptr<Program> program = make_unique<Program>(DT);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
   program->addLayer(lagrange);
   program->addLayer(euler);
   program->addLayer(character);
-  program->addLayer(collisionHandler);
+//  program->addLayer(collisionHandler);
 
   program->render();
 
