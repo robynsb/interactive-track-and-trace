@@ -19,9 +19,8 @@
 
 class Character : public Layer {
 private:
-  vtkSmartPointer<vtkPoints> position; // TODO: Make this position in latlon instead of normalised coords
+  vtkSmartPointer<vtkPoints> position;
   vtkSmartPointer<vtkPolyData> data;
-  vtkSmartPointer<vtkDoubleArray> direction;
   vtkSmartPointer<CharacterMoveCallback> controller;
   vtkSmartPointer<vtkAbstractTransform> cameraTransform;
   vtkSmartPointer<vtkGlyphSource2D> arrowSource;
@@ -35,7 +34,6 @@ private:
   void clampCamera(double pos[3]);
 
 public:
-
   Character(std::shared_ptr<UVGrid> uvGrid);
   void updateData(int t) override;
 

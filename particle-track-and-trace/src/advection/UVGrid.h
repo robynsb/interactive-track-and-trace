@@ -62,10 +62,16 @@ public:
   double latMin() const;
 
   /**
-   * Returns the higehst latitudinal value of grid.
+   * Returns the highest latitudinal value of grid.
    * @return maximum latitude
    */
   double latMax() const;
+
+  /**
+   * Returns the highest time value of grid.
+   * @return maximum latitude
+   */
+  double timeMax() const;
 
   /**
    * times, lats, lons are vector of length timeSize, latSize, lonSize respectively.

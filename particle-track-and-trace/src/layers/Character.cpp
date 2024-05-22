@@ -12,7 +12,6 @@
 #include <vtkAppendFilter.h>
 
 #include "Character.h"
-#include "../commands/CharacterMoveCallback.h"
 #include "../CartographicTransformation.h"
 
 using namespace std;
@@ -22,29 +21,18 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid) {
 
   position = vtkSmartPointer<vtkPoints>::New();
   position->InsertPoint(0, 6.513089433595266, 53.44059997086552, 0); // Groningen
-//  position->InsertPoint(0, 0, 0, 0);
-
-  direction = vtkSmartPointer<vtkDoubleArray>::New();
-  direction->SetNumberOfComponents(3);
-  direction->SetNumberOfTuples(1);
-  direction->SetName("direction");
-  direction->SetTuple3(0, 1, 0, 0);
 
   data = vtkSmartPointer<vtkPolyData>::New();
   data->SetPoints(position);
-  data->GetPointData()->AddArray(this->direction);
-//  data->GetPointData()->SetActiveVectors("direction");
 
   vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
   transformFilter->SetInputData(data);
-//  transformFilter->SetInputData(data);
-//  transformFilter->SetInputConnection(glyph2D->GetOutputPort());
-  transformFilter->GetPolyDataOutput()->GetPointData()->SetActiveVectors("direction");
   transformFilter->Update();
   cameraTransform.TakeReference(transformFilter->GetTransform());
 
   arrowSource = vtkSmartPointer<vtkGlyphSource2D>::New();
-  arrowSource->SetGlyphTypeToArrow();
+//  arrowSource->SetGlyphTypeToArrow();
+  arrowSource->SetGlyphTypeToTriangle();
   arrowSource->SetScale(0.02);
   arrowSource->Update();
 
@@ -54,7 +42,6 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid) {
   glyph2D->OrientOn();
   glyph2D->ClampingOn();
   glyph2D->Update();
-
 
   vtkNew<vtkPolyDataMapper>mapper;
   mapper->SetInputConnection(glyph2D->GetOutputPort());
@@ -111,7 +98,6 @@ void Character::updateVelocity() {
 }
 
 void Character::updatePosition() {
-  double direction[3];
   double point[3];
   position->GetPoint(0, point);
   position->SetPoint(0, point[0] + cos(angleRadians)*velocity, point[1] + sin(angleRadians)*velocity, 0);
@@ -119,9 +105,7 @@ void Character::updatePosition() {
 }
 
 void Character::updateDirection() {
-  direction->SetTuple3(0, cos(angleRadians), sin(angleRadians), 0);
-  direction->Modified();
-  arrowSource->SetRotationAngle(angleRadians * (180.0 / M_PI));
+  arrowSource->SetRotationAngle(45 + angleRadians * (180.0 / M_PI));
   arrowSource->Update();
 }
 

@@ -5,8 +5,8 @@
 #include <vtkPoints.h>
 #include <memory.h>
 
-#include "../Layer.h"
-#include "ParticleCollisionCallback.h"
+#include "Layer.h"
+#include "../collisions/ParticleCollisionCallback.h"
 
 class ParticleCollision : public Layer {
 private:

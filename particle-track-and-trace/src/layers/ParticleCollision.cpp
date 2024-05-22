@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ParticleCollision::ParticleCollision(): distance(10) {}
+ParticleCollision::ParticleCollision(): distance(0.1) {}
 
 void ParticleCollision::addPointSet(
         vtkSmartPointer<vtkPoints> points,

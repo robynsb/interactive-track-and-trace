@@ -10,11 +10,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(VTK COMPONENTS
   GeovisCore
   CommonColor
-  CommonColor
   CommonCore
   CommonDataModel
   FiltersGeneral
   FiltersGeometry
+  FiltersTexture
   FiltersProgrammable
   FiltersSources
   ImagingSources
@@ -74,11 +74,18 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/Character.cpp
         commands/CharacterMoveCallback.h
         commands/CharacterMoveCallback.cpp
-        layers/collisions/ParticleCollision.h
-        layers/collisions/ParticleCollision.cpp
-        layers/collisions/ParticleCollisionCallback.h
-        layers/collisions/DummyCollisionHandler.h
-        layers/collisions/DummyCollisionHandler.cpp
+        layers/ParticleCollision.h
+        layers/ParticleCollision.cpp
+        collisions/ParticleCollisionCallback.h
+        collisions/DummyCollisionHandler.h
+        collisions/DummyCollisionHandler.cpp
+        layers/VesselLayer.h
+        layers/VesselLayer.cpp
+        vesselroutes/VesselRoute.h
+        vesselroutes/QuadraticBezierRoute.cpp
+        vesselroutes/QuadraticBezierRoute.h
+        vesselroutes/VesselRouteFactory.cpp
+        vesselroutes/VesselRouteFactory.h
 )
 
 execute_process(
