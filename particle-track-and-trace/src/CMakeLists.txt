@@ -90,6 +90,8 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/FoodSpawner.h
         collisions/ParticleRemover.cpp
         collisions/ParticleRemover.h
+        vesselroutes/StraightLineRoute.cpp
+        vesselroutes/StraightLineRoute.h
 )
 
 execute_process(

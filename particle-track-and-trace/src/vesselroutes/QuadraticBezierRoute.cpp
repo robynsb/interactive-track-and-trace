@@ -6,7 +6,7 @@ const double quadraticBezier1D(double p0, double p1, double p2, double t) {
   return (1-t)*(1-t)*p0 + 2*(1-t)*t*p1 + t*t*p2;
 }
 
-std::pair<double, double> QuadraticBezierRoute::getPosition(int time) const {
+std::pair<double, double> QuadraticBezierRoute::getPosition(int time) {
   if (time < startTime) {
     return {lon1, lat1};
   }

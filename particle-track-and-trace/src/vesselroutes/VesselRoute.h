@@ -13,7 +13,7 @@ public:
    * @param time time in seconds
    * @return position pair in (longitude, latitude) degrees.
    */
-  virtual std::pair<double, double> getPosition(int time) const = 0;
+  virtual std::pair<double, double> getPosition(int time) = 0;
 
   virtual bool isWrecking(int time) = 0;
 

@@ -16,7 +16,7 @@ class QuadraticBezierRoute : public VesselRoute {
   int currentPeriodNumber = 0;
 
 public:
-  std::pair<double, double> getPosition(int time) const override;
+  std::pair<double, double> getPosition(int time) override;
 
   bool isWrecking(int time) override;
 
