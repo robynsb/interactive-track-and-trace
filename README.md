@@ -12,10 +12,9 @@ See original proposal for description.
 
 ## Gamified Reward Scheme Interaction Approach
 
-
 ![GIF of base interaction scheme](figures/demo2.gif)
 
-The gamified interaction will involve maneuvering a bird character around some litter. Successfully completing this goal will grant the player reward achievements. See below for some example reward achievements.
+The gamified interaction will involve maneuvering a bird character to collect food (green particles) and avoid litter (red particles). Successfully completing this goal will grant the player reward achievements. See below for some example reward achievements.
 
 ![Reward1](figures/fulmar.png)
 
