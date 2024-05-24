@@ -1,4 +1,3 @@
-#include <vtkNamedColors.h>
 #include <vtkPolyDataMapper2D.h>
 #include <vtkVertexGlyphFilter.h>
 #include <vtkActor2D.h>
@@ -14,11 +13,12 @@
 
 #include "../CartographicTransformation.h"
 
-#include "VesselLayer.h"
+#include "Vessels.h"
 
 using namespace std;
 
-VesselLayer::VesselLayer(std::shared_ptr<UVGrid> uvGrid, string path): uvGrid(uvGrid) {
+Vessels::Vessels(std::shared_ptr<UVGrid> uvGrid, string path):
+    uvGrid(uvGrid), deposition(nullptr), particlesBeached(nullptr) {
   // Read the image which will be the texture
   vtkNew<vtkPNGReader> pngReader;
   pngReader->SetFileName((path + "/vessel.png").c_str());
@@ -43,8 +43,6 @@ VesselLayer::VesselLayer(std::shared_ptr<UVGrid> uvGrid, string path): uvGrid(uv
   scaleFilter->SetInputConnection(texturePlane->GetOutputPort());
 
   position = vtkSmartPointer<vtkPoints>::New();
-//  position->InsertPoint(0, 5.064578756538323, 52.38748802505795, 0); // Amsterdam port
-//  position->InsertPoint(1, 3.4871731165678654, 51.421823592473054, 0); // South Netherlands port
 
   data = vtkSmartPointer<vtkPolyData>::New();
   data->SetPoints(position);
@@ -69,17 +67,28 @@ VesselLayer::VesselLayer(std::shared_ptr<UVGrid> uvGrid, string path): uvGrid(uv
   ren->AddActor(texturedPlane);
 }
 
-void VesselLayer::addRoute(std::shared_ptr<VesselRoute> route) {
+void Vessels::addRoute(std::shared_ptr<VesselRoute> route) {
   auto [x, y] = route->getPosition(0);
   position->InsertPoint(routes.size(), x, y, 0);
   routes.push_back(route);
 }
 
-void VesselLayer::updateData(int t) {
+void Vessels::updateData(int t) {
   for (int i = 0; i < routes.size(); i++) {
-    auto [x,y] = routes.at(i)->getPosition(t);
+    auto route = routes.at(i);
+    auto [x,y] = route->getPosition(t);
     position->SetPoint(i, x, y, 0);
     position->Modified();
+    if (deposition != nullptr and route->isWrecking(t)) {
+      deposition->InsertNextPoint(x, y, 0);
+      deposition->Modified();
+      particlesBeached->InsertNextValue(0);
+      particlesBeached->Modified();
+    }
   }
 }
 
+void Vessels::setDepositAndBeached(vtkSmartPointer<vtkPoints> deposit, vtkSmartPointer<vtkIntArray> particlesBeached) {
+  deposition = deposit;
+  this->particlesBeached = particlesBeached;
+}

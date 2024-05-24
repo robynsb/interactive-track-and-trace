@@ -4,4 +4,5 @@ src/.cache
 src/build
 .idea
 src/cmake-build-debug
+src/cmake-build-release
 compile_commands.json

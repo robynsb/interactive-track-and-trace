@@ -14,8 +14,13 @@
 
 #define ROTATIONSTEP 0.1
 #define ACCELERATESTEP 0.05
-#define DECELLERATION 0.1
-#define MAXVELOCITY 0.01
+#define DECELLERATION 0.05
+#define MAXVELOCITY 0.02
+#define SCALEHORIZONTALVELOCITY 1.6 // Since the velocity is measured in degrees per time step,
+                                    // and the longitudanal lines on our map are "squished" more
+                                    // than latitudanal lines. This scaling factor corrects for this
+                                    // to make the character "look" like they move the same velocity
+                                    // horizontally vs vertically.
 
 class Character : public Layer {
 private:
@@ -23,7 +28,7 @@ private:
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<CharacterMoveCallback> controller;
   vtkSmartPointer<vtkAbstractTransform> cameraTransform;
-  vtkSmartPointer<vtkGlyphSource2D> arrowSource;
+  vtkSmartPointer<vtkTransform> rotater;
 
   double velocity = 0;
   double throttle = 0;
@@ -34,7 +39,7 @@ private:
   void clampCamera(double pos[3]);
 
 public:
-  Character(std::shared_ptr<UVGrid> uvGrid);
+  Character(std::shared_ptr<UVGrid> uvGrid, std::string path);
   void updateData(int t) override;
 
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;

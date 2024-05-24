@@ -2,17 +2,11 @@
 
 using namespace std;
 
+const double quadraticBezier1D(double p0, double p1, double p2, double t) {
+  return (1-t)*(1-t)*p0 + 2*(1-t)*t*p1 + t*t*p2;
+}
 
 std::pair<double, double> QuadraticBezierRoute::getPosition(int time) const {
-//  // Southend-on-sea
-//  double lon1 = 0.6833443334080538;
-//  double lat1 = 51.513525377373554;
-//  // Somewhere in the ocean
-//  double lon2 = 4.278963276069124;
-//  double lat2 = 53.595354574287875;
-//  // Amsterdam
-//  double lon3 = 4.905113199673045;
-//  double lat3 = 52.37897444844786;
   if (time < startTime) {
     return {lon1, lat1};
   }
@@ -24,7 +18,14 @@ std::pair<double, double> QuadraticBezierRoute::getPosition(int time) const {
   };
 }
 
-QuadraticBezierRoute::QuadraticBezierRoute(int startTime, int duration, int lon1, int lat1,
+
+QuadraticBezierRoute::QuadraticBezierRoute(int startTime, int duration, int depositionPeriod, int lon1, int lat1,
                                            int lon2, int lat2, int lon3, int lat3) :
         duration(duration), startTime(startTime), lat1(lat1), lon1(lon1),
-        lat2(lat2), lon2(lon2), lon3(lon3), lat3(lat3) {}
+        lat2(lat2), lon2(lon2), lon3(lon3), lat3(lat3), depositionPeriod(depositionPeriod) {}
+
+bool QuadraticBezierRoute::isWrecking(int time) {
+  bool isWrecked = time / depositionPeriod != currentPeriodNumber;
+  currentPeriodNumber = time / depositionPeriod;
+  return isWrecked;
+}

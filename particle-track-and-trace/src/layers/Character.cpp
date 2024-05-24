@@ -10,13 +10,17 @@
 #include <vtkCamera.h>
 #include <vtkTransformFilter.h>
 #include <vtkAppendFilter.h>
+#include <vtkPNGReader.h>
+#include <vtkPlaneSource.h>
+#include <vtkTexture.h>
+#include <vtkTextureMapToPlane.h>
 
 #include "Character.h"
 #include "../CartographicTransformation.h"
 
 using namespace std;
 
-Character::Character(std::shared_ptr<UVGrid> uvGrid) {
+Character::Character(std::shared_ptr<UVGrid> uvGrid, string path) {
   controller = vtkSmartPointer<CharacterMoveCallback>::New();
 
   position = vtkSmartPointer<vtkPoints>::New();
@@ -30,14 +34,36 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid) {
   transformFilter->Update();
   cameraTransform.TakeReference(transformFilter->GetTransform());
 
-  arrowSource = vtkSmartPointer<vtkGlyphSource2D>::New();
-//  arrowSource->SetGlyphTypeToArrow();
-  arrowSource->SetGlyphTypeToTriangle();
-  arrowSource->SetScale(0.02);
-  arrowSource->Update();
+  vtkNew<vtkPNGReader> pngReader;
+  pngReader->SetFileName((path + "/bird.png").c_str());
+
+  // Create a plane
+  vtkNew<vtkPlaneSource> plane;
+  plane->SetCenter(0.0, 0.0, 0.0);
+  plane->SetNormal(0.0, 0.0, 1.0);
+
+  // Apply the texture
+  vtkNew<vtkTexture> texture;
+  texture->SetInputConnection(pngReader->GetOutputPort());
+
+  vtkNew<vtkTextureMapToPlane> texturePlane;
+  texturePlane->SetInputConnection(plane->GetOutputPort());
+
+  vtkNew<vtkTransform> scaler;
+  scaler->Scale(0.05, 0.05, 1.0);
+
+  vtkNew<vtkTransformFilter> scaleFilter;
+  scaleFilter->SetTransform(scaler);
+  scaleFilter->SetInputConnection(texturePlane->GetOutputPort());
+
+  rotater = vtkSmartPointer<vtkTransform>::New();
+  rotater->Identity();
+  vtkNew<vtkTransformFilter> rotateFilter;
+  rotateFilter->SetTransform(rotater);
+  rotateFilter->SetInputConnection(scaleFilter->GetOutputPort());
 
   vtkNew<vtkGlyph2D> glyph2D;
-  glyph2D->SetSourceConnection(arrowSource->GetOutputPort());
+  glyph2D->SetSourceConnection(rotateFilter->GetOutputPort());
   glyph2D->SetInputConnection(transformFilter->GetOutputPort());
   glyph2D->OrientOn();
   glyph2D->ClampingOn();
@@ -47,13 +73,14 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid) {
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
-  vtkNew<vtkActor> actor;
-  actor->SetMapper(mapper);
+  vtkNew<vtkActor> texturedPlane;
+  texturedPlane->SetMapper(mapper);
+  texturedPlane->SetTexture(texture);
 
-  actor->GetProperty()->SetColor(0, 0, 0);
-  actor->GetProperty()->SetOpacity(0.2);
+//  actor->GetProperty()->SetColor(0, 0, 0);
+//  actor->GetProperty()->SetOpacity(0.2);
 
-  ren->AddActor(actor);
+  ren->AddActor(texturedPlane);
 }
 
 
@@ -100,13 +127,16 @@ void Character::updateVelocity() {
 void Character::updatePosition() {
   double point[3];
   position->GetPoint(0, point);
-  position->SetPoint(0, point[0] + cos(angleRadians)*velocity, point[1] + sin(angleRadians)*velocity, 0);
+  position->SetPoint(0,
+                     point[0] + cos(angleRadians)*velocity*SCALEHORIZONTALVELOCITY,
+                     point[1] + sin(angleRadians)*velocity, 0);
   position->Modified();
 }
 
 void Character::updateDirection() {
-  arrowSource->SetRotationAngle(45 + angleRadians * (180.0 / M_PI));
-  arrowSource->Update();
+  rotater->Identity();
+  rotater->RotateZ(- 25+ angleRadians * (180.0 / M_PI));
+  rotater->Update();
 }
 
 void Character::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {

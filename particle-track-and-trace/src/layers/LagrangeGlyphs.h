@@ -1,5 +1,5 @@
-#ifndef LGLYPHLAYER_H
-#define LGLYPHLAYER_H
+#ifndef LAGRANGEGLYPHS_H
+#define LAGRANGEGLYPHS_H
 
 #include "Layer.h"
 #include "../advection/kernel/AdvectionKernel.h"
@@ -7,20 +7,23 @@
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
 
+#define EPS 0.00001
+
 /**
  * Implements the Layer class for the case of a Lagrangian visualization.
  * Specifically, this class models the Lagrangian particles in the simulation
  * using the 'glyph' mark and 'transparency' channel to denote age.
  */
-class LGlyphLayer : public Layer {
+class LagrangeGlyphs : public Layer {
 private:
   vtkSmartPointer<vtkPoints> points;
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<vtkIntArray> particlesBeached;
   std::unique_ptr<AdvectionKernel> advector;
   std::shared_ptr<UVGrid> uvGrid;
+  vtkNew<vtkActor> actor;
   int lastT = 1000;
-  int beachedAtNumberOfTimes = 20;
+  int beachedAtNumberOfTimes = 50;
 
   vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();
 public:
@@ -29,7 +32,7 @@ public:
    * @param uvGrid UVGrid used for boundary conditions calculations
    * @param advectionKernel advects particles using given kernel
    */
-  LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel);
+  LagrangeGlyphs(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel);
 
   /**
    * This function spoofs a few points in the dataset. Mostly used for testing.
@@ -45,6 +48,10 @@ public:
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;
 
   vtkSmartPointer<vtkPoints> getPoints();
+
+  vtkSmartPointer<vtkIntArray> getBeached();
+
+  void setColour(int red, int green, int blue);
 };
 
 #endif

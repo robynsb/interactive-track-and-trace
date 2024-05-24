@@ -1,5 +1,5 @@
-#ifndef VESSELLAYER_H
-#define VESSELLAYER_H
+#ifndef VESSELS_H
+#define VESSELS_H
 
 
 #include <vtkPoints.h>
@@ -8,17 +8,20 @@
 #include "../vesselroutes/VesselRoute.h"
 #include "../advection/UVGrid.h"
 
-class VesselLayer : public Layer {
+class Vessels : public Layer {
 private:
+  vtkSmartPointer<vtkPoints> deposition;
   vtkSmartPointer<vtkPoints> position;
+  vtkSmartPointer<vtkIntArray> particlesBeached;
   vtkSmartPointer<vtkPolyData> data;
   std::vector<std::shared_ptr<VesselRoute>> routes;
   std::shared_ptr<UVGrid> uvGrid;
 public:
   void addRoute(std::shared_ptr<VesselRoute> route);
-  VesselLayer(std::shared_ptr<UVGrid> uvGrid, std::string path);
+  Vessels(std::shared_ptr<UVGrid> uvGrid, std::string path);
+  void setDepositAndBeached(vtkSmartPointer<vtkPoints> deposit, vtkSmartPointer<vtkIntArray> particlesBeached);
 
   void updateData(int t) override;
 };
 
-#endif //VESSELLAYER_H
+#endif //VESSELS_H

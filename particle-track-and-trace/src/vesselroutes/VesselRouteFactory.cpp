@@ -5,9 +5,9 @@
 
 using namespace std;
 
-shared_ptr<VesselLayer> createVesselLayer(shared_ptr<UVGrid> uvGrid, string datapath) {
-  auto vessels = make_shared<VesselLayer>(uvGrid, datapath);
-  vessels->addRoute(make_shared<QuadraticBezierRoute>(0, 1000000,
+shared_ptr<Vessels> createVesselLayer(shared_ptr<UVGrid> uvGrid, string datapath) {
+  auto vessels = make_shared<Vessels>(uvGrid, datapath);
+  vessels->addRoute(make_shared<QuadraticBezierRoute>(0, 1000000, 900000,
           // Southend-on-sea
                                                       0.6833443334080538,
                                                       51.513525377373554,
@@ -18,7 +18,7 @@ shared_ptr<VesselLayer> createVesselLayer(shared_ptr<UVGrid> uvGrid, string data
                                                       4.905113199673045,
                                                       52.37897444844786
   ));
-  vessels->addRoute(make_shared<QuadraticBezierRoute>(10000, 1500000,
+  vessels->addRoute(make_shared<QuadraticBezierRoute>(10000, 1500000, 21000000,
           // Bremerhaven
                                                       8.07569380036341, 54.148494844184846,
           // Sea
@@ -26,7 +26,7 @@ shared_ptr<VesselLayer> createVesselLayer(shared_ptr<UVGrid> uvGrid, string data
           // Rotterdam
                                                       4.082281578861821, 52.086017670497306
   ));
-  vessels->addRoute(make_shared<QuadraticBezierRoute>(50000, 7000000,
+  vessels->addRoute(make_shared<QuadraticBezierRoute>(50000, 7000000, 1200000,
           // Atlantic
                                                       -12.073103195836497, 49.44509691959939,
           // English Channel

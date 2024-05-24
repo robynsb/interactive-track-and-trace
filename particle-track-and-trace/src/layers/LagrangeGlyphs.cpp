@@ -1,4 +1,4 @@
-#include "LGlyphLayer.h"
+#include "LagrangeGlyphs.h"
 #include "../commands/SpawnPointCallback.h"
 #include <vtkActor2D.h>
 #include <vtkGlyph2D.h>
@@ -20,7 +20,7 @@
 
 #include "../CartographicTransformation.h"
 
-vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
+vtkSmartPointer<SpawnPointCallback> LagrangeGlyphs::createSpawnPointCallback() {
   auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
   newPointCallBack->setData(this->data);
   newPointCallBack->setPoints(this->points);
@@ -29,8 +29,6 @@ vtkSmartPointer<SpawnPointCallback> LGlyphLayer::createSpawnPointCallback() {
   newPointCallBack->setBeached(this->particlesBeached);
   return newPointCallBack;
 }
-
-// Further notes; current thinking is to allow tracking a particle's age by using a scalar array in the VtkPolyData. This would be incremented for every tick/updateData function call.
 
 /**
  * Build and returns a vtkLookupTable for the given number of colours in grayscale.
@@ -63,10 +61,7 @@ vtkSmartPointer<vtkLookupTable> buildLut(int n) {
   return lut;
 }
 
-LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel) {
-//  this->ren = vtkSmartPointer<vtkRenderer>::New();
-//  this->ren->SetLayer(2);
-
+LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel) {
   this->points = vtkSmartPointer<vtkPoints>::New();
   this->data = vtkSmartPointer<vtkPolyData>::New();
   this->data->SetPoints(this->points);
@@ -75,8 +70,8 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
   this->particlesBeached->SetName("particlesBeached");
   this->particlesBeached->SetNumberOfComponents(0);
 
-  this->data->GetPointData()->AddArray(this->particlesBeached);
-  this->data->GetPointData()->SetActiveScalars("particlesBeached");
+//  this->data->GetPointData()->AddArray(this->particlesBeached);
+//  this->data->GetPointData()->SetActiveScalars("particlesBeached");
 
   advector = std::move(advectionKernel);
   this->uvGrid = uvGrid;
@@ -97,27 +92,17 @@ LGlyphLayer::LGlyphLayer(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<Advecti
 
   vtkNew<vtkPolyDataMapper> mapper;
   mapper->SetInputConnection(glyph2D->GetOutputPort());
-  mapper->SetLookupTable(buildLut(this->beachedAtNumberOfTimes));
-  mapper->SetScalarRange(0, this->beachedAtNumberOfTimes);
+//  mapper->SetLookupTable(buildLut(this->beachedAtNumberOfTimes));
+//  mapper->SetScalarRange(0, this->beachedAtNumberOfTimes);
   mapper->Update();
   
-  vtkNew<vtkActor> actor;
   actor->SetMapper(mapper);
 
   this->ren->AddActor(actor);
 }
 
 // creates a few points so we can test the updateData function
-void LGlyphLayer::spoofPoints() {
-    // auto id =this->points->InsertNextPoint(6.532949683882039, 53.24308582564463, 0); // Coordinates of Zernike
-    // this->particlesBeached->SetValue(id, 0);
-    // id = this->points->InsertNextPoint(5.315307819255385, 60.40001057122271, 0); // Coordinates of Bergen
-    // this->particlesBeached->SetValue(id, 0);
-    // id = this->points->InsertNextPoint( 6.646210231365825, 46.52346296009023, 0); // Coordinates of Lausanne
-    // this->particlesBeached->SetValue(id, 0);
-    // id = this->points->InsertNextPoint(-6.553894313570932, 62.39522131195857, 0); // Coordinates of the top of the Faroe islands
-    // this->particlesBeached->SetValue(id, 0);
-
+void LagrangeGlyphs::spoofPoints() {
   for (int i=0; i < 330; i+=5) {
     for (int j=0; j < 330; j+=5) {
       this->points->InsertNextPoint(-15.875+(12.875+15.875)/330*j, 46.125+(62.625-46.125)/330*i, 0);
@@ -128,7 +113,7 @@ void LGlyphLayer::spoofPoints() {
   this->points->Modified();
 }
 
-void LGlyphLayer::updateData(int t) {
+void LagrangeGlyphs::updateData(int t) {
   const int SUPERSAMPLINGRATE = 4;
   double point[3], oldX, oldY;
   bool modifiedData = false;
@@ -150,11 +135,19 @@ void LGlyphLayer::updateData(int t) {
 
       // supersampling
       for (int i=0; i < SUPERSAMPLINGRATE; i++) {
-        std::tie(point[1], point[0]) = advector->advect(t, point[1], point[0], (t-this->lastT)/SUPERSAMPLINGRATE);
+        int dt = (t-this->lastT)/SUPERSAMPLINGRATE;
+        if(dt < 0) {
+          // TODO: This is a hack for when the t wraps around,
+          // there is probably a more elegant way of dealing with this whole thing
+          // that involves having two separate DTs.
+          // One for the "render" step time, and one for the computation step time.
+          dt = t;
+        }
+        std::tie(point[1], point[0]) = advector->advect(t, point[1], point[0], dt);
       }
 
       // if the particle's location remains unchanged, increase beachedFor number. Else, decrease it and update point position.
-      if (oldX == point[0] and oldY == point[1]) {
+      if (abs(oldX - point[0]) < EPS and abs(oldY-point[1]) < EPS) {
         this->particlesBeached->SetValue(n, beachedFor+1);
       } else {
         this->particlesBeached->SetValue(n, std::max(beachedFor-1, 0));
@@ -167,13 +160,21 @@ void LGlyphLayer::updateData(int t) {
   this->lastT = t;
 }
 
-void LGlyphLayer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
+void LagrangeGlyphs::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
   auto newPointCallBack = createSpawnPointCallback();
   interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
   interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
   interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
 }
 
-vtkSmartPointer<vtkPoints> LGlyphLayer::getPoints() {
+vtkSmartPointer<vtkPoints> LagrangeGlyphs::getPoints() {
   return points;
+}
+
+vtkSmartPointer<vtkIntArray> LagrangeGlyphs::getBeached() {
+  return particlesBeached;
+}
+
+void LagrangeGlyphs::setColour(int red, int green, int blue) {
+  actor->GetProperty()->SetColor(red/255.0, green/255.0, blue/255.0);
 }

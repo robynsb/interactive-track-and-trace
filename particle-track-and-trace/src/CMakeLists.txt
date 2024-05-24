@@ -40,12 +40,12 @@ find_package(netCDF REQUIRED)
 add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/BackgroundImage.cpp
         layers/BackgroundImage.h
-        layers/EGlyphLayer.cpp
-        layers/EGlyphLayer.h
+        layers/EulerGlyphs.cpp
+        layers/EulerGlyphs.h
         layers/Layer.cpp
         layers/Layer.h
-        layers/LGlyphLayer.cpp
-        layers/LGlyphLayer.h
+        layers/LagrangeGlyphs.cpp
+        layers/LagrangeGlyphs.h
         Program.cpp
         Program.h
         commands/TimerCallbackCommand.h
@@ -79,13 +79,17 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         collisions/ParticleCollisionCallback.h
         collisions/DummyCollisionHandler.h
         collisions/DummyCollisionHandler.cpp
-        layers/VesselLayer.h
-        layers/VesselLayer.cpp
+        layers/Vessels.h
+        layers/Vessels.cpp
         vesselroutes/VesselRoute.h
         vesselroutes/QuadraticBezierRoute.cpp
         vesselroutes/QuadraticBezierRoute.h
         vesselroutes/VesselRouteFactory.cpp
         vesselroutes/VesselRouteFactory.h
+        layers/FoodSpawner.cpp
+        layers/FoodSpawner.h
+        collisions/ParticleRemover.cpp
+        collisions/ParticleRemover.h
 )
 
 execute_process(

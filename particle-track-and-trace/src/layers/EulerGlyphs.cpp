@@ -1,4 +1,4 @@
-#include "EGlyphLayer.h"
+#include "EulerGlyphs.h"
 #include <vtkPointData.h>
 #include <vtkDoubleArray.h>
 #include <vtkGlyphSource2D.h>
@@ -21,7 +21,7 @@
 
 using namespace std;
 
-EGlyphLayer::EGlyphLayer(std::shared_ptr<UVGrid> uvGrid) {
+EulerGlyphs::EulerGlyphs(std::shared_ptr<UVGrid> uvGrid) {
 //  this->ren = vtkSmartPointer<vtkRenderer>::New();
 //  this->ren->SetLayer(1);
   this->ren->InteractiveOff();
@@ -35,7 +35,7 @@ EGlyphLayer::EGlyphLayer(std::shared_ptr<UVGrid> uvGrid) {
 }
 
 
-void EGlyphLayer::readCoordinates() {
+void EulerGlyphs::readCoordinates() {
   vtkNew<vtkPoints> points;
   this->numLats = uvGrid->lats.size();
   this->numLons = uvGrid->lons.size();
@@ -95,7 +95,7 @@ void EGlyphLayer::readCoordinates() {
 }
 
 
-void EGlyphLayer::updateData(int t) {
+void EulerGlyphs::updateData(int t) {
   int i = 0;
   for (int lat = 0; lat < uvGrid->latSize; lat++) {
     for (int lon = 0; lon < uvGrid->lonSize; lon++) {
