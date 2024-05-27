@@ -15,6 +15,7 @@
 #include "layers/FoodSpawner.h"
 #include "layers/LagrangeGlyphs.h"
 #include "layers/Character.h"
+#include "layers/Health.h"
 #include "collisions/DummyCollisionHandler.h"
 #include "collisions/ParticleRemover.h"
 #include "layers/ParticleCollision.h"
@@ -56,6 +57,7 @@ int main() {
   auto foodSpawn = make_shared<FoodSpawner>(food->getPoints(), food->getBeached());
   auto foodRemover = make_unique<ParticleRemover>(food->getPoints());
   collisionHandler->addPointSet(food->getPoints(), std::move(foodRemover));
+  auto health = make_shared<Health>();
 
   unique_ptr<Program> program = make_unique<Program>(DT);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
@@ -66,6 +68,7 @@ int main() {
   program->addLayer(collisionHandler);
   program->addLayer(vessels);
   program->addLayer(character);
+  program->addLayer(health);
 
   program->render();
 

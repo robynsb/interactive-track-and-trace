@@ -92,6 +92,9 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         collisions/ParticleRemover.h
         vesselroutes/StraightLineRoute.cpp
         vesselroutes/StraightLineRoute.h
+        layers/Health.cpp
+        layers/Health.h
+        layers/Health.h
 )
 
 execute_process(

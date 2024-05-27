@@ -154,7 +154,7 @@ void Character::clampCamera(double pos[3]) {
   // only check the x,y coords of the camera; we don't care about z
   for (int i=0; i < 2; i++) {
     //boundary cond: scale+|pos| < 1.
-    if (abs(pos[i])+scale > 1.01) {
+    if (abs(pos[i])+scale >= 1.0) {
       if (pos[i] >= 0) {
         pos[i] = 1 - scale;
       } else {
