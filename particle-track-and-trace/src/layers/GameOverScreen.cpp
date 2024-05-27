@@ -1,6 +1,7 @@
 #include "GameOverScreen.h"
 
 #include "../CartographicTransformation.h"
+#include "../commands/DismissGameoverScreen.h"
 
 #include <vtkGlyph2D.h>
 #include <vtkPolyDataMapper2D.h>
@@ -8,6 +9,7 @@
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkRenderWindow.h>
 #include <vtkTransformFilter.h>
 #include <vtkPNGReader.h>
 #include <vtkPlaneSource.h>
@@ -45,7 +47,7 @@ GameOverScreen::GameOverScreen(string datapath) {
   texturePlane->SetInputConnection(plane->GetOutputPort());
 
   vtkNew<vtkTransform> scaler;
-  scaler->Scale(1, 1, 1.0);
+  scaler->Scale(1.5*1.77, 1.5, 1.0);
 
   vtkNew<vtkTransformFilter> scaleFilter;
   scaleFilter->SetTransform(scaler);
@@ -69,6 +71,8 @@ GameOverScreen::GameOverScreen(string datapath) {
 //  actor->GetProperty()->SetColor(0, 0, 0);
 //  actor->GetProperty()->SetOpacity(0.2);
 
+  setVisibility(false);
+
   ren->AddActor(texturedPlane);
 }
 
@@ -82,4 +86,20 @@ void GameOverScreen::setVisibility(bool visible) {
   } else {
     texturedPlane->GetProperty()->SetOpacity(0);
   }
+  texturedPlane->Modified();
+  if(ren->GetRenderWindow()) ren->GetRenderWindow()->Render();
+}
+
+void GameOverScreen::handleGameOver() {
+  setVisibility(true);
+}
+
+void GameOverScreen::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
+  vtkNew<DismissGameoverScreen> controller;
+  controller->setDismiss(bind(&GameOverScreen::dismiss, this));
+  interactor->AddObserver(vtkCommand::KeyPressEvent, controller);
+}
+
+void GameOverScreen::dismiss() {
+  setVisibility(false);
 }

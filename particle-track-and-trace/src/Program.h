@@ -1,16 +1,18 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
+#include "layers/Layer.h"
+#include "gameovers/GameoverCallback.h"
+
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
 
-#include "layers/Layer.h"
 
 /** This class manages the upper levels of the vtk pipeline; it has attributes for the vtkrenderWindow and a vector of Layers to represent a variable number of vtkRenderers.
   * It can also set up a vtkTimer by connecting an instance of TimerCallbackCommand with its contained vtkRenderWindowInteractor.
   */ 
-class Program {
+class Program: public GameoverCallback {
 private:
   /** This attribute models a variable number of vtkRenderers, managed through the abstract Layer class.
     */ 
@@ -66,6 +68,8 @@ public:
    * Only call this function once!
    */
   void render();
+
+  void handleGameOver() override;
 };
 
 #endif

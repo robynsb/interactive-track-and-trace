@@ -180,3 +180,8 @@ vtkSmartPointer<vtkIntArray> LagrangeGlyphs::getBeached() {
 void LagrangeGlyphs::setColour(int red, int green, int blue) {
   actor->GetProperty()->SetColor(red/255.0, green/255.0, blue/255.0);
 }
+
+void LagrangeGlyphs::handleGameOver() {
+  points->Reset();
+  particlesBeached->Reset();
+}

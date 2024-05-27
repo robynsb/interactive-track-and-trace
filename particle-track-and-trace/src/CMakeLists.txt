@@ -104,10 +104,10 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/GameOverScreen.cpp
         layers/GameOverScreen.h
         gameovers/GameoverCallback.h
-        gameovers/ResetTimeAndPause.cpp
-        gameovers/ResetTimeAndPause.h
         layers/Timer.cpp
         layers/Timer.h
+        commands/DismissGameoverScreen.cpp
+        commands/DismissGameoverScreen.h
 )
 
 execute_process(

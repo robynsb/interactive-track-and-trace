@@ -18,11 +18,11 @@
 #include "layers/Health.h"
 #include "layers/GameOverScreen.h"
 #include "layers/Timer.h"
+#include "layers/ParticleCollision.h"
 #include "collisions/DummyCollisionHandler.h"
 #include "collisions/ParticleRemover.h"
 #include "collisions/FoodPickup.h"
 #include "collisions/DebrisPickup.h"
-#include "layers/ParticleCollision.h"
 #include "vesselroutes/VesselRouteFactory.h"
 #include "Program.h"
 #include "advection/UVGrid.h"
@@ -43,13 +43,18 @@ int main() {
   auto kernelRK4BoundaryCheckedFood = make_unique<SnapBoundaryConditionKernel>(std::move(kernelRK4Food), uvGrid);
 
   cout << "Starting vtk..." << endl;
+  auto program = make_shared<Program>(DT);
+  auto timer = make_shared<Timer>(program, DT);
   auto camera = make_shared<Camera>();
+
+  auto gameover = make_shared<GameOverScreen>(dataPath);
+
   auto litter = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryChecked));
   litter->setColour(254, 74, 73);
 //  auto euler = make_shared<EulerGlyphs>(uvGrid);
   auto character = make_shared<Character>(uvGrid, dataPath, camera);
 
-  auto health = make_shared<Health>();
+  auto health = make_shared<Health>(program);
   auto litterRemover = make_unique<DebrisPickup>(litter->getPoints(), health, camera);
   auto collisionHandler = make_shared<ParticleCollision>();
   collisionHandler->addPointSet(litter->getPoints(), std::move(litterRemover));
@@ -64,11 +69,6 @@ int main() {
   auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health);
   collisionHandler->addPointSet(food->getPoints(), std::move(foodRemover));
 
-  auto gameover = make_shared<GameOverScreen>(dataPath);
-
-  auto program = make_shared<Program>(DT);
-  auto timer = make_shared<Timer>(program, DT);
-
   program->addLayer(timer);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
   program->addLayer(litter);
@@ -80,7 +80,7 @@ int main() {
   program->addLayer(character);
   program->addLayer(health);
   program->addLayer(camera);
-//  program->addLayer(gameover);
+  program->addLayer(gameover);
 
   program->render();
 

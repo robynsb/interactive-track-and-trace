@@ -1,12 +1,8 @@
-//
-// Created by Robin Sachsenweger Ballantyne on 27/05/2024.
-//
-
 #include "Timer.h"
 #include "../commands/TimerCallbackCommand.h"
 
 void Timer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-  auto callback = vtkSmartPointer<TimerCallbackCommand>::New(program.get());
+  callback = vtkSmartPointer<TimerCallbackCommand>::New(program.get());
   callback->SetClientData(this);
   callback->setDt(dt);
   interactor->AddObserver(vtkCommand::TimerEvent, callback);
@@ -15,3 +11,16 @@ void Timer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) 
 }
 
 Timer::Timer(const std::shared_ptr<Program> &program, int dt) : program(program), dt(dt) {}
+
+void Timer::setPaused(bool val) {
+  callback->setPaused(val);
+}
+
+void Timer::resetTime() {
+  callback->resetTime();
+}
+
+void Timer::handleGameOver() {
+  setPaused(true);
+  resetTime();
+}

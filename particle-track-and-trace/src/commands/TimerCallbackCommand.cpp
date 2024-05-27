@@ -41,6 +41,6 @@ void TimerCallbackCommand::setDt(int dt) {
   this->dt = dt;
 }
 
-void TimerCallbackCommand::setTime(int time) {
-  this->time = time;
+void TimerCallbackCommand::resetTime() {
+  this->time = 0;
 }

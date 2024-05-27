@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "../advection/kernel/AdvectionKernel.h"
 #include "../commands/SpawnPointCallback.h"
+#include "../gameovers/GameoverCallback.h"
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
 
@@ -52,6 +53,8 @@ public:
   vtkSmartPointer<vtkIntArray> getBeached();
 
   void setColour(int red, int green, int blue);
+
+  void handleGameOver() override;
 };
 
 #endif

@@ -19,7 +19,6 @@ public:
    */
   virtual vtkSmartPointer<vtkRenderer> getLayer();
 
-
   /** updates the data in the layer to reflect the given timestamp.
     * @param t : the timestamp which the data should reflect.
     */
@@ -34,6 +33,8 @@ public:
     * Used to share one camera between multiple layers.
     */ 
   virtual void setCamera(vtkCamera *camera);
+
+  virtual void handleGameOver();
 };
 
 #endif

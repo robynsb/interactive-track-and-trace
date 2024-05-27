@@ -78,3 +78,9 @@ void Program::render() {
   win->Render();
   interact->Start();
 }
+
+void Program::handleGameOver() {
+  for (shared_ptr<Layer> l: layers) {
+    l->handleGameOver();
+  }
+}

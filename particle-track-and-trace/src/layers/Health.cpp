@@ -96,7 +96,7 @@ void Health::placeHealth() {
   ren->AddActor(actor);
 }
 
-Health::Health() {
+Health::Health(const std::shared_ptr<GameoverCallback> &gameoverCallback): gameoverCallback(gameoverCallback) {
   placeBackgroundHealth();
   placeHealth();
 }
@@ -116,7 +116,7 @@ void Health::changeHealth(double healthChange) {
     return;
   }
   if (healthChange < 0 and gracePeriod == 0) {
-    gracePeriod = GRADEPERIOD;
+    gracePeriod = GRACEPERIOD;
   }
 
   setHealth(health + healthChange);
@@ -124,7 +124,7 @@ void Health::changeHealth(double healthChange) {
 
 void Health::setHealth(double health) {
   if (health < 0) {
-    cout << "GAME OVER" << endl;
+    gameoverCallback->handleGameOver();
     health = 1;
   }
   this->health = health;

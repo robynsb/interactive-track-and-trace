@@ -12,8 +12,7 @@ public:
 
   void setProgram(Program *program);
   void setPaused(bool val);
-  void setTime(int time);
-
+  void resetTime();
   void setDt(int dt);
 
 private:

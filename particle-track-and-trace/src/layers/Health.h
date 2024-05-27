@@ -2,8 +2,9 @@
 #define HEALTH_H
 
 #include "Layer.h"
+#include "../gameovers/GameoverCallback.h"
 
-#define GRADEPERIOD 10;
+#define GRACEPERIOD 10;
 
 class Health : public Layer {
 private:
@@ -16,6 +17,7 @@ private:
    */
   double health = 1;
   vtkSmartPointer<vtkTransform> healthBarScaler;
+  std::shared_ptr<GameoverCallback> gameoverCallback;
   void placeBackgroundHealth();
   void placeHealth();
   void setHealth(double health);
@@ -23,7 +25,7 @@ public:
   void updateData(int t) override;
   void changeHealth(double healthChange);
 
-  Health();
+  Health(const std::shared_ptr<GameoverCallback> &gameoverCallback);
   void setCamera(vtkCamera *camera) override;
 };
 

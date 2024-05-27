@@ -3,7 +3,7 @@
 
 class GameoverCallback {
 public:
-  virtual void handleGameOver() const = 0;
+  virtual void handleGameOver() = 0;
 
   virtual ~GameoverCallback() = default;
 };
