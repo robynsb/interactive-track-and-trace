@@ -1,8 +1,6 @@
 #include <vtkRenderWindow.h>
 #include <vtkPointData.h>
 #include <vtkDoubleArray.h>
-#include <vtkGlyphSource2D.h>
-#include <vtkRegularPolygonSource.h>
 #include <vtkGlyph2D.h>
 #include <vtkActor2D.h>
 #include <vtkNamedColors.h>
@@ -11,15 +9,11 @@
 #include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
-#include <vtkCamera.h>
-#include <netcdf>
-#include <vtkArrowSource.h>
 #include <vtkNew.h>
 #include <vtkCallbackCommand.h>
 #include <vtkInteractorStyleUser.h>
 
 #include "Program.h"
-#include "commands/TimerCallbackCommand.h"
 #include "CartographicTransformation.h"
 #include "commands/CameraMoveCallback.h"
 
@@ -37,23 +31,6 @@ void Program::setWinProperties() {
   interact->SetInteractorStyle(style);
 }
 
-void Program::setupTimer(int dt) {
-  auto callback = vtkSmartPointer<TimerCallbackCommand>::New(this);
-  callback->SetClientData(this);
-  callback->setDt(dt);
-  this->interact->AddObserver(vtkCommand::TimerEvent, callback);
-  this->interact->AddObserver(vtkCommand::KeyPressEvent, callback);
-  this->interact->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
-}
-
-void Program::setupCameraCallback() {
-//  auto callback = vtkSmartPointer<CameraMoveCallback>::New(this->cam);
-//  this->interact->AddObserver(vtkCommand::MouseWheelForwardEvent, callback);
-//  this->interact->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
-//  this->interact->AddObserver(vtkCommand::KeyPressEvent, callback);
-}
-
-
 Program::Program(int timerDT) {
   this->win = vtkSmartPointer<vtkRenderWindow>::New();
   this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
@@ -61,8 +38,6 @@ Program::Program(int timerDT) {
 
   this->win->SetNumberOfLayers(0);
   setWinProperties();
-  setupTimer(timerDT);
-  setupCameraCallback();
 }
 
 void Program::addLayer(shared_ptr<Layer> layer) {

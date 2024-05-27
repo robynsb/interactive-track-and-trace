@@ -1,13 +1,11 @@
 #include "BackgroundImage.h"
 #include <vtkImageDataGeometryFilter.h>
 #include <vtkImageChangeInformation.h>
-#include <vtkImageSliceMapper.h>
 #include <vtkCamera.h>
 #include <vtkImageActor.h>
 #include <vtkImageData.h>
 #include <vtkImageMapper3D.h>
 #include <vtkImageReader2.h>
-#include <vtkImageShiftScale.h>
 #include <vtkMatrix4x4.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkTransform.h>

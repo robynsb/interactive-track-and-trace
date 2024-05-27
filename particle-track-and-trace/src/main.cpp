@@ -16,6 +16,8 @@
 #include "layers/LagrangeGlyphs.h"
 #include "layers/Character.h"
 #include "layers/Health.h"
+#include "layers/GameOverScreen.h"
+#include "layers/Timer.h"
 #include "collisions/DummyCollisionHandler.h"
 #include "collisions/ParticleRemover.h"
 #include "collisions/FoodPickup.h"
@@ -62,7 +64,12 @@ int main() {
   auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health);
   collisionHandler->addPointSet(food->getPoints(), std::move(foodRemover));
 
-  unique_ptr<Program> program = make_unique<Program>(DT);
+  auto gameover = make_shared<GameOverScreen>(dataPath);
+
+  auto program = make_shared<Program>(DT);
+  auto timer = make_shared<Timer>(program, DT);
+
+  program->addLayer(timer);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
   program->addLayer(litter);
 //  program->addLayer(euler);
@@ -73,6 +80,7 @@ int main() {
   program->addLayer(character);
   program->addLayer(health);
   program->addLayer(camera);
+//  program->addLayer(gameover);
 
   program->render();
 

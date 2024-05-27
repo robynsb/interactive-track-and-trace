@@ -11,7 +11,8 @@ public:
   void Execute(vtkObject* caller, unsigned long eventId, void* vtkNotUsed(callData)) override;
 
   void setProgram(Program *program);
-  void setPaused(const bool val);
+  void setPaused(bool val);
+  void setTime(int time);
 
   void setDt(int dt);
 

@@ -106,7 +106,8 @@ void Health::setCamera(vtkCamera *camera) {
 }
 
 void Health::updateData(int t) {
-  setHealth(health-healthLossRate);
+  if (health > 0.25) setHealth(health-healthLossRate);
+  else setHealth(health-healthLossRate/2);
   if (gracePeriod > 0) gracePeriod--;
 }
 

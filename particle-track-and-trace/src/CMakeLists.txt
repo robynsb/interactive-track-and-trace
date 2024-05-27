@@ -101,6 +101,13 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         collisions/DebrisPickup.h
         layers/Camera.cpp
         layers/Camera.h
+        layers/GameOverScreen.cpp
+        layers/GameOverScreen.h
+        gameovers/GameoverCallback.h
+        gameovers/ResetTimeAndPause.cpp
+        gameovers/ResetTimeAndPause.h
+        layers/Timer.cpp
+        layers/Timer.h
 )
 
 execute_process(

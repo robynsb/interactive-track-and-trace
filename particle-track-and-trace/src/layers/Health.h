@@ -9,7 +9,7 @@ class Health : public Layer {
 private:
   int gracePeriod = 10;
   double h = 0.18; // Original height of green bar.
-  double healthLossRate = 0.0005;
+  double healthLossRate = 0.00075;
   /**
    * Maximum health is 1.
    * Minimum health (i.e game over) is 0.

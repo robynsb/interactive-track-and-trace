@@ -40,3 +40,7 @@ void TimerCallbackCommand::setPaused(const bool val) {
 void TimerCallbackCommand::setDt(int dt) {
   this->dt = dt;
 }
+
+void TimerCallbackCommand::setTime(int time) {
+  this->time = time;
+}

@@ -19,6 +19,7 @@ using namespace std;
 
 Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_ptr<Camera> camera):
   uvGrid(uvGrid), camera(camera) {
+
   controller = vtkSmartPointer<CharacterMoveCallback>::New();
 
   position = vtkSmartPointer<vtkPoints>::New();
