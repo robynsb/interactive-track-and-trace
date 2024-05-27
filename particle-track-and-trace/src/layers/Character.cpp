@@ -1,15 +1,12 @@
 #include <cassert>
 
 #include <vtkGlyph2D.h>
-#include <vtkGlyphSource2D.h>
 #include <vtkPolyDataMapper2D.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkRenderWindowInteractor.h>
-#include <vtkCamera.h>
 #include <vtkTransformFilter.h>
-#include <vtkAppendFilter.h>
 #include <vtkPNGReader.h>
 #include <vtkPlaneSource.h>
 #include <vtkTexture.h>
@@ -20,7 +17,8 @@
 
 using namespace std;
 
-Character::Character(std::shared_ptr<UVGrid> uvGrid, string path) {
+Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_ptr<Camera> camera):
+  uvGrid(uvGrid), camera(camera) {
   controller = vtkSmartPointer<CharacterMoveCallback>::New();
 
   position = vtkSmartPointer<vtkPoints>::New();
@@ -107,8 +105,7 @@ void Character::updateData(int t) {
   }
   updateVelocity();
   updatePosition();
-  clampCamera(cameraTransform->TransformPoint(position->GetPoint(0)));
-//  position->SetPoint(0, sin(time), cos(time), 0);
+  camera->clampCamera(cameraTransform->TransformPoint(position->GetPoint(0)));
 }
 
 double easingFunction(double t) {
@@ -127,9 +124,23 @@ void Character::updateVelocity() {
 void Character::updatePosition() {
   double point[3];
   position->GetPoint(0, point);
-  position->SetPoint(0,
-                     point[0] + cos(angleRadians)*velocity*SCALEHORIZONTALVELOCITY,
-                     point[1] + sin(angleRadians)*velocity, 0);
+  point[0] += cos(angleRadians)*velocity*SCALEHORIZONTALVELOCITY;
+  point[1] += sin(angleRadians)*velocity;
+
+  if (point[0] < uvGrid->lonMin()) {
+    point[0] = uvGrid->lonMin();
+  }
+  if (point[0] > uvGrid->lonMax()) {
+    point[0] = uvGrid->lonMax();
+  }
+  if (point[1] < uvGrid->latMin()) {
+    point[1] = uvGrid->latMin();
+  }
+  if (point[1] > uvGrid->latMax()) {
+    point[1] = uvGrid->latMax();
+  }
+
+  position->SetPoint(0, point);
   position->Modified();
 }
 
@@ -142,29 +153,6 @@ void Character::updateDirection() {
 void Character::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
   interactor->AddObserver(vtkCommand::KeyPressEvent, controller);
   interactor->AddObserver(vtkCommand::KeyReleaseEvent, controller);
-}
-
-void Character::clampCamera(double pos[3]) {
-  auto cam = ren->GetActiveCamera();
-  double ogpos[3];
-  cam->GetPosition(ogpos);
-
-  double scale = cam->GetParallelScale();
-
-  // only check the x,y coords of the camera; we don't care about z
-  for (int i=0; i < 2; i++) {
-    //boundary cond: scale+|pos| < 1.
-    if (abs(pos[i])+scale >= 1.0) {
-      if (pos[i] >= 0) {
-        pos[i] = 1 - scale;
-      } else {
-        pos[i] = scale - 1;
-      }
-    }
-  }
-
-  cam->SetPosition(pos[0], pos[1], ogpos[2]);
-  cam->SetFocalPoint(pos[0], pos[1], 0);
 }
 
 vtkSmartPointer<vtkPoints> Character::getPosition() {

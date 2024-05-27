@@ -18,6 +18,8 @@
 #include "layers/Health.h"
 #include "collisions/DummyCollisionHandler.h"
 #include "collisions/ParticleRemover.h"
+#include "collisions/FoodPickup.h"
+#include "collisions/DebrisPickup.h"
 #include "layers/ParticleCollision.h"
 #include "vesselroutes/VesselRouteFactory.h"
 #include "Program.h"
@@ -39,12 +41,14 @@ int main() {
   auto kernelRK4BoundaryCheckedFood = make_unique<SnapBoundaryConditionKernel>(std::move(kernelRK4Food), uvGrid);
 
   cout << "Starting vtk..." << endl;
+  auto camera = make_shared<Camera>();
   auto litter = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryChecked));
   litter->setColour(254, 74, 73);
 //  auto euler = make_shared<EulerGlyphs>(uvGrid);
-  auto character = make_shared<Character>(uvGrid, dataPath);
+  auto character = make_shared<Character>(uvGrid, dataPath, camera);
 
-  auto litterRemover = make_unique<ParticleRemover>(litter->getPoints());
+  auto health = make_shared<Health>();
+  auto litterRemover = make_unique<DebrisPickup>(litter->getPoints(), health, camera);
   auto collisionHandler = make_shared<ParticleCollision>();
   collisionHandler->addPointSet(litter->getPoints(), std::move(litterRemover));
   collisionHandler->setPosition(character->getPosition());
@@ -55,9 +59,8 @@ int main() {
   auto food = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryCheckedFood));
   food->setColour(5, 74, 41);
   auto foodSpawn = make_shared<FoodSpawner>(food->getPoints(), food->getBeached());
-  auto foodRemover = make_unique<ParticleRemover>(food->getPoints());
+  auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health);
   collisionHandler->addPointSet(food->getPoints(), std::move(foodRemover));
-  auto health = make_shared<Health>();
 
   unique_ptr<Program> program = make_unique<Program>(DT);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
@@ -69,6 +72,7 @@ int main() {
   program->addLayer(vessels);
   program->addLayer(character);
   program->addLayer(health);
+  program->addLayer(camera);
 
   program->render();
 

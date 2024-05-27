@@ -106,10 +106,26 @@ void Health::setCamera(vtkCamera *camera) {
 }
 
 void Health::updateData(int t) {
-  setHealth(sin(t/360000.0)/2 + 0.5);
+  setHealth(health-healthLossRate);
+  if (gracePeriod > 0) gracePeriod--;
+}
+
+void Health::changeHealth(double healthChange) {
+  if (healthChange < 0 and gracePeriod > 0) {
+    return;
+  }
+  if (healthChange < 0 and gracePeriod == 0) {
+    gracePeriod = GRADEPERIOD;
+  }
+
+  setHealth(health + healthChange);
 }
 
 void Health::setHealth(double health) {
+  if (health < 0) {
+    cout << "GAME OVER" << endl;
+    health = 1;
+  }
   this->health = health;
   healthBarScaler->Identity();
   healthBarScaler->Translate(0, -h*(1-health)/2, 0);

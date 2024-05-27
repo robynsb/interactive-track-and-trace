@@ -47,9 +47,9 @@ void Program::setupTimer(int dt) {
 }
 
 void Program::setupCameraCallback() {
-  auto callback = vtkSmartPointer<CameraMoveCallback>::New(this->cam);
-  this->interact->AddObserver(vtkCommand::MouseWheelForwardEvent, callback);
-  this->interact->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
+//  auto callback = vtkSmartPointer<CameraMoveCallback>::New(this->cam);
+//  this->interact->AddObserver(vtkCommand::MouseWheelForwardEvent, callback);
+//  this->interact->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback);
 //  this->interact->AddObserver(vtkCommand::KeyPressEvent, callback);
 }
 

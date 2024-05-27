@@ -9,6 +9,7 @@
 #include <vtkTransform.h>
 #include <vtkGlyphSource2D.h>
 #include "Layer.h"
+#include "Camera.h"
 #include "../commands/CharacterMoveCallback.h"
 #include "../advection/UVGrid.h"
 
@@ -29,6 +30,8 @@ private:
   vtkSmartPointer<CharacterMoveCallback> controller;
   vtkSmartPointer<vtkAbstractTransform> cameraTransform;
   vtkSmartPointer<vtkTransform> rotater;
+  std::shared_ptr<UVGrid> uvGrid;
+  std::shared_ptr<Camera> camera;
 
   double velocity = 0;
   double throttle = 0;
@@ -36,10 +39,9 @@ private:
   void updateDirection();
   void updateVelocity();
   void updatePosition();
-  void clampCamera(double pos[3]);
 
 public:
-  Character(std::shared_ptr<UVGrid> uvGrid, std::string path);
+  Character(std::shared_ptr<UVGrid> uvGrid, std::string path, std::shared_ptr<Camera> camera);
   void updateData(int t) override;
 
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;

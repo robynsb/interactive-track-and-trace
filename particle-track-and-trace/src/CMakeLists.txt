@@ -95,6 +95,12 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/Health.cpp
         layers/Health.h
         layers/Health.h
+        collisions/FoodPickup.cpp
+        collisions/FoodPickup.h
+        collisions/DebrisPickup.cpp
+        collisions/DebrisPickup.h
+        layers/Camera.cpp
+        layers/Camera.h
 )
 
 execute_process(

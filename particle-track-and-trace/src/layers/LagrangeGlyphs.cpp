@@ -19,6 +19,7 @@
 #include <vtkCamera.h>
 
 #include "../CartographicTransformation.h"
+#include "../advection/interpolate.h"
 
 vtkSmartPointer<SpawnPointCallback> LagrangeGlyphs::createSpawnPointCallback() {
   auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
@@ -147,7 +148,8 @@ void LagrangeGlyphs::updateData(int t) {
       }
 
       // if the particle's location remains unchanged, increase beachedFor number. Else, decrease it and update point position.
-      if (abs(oldX - point[0]) < EPS and abs(oldY-point[1]) < EPS) {
+//      if (abs(oldX - point[0]) < EPS and abs(oldY-point[1]) < EPS) {
+      if (isNearestNeighbourZero(*uvGrid, t, point[1], point[0])) {
         this->particlesBeached->SetValue(n, beachedFor+1);
       } else {
         this->particlesBeached->SetValue(n, std::max(beachedFor-1, 0));
@@ -161,10 +163,10 @@ void LagrangeGlyphs::updateData(int t) {
 }
 
 void LagrangeGlyphs::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-  auto newPointCallBack = createSpawnPointCallback();
-  interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
-  interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
-  interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
+//  auto newPointCallBack = createSpawnPointCallback();
+//  interactor->AddObserver(vtkCommand::LeftButtonPressEvent, newPointCallBack);
+//  interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, newPointCallBack);
+//  interactor->AddObserver(vtkCommand::MouseMoveEvent, newPointCallBack);
 }
 
 vtkSmartPointer<vtkPoints> LagrangeGlyphs::getPoints() {

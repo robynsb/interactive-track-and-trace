@@ -5,6 +5,7 @@
 
 #include "UVGrid.h"
 
+
 /**
  * Bilinearly interpolate the point (time, lat, lon) to produce the interpolated velocity.
  * Since it is in 3D, this means that it interpolates against 8 points (excluding edges).
@@ -24,5 +25,7 @@ Vel bilinearinterpolate(const UVGrid &uvGrid, int time, double lat, double lon);
  * @return interpolated velocities
  */
 std::vector<Vel> bilinearinterpolation(const UVGrid &uvGrid, std::vector<std::tuple<int, double, double>> points);
+
+bool isNearestNeighbourZero(const UVGrid &uvGrid, int time, double lat, double lon);
 
 #endif //INTERPOLATE_H
