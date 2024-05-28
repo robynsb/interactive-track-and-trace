@@ -12,6 +12,11 @@ double Camera::getScreenShakeOffset() {
   return maxOffset * dis(gen);
 }
 
+double Camera::getZoomOffset() {
+  if (zoomIn) return 1 + zoomProgress * zoomProgress * (MAXZOOM - 1)/(MAXZOOMDURATION*MAXZOOMDURATION);
+  else return 1 + zoomProgress * (MAXZOOM - 1) / MAXZOOMDURATION;
+}
+
 void Camera::clampCamera(double pos[3]) {
   pos[0] += getScreenShakeOffset();
   pos[1] += getScreenShakeOffset();
@@ -20,7 +25,7 @@ void Camera::clampCamera(double pos[3]) {
   double ogpos[3];
   cam->GetPosition(ogpos);
 
-  cam->SetParallelScale(0.4);
+  cam->SetParallelScale(ZOOMLEVEL * getZoomOffset());
   double scale = cam->GetParallelScale();
 
   // only check the x,y coords of the camera; we don't care about z
@@ -44,8 +49,20 @@ Camera::Camera(): gen(rd()), dis(0.0, 1.0) {
 
 void Camera::updateData(int t) {
   if( screenShakeProgress > 0) screenShakeProgress--;
+  if (zoomIn) zoomProgress += 3;
+  if (zoomProgress > MAXZOOMDURATION) {
+    zoomProgress = MAXZOOMDURATION;
+    zoomIn = false;
+  }
+  if (zoomProgress > 0 and !zoomIn) zoomProgress -= 1;
+
+  if (zoomProgress < 0) zoomProgress = 0;
 }
 
 void Camera::shakeScreen() {
   screenShakeProgress = MAXSCREENSHAKEDURATION;
+}
+
+void Camera::zoomScreen() {
+  zoomIn = true;
 }

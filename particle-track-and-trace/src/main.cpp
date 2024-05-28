@@ -66,7 +66,7 @@ int main() {
   auto food = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryCheckedFood));
   food->setColour(5, 74, 41);
   auto foodSpawn = make_shared<FoodSpawner>(food->getPoints(), food->getBeached());
-  auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health);
+  auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health, camera, character);
   collisionHandler->addPointSet(food->getPoints(), std::move(foodRemover));
 
   program->addLayer(timer);

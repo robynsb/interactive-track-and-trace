@@ -2,7 +2,8 @@
 
 void DebrisPickup::handleCollision(int index) const {
   ParticleRemover::handleCollision(index);
-  health->changeHealth(-0.4);
+  health->changeHealth(-0.3);
+  health->grace();
   camera->shakeScreen();
 }
 

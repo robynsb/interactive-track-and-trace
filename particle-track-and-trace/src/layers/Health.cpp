@@ -115,9 +115,6 @@ void Health::changeHealth(double healthChange) {
   if (healthChange < 0 and gracePeriod > 0) {
     return;
   }
-  if (healthChange < 0 and gracePeriod == 0) {
-    gracePeriod = GRACEPERIOD;
-  }
 
   setHealth(health + healthChange);
 }
@@ -125,10 +122,19 @@ void Health::changeHealth(double healthChange) {
 void Health::setHealth(double health) {
   if (health < 0) {
     gameoverCallback->handleGameOver();
-    health = 1;
+    return;
   }
   this->health = health;
   healthBarScaler->Identity();
   healthBarScaler->Translate(0, -h*(1-health)/2, 0);
   healthBarScaler->Scale(1, health, 1);
+}
+
+void Health::handleGameOver() {
+  health = 1;
+  setHealth(health);
+}
+
+void Health::grace() {
+  gracePeriod = GRACEPERIOD;
 }

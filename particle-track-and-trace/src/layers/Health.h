@@ -24,9 +24,12 @@ private:
 public:
   void updateData(int t) override;
   void changeHealth(double healthChange);
+  void grace();
 
   Health(const std::shared_ptr<GameoverCallback> &gameoverCallback);
   void setCamera(vtkCamera *camera) override;
+
+  void handleGameOver() override;
 };
 
 

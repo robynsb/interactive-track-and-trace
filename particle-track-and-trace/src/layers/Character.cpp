@@ -23,7 +23,7 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   controller = vtkSmartPointer<CharacterMoveCallback>::New();
 
   position = vtkSmartPointer<vtkPoints>::New();
-  position->InsertPoint(0, 6.513089433595266, 53.44059997086552, 0); // Groningen
+  position->InsertPoint(0, STARTLON, STARTLAT, 0);
 
   data = vtkSmartPointer<vtkPolyData>::New();
   data->SetPoints(position);
@@ -42,7 +42,7 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   plane->SetNormal(0.0, 0.0, 1.0);
 
   // Apply the texture
-  vtkNew<vtkTexture> texture;
+  texture = vtkSmartPointer<vtkTexture>::New();
   texture->SetInputConnection(pngReader->GetOutputPort());
 
   vtkNew<vtkTextureMapToPlane> texturePlane;
@@ -72,7 +72,7 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
-  vtkNew<vtkActor> texturedPlane;
+  texturedPlane = vtkSmartPointer<vtkActor>::New();
   texturedPlane->SetMapper(mapper);
   texturedPlane->SetTexture(texture);
 
@@ -104,6 +104,7 @@ void Character::updateData(int t) {
       throttle = 0;
     }
   }
+  updateDashProgress();
   updateVelocity();
   updatePosition();
   camera->clampCamera(cameraTransform->TransformPoint(position->GetPoint(0)));
@@ -119,7 +120,7 @@ double easingFunction(double t) {
 }
 
 void Character::updateVelocity() {
-  velocity = MAXVELOCITY * easingFunction(throttle);
+  velocity = MAXVELOCITY * easingFunction(throttle) + getDashVelocityBonus();
 }
 
 void Character::updatePosition() {
@@ -158,4 +159,28 @@ void Character::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interact
 
 vtkSmartPointer<vtkPoints> Character::getPosition() {
   return position;
+}
+
+void Character::handleGameOver() {
+  position->SetPoint(0, STARTLON, STARTLAT, 0);
+}
+
+void Character::dash() {
+  dashProgress = DASHDURATION;
+  dashing = true;
+}
+
+double Character::getDashVelocityBonus() {
+  return dashProgress * DASHVELOCITYBONUS / DASHDURATION;
+}
+
+void Character::updateDashProgress() {
+  if (dashing and dashProgress > 0) {
+    dashProgress--;
+    texturedPlane->GetProperty()->SetColor(12/255.0, 177/255.0, 98/255.0);
+  }
+  if (dashing and dashProgress == 0) {
+    texturedPlane->GetProperty()->SetColor(1, 1, 1);
+    dashing = false;
+  }
 }
