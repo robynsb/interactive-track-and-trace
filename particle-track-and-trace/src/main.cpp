@@ -19,6 +19,7 @@
 #include "layers/GameOverScreen.h"
 #include "layers/Timer.h"
 #include "layers/ParticleCollision.h"
+#include "layers/DayCounter.h"
 #include "collisions/DummyCollisionHandler.h"
 #include "collisions/ParticleRemover.h"
 #include "collisions/FoodPickup.h"
@@ -69,6 +70,8 @@ int main() {
   auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health, camera, character);
   collisionHandler->addPointSet(food->getPoints(), std::move(foodRemover));
 
+  auto dayCounter = make_shared<DayCounter>();
+
   program->addLayer(timer);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
   program->addLayer(litter);
@@ -81,6 +84,7 @@ int main() {
   program->addLayer(health);
   program->addLayer(camera);
   program->addLayer(gameover);
+  program->addLayer(dayCounter);
 
   program->render();
 

@@ -108,6 +108,8 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/Timer.h
         commands/DismissGameoverScreen.cpp
         commands/DismissGameoverScreen.h
+        layers/DayCounter.cpp
+        layers/DayCounter.h
 )
 
 execute_process(
