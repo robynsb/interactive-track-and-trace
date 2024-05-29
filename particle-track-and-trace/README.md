@@ -1,4 +1,4 @@
-## Vtk
+## Interactive track and trace
 This folder contains the Vtk program which actually displays the simulated data. The code is driven by the `Program` class, which contains the upper level of the vtk pipeline: the class has attributes for a vtkRenderWindow and vtkRenderWindowInteractor. vtkRenderers are managed through an abstract `Layer` class, which the program keeps track of trough a vector attribute.
 
 Each layer implementation contains and manages one vtkRenderer, this includes managing which layer of the vtkrenderwindow ths layer renders to. Currently implemented are three such layers:
@@ -18,12 +18,19 @@ data/
   grid.h5
   hydrodynamic_U.h5
   hydrodynamic_V.h5
+  bird.png
+  gameover.png
+  map_2071-2067.png
+  vessel.png
+  
 interactive-track-and-trace/
   particle-track-and-trace/
      ...
 ```
 
 ## Compiling
+You will need [vtk](https://gitlab.kitware.com/vtk/vtk) and [netcdf-cxx](https://github.com/Unidata/netcdf-cxx4/).
+
 Let the current directory be the `src` directory. Run:
 ```shell
 mkdir build
