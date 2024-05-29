@@ -3,7 +3,7 @@
 void FoodPickup::handleCollision(int index) const {
   ParticleRemover::handleCollision(index);
   health->changeHealth(0.2);
-  health->grace();
+//  health->grace();
   camera->zoomScreen();
   character->dash();
 }
