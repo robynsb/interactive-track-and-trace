@@ -8,8 +8,6 @@
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
 
-#define EPS 0.00001
-
 /**
  * Implements the Layer class for the case of a Lagrangian visualization.
  * Specifically, this class models the Lagrangian particles in the simulation
@@ -17,6 +15,7 @@
  */
 class LagrangeGlyphs : public Layer {
 private:
+
   vtkSmartPointer<vtkPoints> points;
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<vtkIntArray> particlesBeached;

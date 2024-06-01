@@ -23,12 +23,12 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   controller = vtkSmartPointer<CharacterMoveCallback>::New();
 
   position = vtkSmartPointer<vtkPoints>::New();
-  position->InsertPoint(0, STARTLON, STARTLAT, 0);
+  position->InsertPoint(0, startLon, startLat, 0);
 
   data = vtkSmartPointer<vtkPolyData>::New();
   data->SetPoints(position);
 
-  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
+  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(*uvGrid);
   transformFilter->SetInputData(data);
   transformFilter->Update();
   cameraTransform.TakeReference(transformFilter->GetTransform());
@@ -86,20 +86,20 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
 void Character::updateData(int t) {
   double time = (double) t/10000;
   if (controller->getIsGoingLeft()) {
-    angleRadians += ROTATIONSTEP;
+    angleRadians += rotationStep;
   }
   if (controller->getIsGoingRight()) {
-    angleRadians -= ROTATIONSTEP;
+    angleRadians -= rotationStep;
   }
   updateDirection();
   if(controller->getIsAccelerating() and !controller->getIsReversing()) {
-    throttle += ACCELERATESTEP;
+    throttle += accelerateStep;
   }
   if (!controller->getIsAccelerating()) {
     if(throttle > 1) {
       throttle = 1;
-    } else if (DECELLERATION < throttle ) {
-      throttle -= DECELLERATION;
+    } else if (decelleration < throttle ) {
+      throttle -= decelleration;
     } else {
       throttle = 0;
     }
@@ -120,13 +120,13 @@ double easingFunction(double t) {
 }
 
 void Character::updateVelocity() {
-  velocity = MAXVELOCITY * easingFunction(throttle) + getDashVelocityBonus();
+  velocity = maxVelocity * easingFunction(throttle) + getDashVelocityBonus();
 }
 
 void Character::updatePosition() {
   double point[3];
   position->GetPoint(0, point);
-  point[0] += cos(angleRadians)*velocity*SCALEHORIZONTALVELOCITY;
+  point[0] += cos(angleRadians)*velocity*scaleHorizontalVelocity;
   point[1] += sin(angleRadians)*velocity;
 
   if (point[0] < uvGrid->lonMin()) {
@@ -162,16 +162,20 @@ vtkSmartPointer<vtkPoints> Character::getPosition() {
 }
 
 void Character::handleGameOver() {
-  position->SetPoint(0, STARTLON, STARTLAT, 0);
+  position->SetPoint(0, startLon, startLat, 0);
+  dashProgress = 0;
+  velocity = 0;
+  throttle = 0;
+  updateDashProgress();
 }
 
 void Character::dash() {
-  dashProgress = DASHDURATION;
+  dashProgress = dashDuration;
   dashing = true;
 }
 
 double Character::getDashVelocityBonus() {
-  return dashProgress * DASHVELOCITYBONUS / DASHDURATION;
+  return dashProgress * dashVelocityBonus / dashDuration;
 }
 
 void Character::updateDashProgress() {

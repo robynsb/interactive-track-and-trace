@@ -1,6 +1,6 @@
 #include "interpolate.h"
 
-#define EPS 0.000001
+constexpr double eps =  0.000001;
 
 using namespace std;
 
@@ -68,7 +68,7 @@ bool isNearestNeighbourZero(const UVGrid &uvGrid, int time, double lat, double l
                         latIndex + 1 < uvGrid.latSize ? latIndex + latOffset : latIndex,
                         lonIndex + 1 < uvGrid.lonSize ? lonIndex + lonOffset : lonIndex
         ];
-        if (abs(u) < EPS and abs(v) < EPS ) {
+        if (abs(u) < eps and abs(v) < eps ) {
           counter++;
         }
 

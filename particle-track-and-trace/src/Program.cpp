@@ -20,15 +20,16 @@
 using namespace std;
 
 void Program::setWinProperties() {
-  this->win->SetWindowName("Simulation");
-  this->win->SetSize(661, 661);
-  this->win->SetDesiredUpdateRate(60);
 
   this->interact->SetRenderWindow(this->win);
   this->interact->Initialize();
 
+
   vtkNew<vtkInteractorStyleUser> style;
   interact->SetInteractorStyle(style);
+
+  this->win->SetDesiredUpdateRate(60);
+  this->win->SetWindowName("Particle track and trace Gamification");
 }
 
 Program::Program(int timerDT) {

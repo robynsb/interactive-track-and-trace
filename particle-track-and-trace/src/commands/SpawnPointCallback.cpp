@@ -75,7 +75,7 @@ void SpawnPointCallback::setRen(const vtkSmartPointer<vtkRenderer> &ren) {
 
 void SpawnPointCallback::setUVGrid(const std::shared_ptr<UVGrid> &uvGrid) {
   this->uvGrid = uvGrid;
-  inverseCartographicProjection = createInverseCartographicTransformFilter(uvGrid)->GetTransform();
+  inverseCartographicProjection = createInverseCartographicTransformFilter(*uvGrid)->GetTransform();
 }
 
 void SpawnPointCallback::setBeached(const vtkSmartPointer<vtkIntArray> &ints) {

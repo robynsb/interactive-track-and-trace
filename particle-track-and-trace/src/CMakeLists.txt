@@ -110,6 +110,20 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         commands/DismissGameoverScreen.h
         layers/DayCounter.cpp
         layers/DayCounter.h
+        layers/Badges.cpp
+        layers/Badges.h
+        badges/Badge.h
+        badges/MedianIsKing.cpp
+        badges/MedianIsKing.h
+        badges/Badge.cpp
+        badges/StaticBadge.cpp
+        badges/StaticBadge.h
+        badges/NorthernFulmar.cpp
+        badges/NorthernFulmar.h
+        badges/FirstSteps.cpp
+        badges/FirstSteps.h
+        badges/EveryoneMakesMistakes.cpp
+        badges/EveryoneMakesMistakes.h
 )
 
 execute_process(

@@ -5,7 +5,6 @@
 
 #include "UVGrid.h"
 
-
 /**
  * Bilinearly interpolate the point (time, lat, lon) to produce the interpolated velocity.
  * Since it is in 3D, this means that it interpolates against 8 points (excluding edges).

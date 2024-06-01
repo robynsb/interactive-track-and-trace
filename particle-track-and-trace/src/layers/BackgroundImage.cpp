@@ -14,8 +14,6 @@
 using std::string;
 
 BackgroundImage::BackgroundImage(string imagePath) : imagePath(imagePath) {
-//  this->ren = vtkSmartPointer<vtkRenderer>::New();
-//  this->ren->SetLayer(0);
   this->ren->InteractiveOff();
   updateImage();
 }

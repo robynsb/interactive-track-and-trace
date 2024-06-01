@@ -19,17 +19,17 @@ vtkSmartPointer<vtkCamera> createNormalisedCamera() {
 }
 
 // Assumes Normalised camera is used
-vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid) {
+vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const UVGrid &uvGrid) {
   auto proj = vtkSmartPointer<vtkGeoProjection>::New();
   proj->SetName("merc");
 
   auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
   geoTransform->SetDestinationProjection(proj);
 
-  const double XMin = uvGrid->lonMin();
-  const double XMax = uvGrid->lonMax();
-  const double YMin = uvGrid->latMin();
-  const double YMax = uvGrid->latMax();
+  const double XMin = uvGrid.lonMin();
+  const double XMax = uvGrid.lonMax();
+  const double YMin = uvGrid.latMin();
+  const double YMax = uvGrid.latMax();
 
   double bottomLeft[3] = {XMin, YMin, 0};
   double topRight[3] = {XMax, YMax, 0};
@@ -54,17 +54,17 @@ vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std:
   return transformFilter;
 }
 
-vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid) {
+vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(const UVGrid &uvGrid) {
   auto proj = vtkSmartPointer<vtkGeoProjection>::New();
   proj->SetName("merc");
 
   auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
   geoTransform->SetDestinationProjection(proj);
 
-  const double XMin = uvGrid->lonMin();
-  const double XMax = uvGrid->lonMax();
-  const double YMin = uvGrid->latMin();
-  const double YMax = uvGrid->latMax();
+  const double XMin = uvGrid.lonMin();
+  const double XMax = uvGrid.lonMax();
+  const double YMin = uvGrid.latMin();
+  const double YMax = uvGrid.latMax();
 
   double bottomLeft[3] = {XMin, YMin, 0};
   double topRight[3] = {XMax, YMax, 0};

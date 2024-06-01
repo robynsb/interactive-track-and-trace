@@ -4,11 +4,10 @@
 #include "Layer.h"
 #include "../gameovers/GameoverCallback.h"
 
-#define GRACEPERIOD 10;
-
 class Health : public Layer {
 private:
-  int gracePeriod = 10;
+  static constexpr int gracePeriod = 10;;
+  int graceProgress = 10;
   double h = 0.18; // Original height of green bar.
   double healthLossRate = 0.00075;
   /**

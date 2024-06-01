@@ -44,7 +44,7 @@ void EulerGlyphs::readCoordinates() {
   this->direction->SetNumberOfTuples(numLats * numLons);
   points->Allocate(numLats * numLons);
 
-  vtkSmartPointer<vtkTransformFilter> filter = createCartographicTransformFilter(uvGrid);
+  vtkSmartPointer<vtkTransformFilter> filter = createCartographicTransformFilter(*uvGrid);
   auto transform = filter->GetTransform();
 
   int i = 0;

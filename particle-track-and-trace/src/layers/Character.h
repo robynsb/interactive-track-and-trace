@@ -13,23 +13,21 @@
 #include "../commands/CharacterMoveCallback.h"
 #include "../advection/UVGrid.h"
 
-#define ROTATIONSTEP 0.1
-#define ACCELERATESTEP 0.05
-#define DECELLERATION 0.05
-#define MAXVELOCITY 0.02
-#define SCALEHORIZONTALVELOCITY 1.6 // Since the velocity is measured in degrees per time step,
-                                    // and the longitudanal lines on our map are "squished" more
-                                    // than latitudanal lines. This scaling factor corrects for this
-                                    // to make the character "look" like they move the same velocity
-                                    // horizontally vs vertically.
-#define DASHVELOCITYBONUS 0.04
-#define DASHDURATION 15
-
-#define STARTLON 6.513089433595266 // Groningen
-#define STARTLAT 53.44059997086552
-
 class Character : public Layer {
 private:
+  static constexpr double rotationStep = 0.1;
+  static constexpr double accelerateStep = 0.05;
+  static constexpr double decelleration = 0.05;
+  static constexpr double maxVelocity = 0.02;
+  static constexpr double scaleHorizontalVelocity = 1.6; // Since the velocity is measured in degrees per time step,
+  // and the longitudanal lines on our map are "squished" more
+  // than latitudanal lines. This scaling factor corrects for this
+  // to make the character "look" like they move the same velocity
+  // horizontally vs vertically.
+  static constexpr double dashVelocityBonus = 0.04;
+  static constexpr int dashDuration = 15;
+  static constexpr double startLon = 6.513089433595266; // Groningen
+  static constexpr double startLat = 53.44059997086552;
 
   vtkSmartPointer<vtkTexture> texture;
   vtkSmartPointer<vtkActor> texturedPlane;

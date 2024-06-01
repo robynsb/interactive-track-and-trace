@@ -77,7 +77,7 @@ LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<A
   advector = std::move(advectionKernel);
   this->uvGrid = uvGrid;
 
-  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(uvGrid);
+  vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(*uvGrid);
   transformFilter->SetInputData(data);
 
   vtkNew<vtkGlyphSource2D> circleSource;

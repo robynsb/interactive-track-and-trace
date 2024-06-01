@@ -6,6 +6,10 @@
 
 class UVGrid {
 private:
+  static constexpr char sizeError[] =  "The sizes of the hydrodynamicU or -V files does not correspond with the sizes of the grid file";
+  static constexpr char sizeError2[] = "The sizes of the hydrodynamicU and -V data files have different sizes";
+  static constexpr char indexOutOfBounds[] = "UVGrid: Index out of bounds";
+
   /**
    * 1D data vector of all the us and vs
    */

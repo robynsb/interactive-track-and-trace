@@ -47,7 +47,7 @@ Vessels::Vessels(std::shared_ptr<UVGrid> uvGrid, string path):
   data = vtkSmartPointer<vtkPolyData>::New();
   data->SetPoints(position);
 
-  vtkSmartPointer<vtkTransformFilter> latLonCoordinates = createCartographicTransformFilter(uvGrid);
+  vtkSmartPointer<vtkTransformFilter> latLonCoordinates = createCartographicTransformFilter(*uvGrid);
   latLonCoordinates->SetInputData(data);
   latLonCoordinates->Update();
 

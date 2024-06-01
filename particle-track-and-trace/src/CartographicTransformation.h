@@ -19,7 +19,7 @@ vtkSmartPointer<vtkCamera> createNormalisedCamera();
  *  @param uvGrid grid that contains latitudes and longitudes
  *  @return pointer to transform filter
  */
-vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid);
+vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const UVGrid &uvGrid);
 
 /**
  * Creates an inverse mercator projection and then scales into normalised space.
@@ -30,5 +30,5 @@ vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const std:
  * @param uvGrid grid that contains latitudes and longitudes
  * @return pointer to transform filter
  */
-vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(const std::shared_ptr<UVGrid> uvGrid);
+vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(const UVGrid &uvGrid);
 #endif //NORMALISEDCARTOGRAPHICCAMERA_H

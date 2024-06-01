@@ -108,11 +108,11 @@ void Health::setCamera(vtkCamera *camera) {
 void Health::updateData(int t) {
   if (health > 0.25) setHealth(health-healthLossRate);
   else setHealth(health-healthLossRate/2);
-  if (gracePeriod > 0) gracePeriod--;
+  if (graceProgress > 0) graceProgress--;
 }
 
 void Health::changeHealth(double healthChange) {
-  if (healthChange < 0 and gracePeriod > 0) {
+  if (healthChange < 0 and graceProgress > 0) {
     return;
   }
 
@@ -136,5 +136,5 @@ void Health::handleGameOver() {
 }
 
 void Health::grace() {
-  gracePeriod = GRACEPERIOD;
+  graceProgress = gracePeriod;
 }

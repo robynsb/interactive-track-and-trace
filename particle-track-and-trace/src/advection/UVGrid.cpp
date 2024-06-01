@@ -3,8 +3,6 @@
 #include "UVGrid.h"
 #include "readdata.h"
 
-#define sizeError2 "The sizes of the hydrodynamic data files are different"
-#define sizeError "The sizes of the hydrodynamicU or -V files does not correspond with the sizes of the grid file"
 
 using namespace std;
 
@@ -37,7 +35,7 @@ const Vel &UVGrid::operator[](size_t timeIndex, size_t latIndex, size_t lonIndex
   if (timeIndex < 0 or timeIndex >= timeSize
       or latIndex < 0 or latIndex >= latSize
       or lonIndex < 0 or lonIndex >= lonSize) {
-    throw std::out_of_range("UVGrid: Index out of bounds");
+    throw std::out_of_range(indexOutOfBounds);
   }
   size_t index = timeIndex * (latSize * lonSize) + latIndex * lonSize + lonIndex;
   return uvData[index];
