@@ -64,7 +64,6 @@ vtkSmartPointer<vtkLookupTable> buildLut(int n) {
 
 LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> grid, std::unique_ptr<AdvectionKernel> advectionKernel) :
         uvGrid{std::move(grid)}, advector{std::move(advectionKernel)} {
-//  this->points = vtkSmartPointer<vtkPoints>::New();
   this->data = vtkSmartPointer<vtkPolyData>::New();
   this->data->SetPoints(this->points);
 

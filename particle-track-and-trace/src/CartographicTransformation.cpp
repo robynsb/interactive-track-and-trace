@@ -7,7 +7,7 @@
 #include <vtkGeneralTransform.h>
 
 vtkSmartPointer<vtkCamera> createNormalisedCamera() {
-  vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
+  vtkNew<vtkCamera> camera;
   camera->ParallelProjectionOn(); // Enable parallel projection
 
   camera->SetPosition(0, 0, 1000);  // Place the camera above the center
@@ -23,7 +23,7 @@ vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const UVGr
   vtkNew<vtkGeoProjection> proj;
   proj->SetName("merc");
 
-  auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
+  vtkNew<vtkGeoTransform> geoTransform;
   geoTransform->SetDestinationProjection(proj);
 
   const double XMin = uvGrid.lonMin();
@@ -39,26 +39,26 @@ vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const UVGr
   double width = topRight[0] - bottomLeft[0];
   double height = topRight[1] - bottomLeft[1];
 
-  auto scaleIntoNormalisedSpace = vtkSmartPointer<vtkTransform>::New();
+  vtkNew<vtkTransform> scaleIntoNormalisedSpace;
   scaleIntoNormalisedSpace->Scale(2 / (width), 2 / (height), 1);
   scaleIntoNormalisedSpace->Translate(-(bottomLeft[0] + topRight[0]) / 2, -(bottomLeft[1] + topRight[1]) / 2, 0);
 
-  auto totalProjection = vtkSmartPointer<vtkGeneralTransform>::New();
+  vtkNew<vtkGeneralTransform> totalProjection;
   totalProjection->Identity();
   totalProjection->Concatenate(scaleIntoNormalisedSpace);
   totalProjection->Concatenate(geoTransform);
 
-  vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
+  vtkNew<vtkTransformFilter> transformFilter;
   transformFilter->SetTransform(totalProjection);
 
   return transformFilter;
 }
 
 vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(const UVGrid &uvGrid) {
-  auto proj = vtkSmartPointer<vtkGeoProjection>::New();
+  vtkNew<vtkGeoProjection> proj;
   proj->SetName("merc");
 
-  auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();
+  vtkNew<vtkGeoTransform> geoTransform;
   geoTransform->SetDestinationProjection(proj);
 
   const double XMin = uvGrid.lonMin();
@@ -75,17 +75,17 @@ vtkSmartPointer<vtkTransformFilter> createInverseCartographicTransformFilter(con
   double width = topRight[0] - bottomLeft[0];
   double height = topRight[1] - bottomLeft[1];
 
-  auto scaleIntoNormalisedSpace = vtkSmartPointer<vtkTransform>::New();
+  vtkNew<vtkTransform> scaleIntoNormalisedSpace;
   scaleIntoNormalisedSpace->Scale(2 / (width), 2 / (height), 1);
   scaleIntoNormalisedSpace->Translate(-(bottomLeft[0] + topRight[0]) / 2, -(bottomLeft[1] + topRight[1]) / 2, 0);
   scaleIntoNormalisedSpace->Inverse();
 
-  auto totalProjection = vtkSmartPointer<vtkGeneralTransform>::New();
+  vtkNew<vtkGeneralTransform> totalProjection;
   totalProjection->Identity();
   totalProjection->Concatenate(geoTransform);
   totalProjection->Concatenate(scaleIntoNormalisedSpace);
 
-  vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
+  vtkNew<vtkTransformFilter> transformFilter;
   transformFilter->SetTransform(totalProjection);
 
   return transformFilter;

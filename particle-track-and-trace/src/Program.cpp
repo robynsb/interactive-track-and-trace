@@ -32,10 +32,7 @@ void Program::setWinProperties() {
   this->win->SetWindowName("Particle track and trace Gamification");
 }
 
-Program::Program(int timerDT) {
-  this->win = vtkSmartPointer<vtkRenderWindow>::New();
-  this->interact = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-  this->cam = createNormalisedCamera();
+Program::Program(int timerDT): cam{createNormalisedCamera()} {
 
   this->win->SetNumberOfLayers(0);
   setWinProperties();

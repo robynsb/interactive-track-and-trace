@@ -18,14 +18,10 @@
 using namespace std;
 
 Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_ptr<Camera> camera):
-  uvGrid(uvGrid), camera(camera) {
+  uvGrid{uvGrid}, camera{camera} {
 
-  controller = vtkSmartPointer<CharacterMoveCallback>::New();
-
-  position = vtkSmartPointer<vtkPoints>::New();
   position->InsertPoint(0, startLon, startLat, 0);
 
-  data = vtkSmartPointer<vtkPolyData>::New();
   data->SetPoints(position);
 
   vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(*uvGrid);
@@ -42,7 +38,6 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   plane->SetNormal(0.0, 0.0, 1.0);
 
   // Apply the texture
-  texture = vtkSmartPointer<vtkTexture>::New();
   texture->SetInputConnection(pngReader->GetOutputPort());
 
   vtkNew<vtkTextureMapToPlane> texturePlane;
@@ -55,7 +50,6 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   scaleFilter->SetTransform(scaler);
   scaleFilter->SetInputConnection(texturePlane->GetOutputPort());
 
-  rotater = vtkSmartPointer<vtkTransform>::New();
   rotater->Identity();
   vtkNew<vtkTransformFilter> rotateFilter;
   rotateFilter->SetTransform(rotater);
@@ -72,7 +66,6 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
-  texturedPlane = vtkSmartPointer<vtkActor>::New();
   texturedPlane->SetMapper(mapper);
   texturedPlane->SetTexture(texture);
 

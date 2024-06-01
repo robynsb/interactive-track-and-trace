@@ -11,8 +11,8 @@ private:
   static constexpr double initY = 1.5;
   static constexpr double targetY = 0.85;
   std::string datapath;
-  vtkSmartPointer<vtkPoints> position;
-  vtkSmartPointer<vtkActor> texturedPlane;
+  vtkNew<vtkPoints> position;
+  vtkNew<vtkActor> texturedPlane;
   bool moving = false;
   double movingProgress = 0;
 public:

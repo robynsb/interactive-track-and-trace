@@ -26,7 +26,7 @@ vtkSmartPointer<vtkMatrix4x4> BackgroundImage::getMatrix(const double x0, const 
             0, 0, 1, 0,
             0, 0, 0, 1
     };
-    auto matrix = vtkSmartPointer<vtkMatrix4x4>::New();
+    vtkNew<vtkMatrix4x4> matrix;
     matrix->DeepCopy(eyeTransform);
     return matrix;
 }
@@ -61,7 +61,7 @@ void BackgroundImage::updateImage() {
 //   setup the vtkTransform - this is where use the data from imageData we got earlier
   vtkNew<vtkTransform> transform;
   transform->SetMatrix(getMatrix(origin[0], origin[1], extent[1]+origin[0], extent[3]+origin[1]));
-  vtkSmartPointer<vtkTransformFilter> transformFilter = vtkSmartPointer<vtkTransformFilter>::New();
+  vtkNew<vtkTransformFilter> transformFilter;
   transformFilter->SetTransform(transform);
   transformFilter->SetInputConnection(imageDataGeometryFilter->GetOutputPort());
   transformFilter->Update();

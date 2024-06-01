@@ -19,12 +19,10 @@ vtkSmartPointer<vtkActor> StaticBadge::getActor() {
 }
 
 StaticBadge::StaticBadge(const std::string &datapath, double size, double aspectRatio) : datapath(datapath) {
-  vtkSmartPointer<vtkPolyData> data;
 
-  position = vtkSmartPointer<vtkPoints>::New();
   position->InsertPoint(0, 0, initY, 0);
 
-  data = vtkSmartPointer<vtkPolyData>::New();
+  vtkNew<vtkPolyData> data;
   data->SetPoints(position);
 
   vtkNew<vtkPNGReader> pngReader;
@@ -60,7 +58,6 @@ StaticBadge::StaticBadge(const std::string &datapath, double size, double aspect
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
-  texturedPlane = vtkSmartPointer<vtkActor>::New();
   texturedPlane->SetMapper(mapper);
   texturedPlane->SetTexture(texture);
 

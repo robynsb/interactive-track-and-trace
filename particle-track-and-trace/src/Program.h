@@ -20,11 +20,11 @@ private:
 
   /** The window this program's layers render to.
     */ 
-  vtkSmartPointer<vtkRenderWindow> win;
+  vtkNew<vtkRenderWindow> win;
 
   /** The interactor through which the layers can interact with the window.
     */ 
-  vtkSmartPointer<vtkRenderWindowInteractor> interact;
+  vtkNew<vtkRenderWindowInteractor> interact;
 
 
   /** The camera used by all layers for this program.

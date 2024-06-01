@@ -8,6 +8,8 @@
 #include <vtkDoubleArray.h>
 #include <vtkTransform.h>
 #include <vtkGlyphSource2D.h>
+#include <vtkTexture.h>
+
 #include "Layer.h"
 #include "Camera.h"
 #include "../commands/CharacterMoveCallback.h"
@@ -29,13 +31,13 @@ private:
   static constexpr double startLon = 6.513089433595266; // Groningen
   static constexpr double startLat = 53.44059997086552;
 
-  vtkSmartPointer<vtkTexture> texture;
-  vtkSmartPointer<vtkActor> texturedPlane;
-  vtkSmartPointer<vtkPoints> position;
-  vtkSmartPointer<vtkPolyData> data;
-  vtkSmartPointer<CharacterMoveCallback> controller;
+  vtkNew<vtkTexture> texture;
+  vtkNew<vtkActor> texturedPlane;
+  vtkNew<vtkPoints> position;
+  vtkNew<vtkPolyData> data;
+  vtkNew<CharacterMoveCallback> controller;
   vtkSmartPointer<vtkAbstractTransform> cameraTransform;
-  vtkSmartPointer<vtkTransform> rotater;
+  vtkNew<vtkTransform> rotater;
   std::shared_ptr<UVGrid> uvGrid;
   std::shared_ptr<Camera> camera;
 
