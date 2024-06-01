@@ -20,7 +20,7 @@ vtkSmartPointer<vtkCamera> createNormalisedCamera() {
 
 // Assumes Normalised camera is used
 vtkSmartPointer<vtkTransformFilter> createCartographicTransformFilter(const UVGrid &uvGrid) {
-  auto proj = vtkSmartPointer<vtkGeoProjection>::New();
+  vtkNew<vtkGeoProjection> proj;
   proj->SetName("merc");
 
   auto geoTransform = vtkSmartPointer<vtkGeoTransform>::New();

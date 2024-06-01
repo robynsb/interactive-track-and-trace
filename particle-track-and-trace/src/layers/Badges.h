@@ -8,9 +8,9 @@
 
 class Badges : public Layer {
 private:
-  static constexpr int displaytime =  1000000;
-  double gramsOfDebrisEaten = 0;
-  double gramsOfFoodEaten = 0;
+  static constexpr int displaytime {2000000};
+  double gramsOfDebrisEaten {0};
+  double gramsOfFoodEaten {0};
   std::shared_ptr<Badge> medianIsKing;
   std::shared_ptr<Badge> northernFulmar;
   std::shared_ptr<Badge> firstSteps;

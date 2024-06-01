@@ -6,11 +6,8 @@
 #include "../badges/EveryoneMakesMistakes.h"
 #include "../CartographicTransformation.h"
 
-#include <vtkPoints.h>
 #include <vtkPolyData.h>
-#include <vtkPlaneSource.h>
 #include <vtkTransformFilter.h>
-#include <vtkGlyph2D.h>
 #include <vtkTransform.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
@@ -26,27 +23,27 @@ void Badges::logFoodConsumption() {
   gramsOfFoodEaten += 0.01;
 }
 
-Badges::Badges(string datapath) : pq(
+Badges::Badges(string datapath) : pq{
         [](const BadgePair &lhs, const BadgePair &rhs) {
           return lhs.first > rhs.first; // For ascending order
-        }
-) {
-  medianIsKing = make_shared<MedianIsKing>(datapath);
+        }},
+        medianIsKing{make_shared<MedianIsKing>(datapath)},
+        northernFulmar{make_shared<NorthernFulmar>(datapath)},
+        firstSteps{make_shared<FirstSteps>(datapath)},
+        everyoneMakesMistakes{make_shared<EveryoneMakesMistakes>(datapath)}
+{
   medianIsKing->setVisible(false);
   ren->AddActor(medianIsKing->getActor());
   badges.push_back(medianIsKing);
 
-  northernFulmar = make_shared<NorthernFulmar>(datapath);
   northernFulmar->setVisible(false);
   ren->AddActor(northernFulmar->getActor());
   badges.push_back(northernFulmar);
 
-  firstSteps = make_shared<FirstSteps>(datapath);
   firstSteps->setVisible(false);
   ren->AddActor(firstSteps->getActor());
   badges.push_back(firstSteps);
 
-  everyoneMakesMistakes = make_shared<EveryoneMakesMistakes>(datapath);
   everyoneMakesMistakes->setVisible(false);
   ren->AddActor(everyoneMakesMistakes->getActor());
   badges.push_back(everyoneMakesMistakes);

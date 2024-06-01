@@ -15,8 +15,8 @@
  */
 class LagrangeGlyphs : public Layer {
 private:
-
-  vtkSmartPointer<vtkPoints> points;
+//  vtkSmartPointer<vtkPoints> points;
+  vtkNew<vtkPoints> points;
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<vtkIntArray> particlesBeached;
   std::unique_ptr<AdvectionKernel> advector;

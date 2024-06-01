@@ -43,7 +43,7 @@ vtkSmartPointer<vtkLookupTable> buildLut(int n) {
   lut->SetScaleToLinear();
   lut->Build();
 
-  double lightColor[3] = {44/255, 61/255, 85/255}; // #2c3d55
+  double lightColor[3] = {44 / 255, 61 / 255, 85 / 255}; // #2c3d55
   double blackColor[3] = {0.0, 0.0, 0.0}; // Black
 
   // Interpolate colors between light and black
@@ -62,8 +62,9 @@ vtkSmartPointer<vtkLookupTable> buildLut(int n) {
   return lut;
 }
 
-LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<AdvectionKernel> advectionKernel) {
-  this->points = vtkSmartPointer<vtkPoints>::New();
+LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> grid, std::unique_ptr<AdvectionKernel> advectionKernel) :
+        uvGrid{std::move(grid)}, advector{std::move(advectionKernel)} {
+//  this->points = vtkSmartPointer<vtkPoints>::New();
   this->data = vtkSmartPointer<vtkPolyData>::New();
   this->data->SetPoints(this->points);
 
@@ -73,9 +74,6 @@ LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<A
 
 //  this->data->GetPointData()->AddArray(this->particlesBeached);
 //  this->data->GetPointData()->SetActiveScalars("particlesBeached");
-
-  advector = std::move(advectionKernel);
-  this->uvGrid = uvGrid;
 
   vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(*uvGrid);
   transformFilter->SetInputData(data);
@@ -96,7 +94,7 @@ LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<A
 //  mapper->SetLookupTable(buildLut(this->beachedAtNumberOfTimes));
 //  mapper->SetScalarRange(0, this->beachedAtNumberOfTimes);
   mapper->Update();
-  
+
   actor->SetMapper(mapper);
 
   this->ren->AddActor(actor);
@@ -104,9 +102,9 @@ LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> uvGrid, std::unique_ptr<A
 
 // creates a few points so we can test the updateData function
 void LagrangeGlyphs::spoofPoints() {
-  for (int i=0; i < 330; i+=5) {
-    for (int j=0; j < 330; j+=5) {
-      this->points->InsertNextPoint(-15.875+(12.875+15.875)/330*j, 46.125+(62.625-46.125)/330*i, 0);
+  for (int i = 0; i < 330; i += 5) {
+    for (int j = 0; j < 330; j += 5) {
+      this->points->InsertNextPoint(-15.875 + (12.875 + 15.875) / 330 * j, 46.125 + (62.625 - 46.125) / 330 * i, 0);
       this->particlesBeached->InsertNextValue(0);
     }
   }
@@ -120,24 +118,26 @@ void LagrangeGlyphs::updateData(int t) {
   bool modifiedData = false;
 
   // iterate over every point.
-  for (vtkIdType n=0; n < this->points->GetNumberOfPoints(); n++) {
+  for (vtkIdType n = 0; n < this->points->GetNumberOfPoints(); n++) {
     int beachedFor = this->particlesBeached->GetValue(n);
     // first check: only update non-beached particles.
     if (beachedFor < this->beachedAtNumberOfTimes) {
       this->points->GetPoint(n, point);
       // second check: only update points within our grid's boundary.
-      if (point[0] <= this->uvGrid->lonMin() or point[0] >= this->uvGrid->lonMax() or point[1] <= this->uvGrid->latMin() or point[1] >= this->uvGrid->latMax()) {
+      if (point[0] <= this->uvGrid->lonMin() or point[0] >= this->uvGrid->lonMax() or
+          point[1] <= this->uvGrid->latMin() or point[1] >= this->uvGrid->latMax()) {
         // sets any particle out of bounds to be beached - so it gets assigned the right colour in the lookup table.
         this->particlesBeached->SetValue(n, this->beachedAtNumberOfTimes);
         continue;
       }
 
-      oldX = point[0]; oldY = point[1];
+      oldX = point[0];
+      oldY = point[1];
 
       // supersampling
-      for (int i=0; i < SUPERSAMPLINGRATE; i++) {
-        int dt = (t-this->lastT)/SUPERSAMPLINGRATE;
-        if(dt < 0) {
+      for (int i = 0; i < SUPERSAMPLINGRATE; i++) {
+        int dt = (t - this->lastT) / SUPERSAMPLINGRATE;
+        if (dt < 0) {
           // TODO: This is a hack for when the t wraps around,
           // there is probably a more elegant way of dealing with this whole thing
           // that involves having two separate DTs.
@@ -150,9 +150,9 @@ void LagrangeGlyphs::updateData(int t) {
       // if the particle's location remains unchanged, increase beachedFor number. Else, decrease it and update point position.
 //      if (abs(oldX - point[0]) < EPS and abs(oldY-point[1]) < EPS) {
       if (isNearestNeighbourZero(*uvGrid, t, point[1], point[0])) {
-        this->particlesBeached->SetValue(n, beachedFor+1);
+        this->particlesBeached->SetValue(n, beachedFor + 1);
       } else {
-        this->particlesBeached->SetValue(n, std::max(beachedFor-1, 0));
+        this->particlesBeached->SetValue(n, std::max(beachedFor - 1, 0));
         this->points->SetPoint(n, point);
         modifiedData = true;
       }
@@ -178,7 +178,7 @@ vtkSmartPointer<vtkIntArray> LagrangeGlyphs::getBeached() {
 }
 
 void LagrangeGlyphs::setColour(int red, int green, int blue) {
-  actor->GetProperty()->SetColor(red/255.0, green/255.0, blue/255.0);
+  actor->GetProperty()->SetColor(red / 255.0, green / 255.0, blue / 255.0);
 }
 
 void LagrangeGlyphs::handleGameOver() {
