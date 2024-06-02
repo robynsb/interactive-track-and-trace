@@ -52,7 +52,7 @@ int main() {
 
   auto health = make_shared<Health>(program);
   auto litterRemover = make_unique<DebrisPickup>(litter->getPoints(), health, camera);
-  auto trackedLitterRemover = make_shared<TrackedCollision>(0.01, std::move(litterRemover));
+  auto trackedLitterRemover = make_shared<TrackedCollision>(0.1, std::move(litterRemover));
   auto collisionHandler = make_shared<ParticleCollision>();
   collisionHandler->addPointSet(litter->getPoints(), trackedLitterRemover);
   collisionHandler->setPosition(character->getPosition());
@@ -64,7 +64,7 @@ int main() {
   food->setColour(5, 74, 41);
   auto foodSpawn = make_shared<FoodSpawner>(food->getPoints(), food->getBeached());
   auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health, camera, character);
-  auto trackedFoodRemover = make_shared<TrackedCollision>(0.01, std::move(foodRemover));
+  auto trackedFoodRemover = make_shared<TrackedCollision>(0.1, std::move(foodRemover));
   collisionHandler->addPointSet(food->getPoints(), trackedFoodRemover);
 
   auto dayCounter = make_shared<DayCounter>();
