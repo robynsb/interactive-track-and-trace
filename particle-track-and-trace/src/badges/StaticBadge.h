@@ -22,7 +22,7 @@ public:
 
   void updateData(int t) override;
 
-  explicit StaticBadge(const std::string &datapath, double size, double aspectRatio);
+  explicit StaticBadge(const std::string &datapath, double size);
 
   void reset() override;
 

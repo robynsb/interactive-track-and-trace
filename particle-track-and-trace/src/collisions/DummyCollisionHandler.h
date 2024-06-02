@@ -5,7 +5,7 @@
 #include "ParticleCollisionCallback.h"
 
 class DummyCollisionHandler : public ParticleCollisionCallback {
-  void handleCollision(int index) const override;
+  void handleCollision(int index) override;
 };
 
 

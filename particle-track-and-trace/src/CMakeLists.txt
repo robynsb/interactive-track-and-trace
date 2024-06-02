@@ -113,17 +113,20 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/Badges.cpp
         layers/Badges.h
         badges/Badge.h
-        badges/MedianIsKing.cpp
-        badges/MedianIsKing.h
         badges/Badge.cpp
         badges/StaticBadge.cpp
         badges/StaticBadge.h
-        badges/NorthernFulmar.cpp
-        badges/NorthernFulmar.h
-        badges/FirstSteps.cpp
-        badges/FirstSteps.h
-        badges/EveryoneMakesMistakes.cpp
-        badges/EveryoneMakesMistakes.h
+        badges/Statistic.h
+        collisions/TrackedCollision.cpp
+        collisions/TrackedCollision.h
+        badges/Achievement.h
+        badges/SimpleAchievement.cpp
+        badges/SimpleAchievement.h
+        badges/FileBadgeFactory.cpp
+        badges/FileBadgeFactory.h
+        layers/StatisticsManager.cpp
+        layers/StatisticsManager.h
+        badges/Statistic.cpp
 )
 
 execute_process(

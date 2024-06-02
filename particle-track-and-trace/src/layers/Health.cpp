@@ -44,7 +44,7 @@ void Health::placeBackgroundHealth() {
   actor->SetMapper(mapper);
 
   actor->GetProperty()->SetColor(0.227, 0.188, 0.259);
-  actor->GetProperty()->SetOpacity(1);
+//  actor->GetProperty()->SetOpacity(1);
 
   ren->AddActor(actor);
 }
@@ -91,7 +91,7 @@ void Health::placeHealth() {
   actor->SetMapper(mapper);
 
   actor->GetProperty()->SetColor(0.165, 0.988, 0.596);
-  actor->GetProperty()->SetOpacity(1);
+//  actor->GetProperty()->SetOpacity(1);
 
   ren->AddActor(actor);
 }

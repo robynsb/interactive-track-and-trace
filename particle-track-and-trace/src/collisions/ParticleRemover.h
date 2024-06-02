@@ -10,7 +10,7 @@ class ParticleRemover : public ParticleCollisionCallback {
 public:
   explicit ParticleRemover(const vtkSmartPointer<vtkPoints> &particles);
 
-  void handleCollision(int index) const override;
+  void handleCollision(int index) override;
 };
 
 

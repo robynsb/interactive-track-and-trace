@@ -1,14 +1,12 @@
 #ifndef BADGE_H
 #define BADGE_H
 
-
 #include <vtkActor.h>
 
 class Badge {
 private:
   bool collected = false;
 public:
-
   void collect();
 
   bool isCollected();
@@ -23,6 +21,5 @@ public:
   virtual ~Badge() = default;
 
 };
-
 
 #endif //BADGE_H

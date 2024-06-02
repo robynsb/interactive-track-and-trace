@@ -1,9 +1,8 @@
 #include "DebrisPickup.h"
 
-void DebrisPickup::handleCollision(int index) const {
+void DebrisPickup::handleCollision(int index) {
   ParticleRemover::handleCollision(index);
   camera->shakeScreen();
-  badges->logDebrisConsumption();
   health->changeHealth(-0.3);
   health->grace();
 }
@@ -11,7 +10,6 @@ void DebrisPickup::handleCollision(int index) const {
 DebrisPickup::DebrisPickup(
         const vtkSmartPointer<vtkPoints> &particles,
         const std::shared_ptr<Health> &health,
-        const std::shared_ptr<Camera> &camera,
-        const std::shared_ptr<Badges> &badges
+        const std::shared_ptr<Camera> &camera
 )
-        : ParticleRemover(particles), health(health), camera(camera), badges(badges) {}
+        : ParticleRemover(particles), health(health), camera(camera) {}

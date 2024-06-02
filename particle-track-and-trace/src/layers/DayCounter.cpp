@@ -5,7 +5,6 @@
 #include <iomanip>
 
 DayCounter::DayCounter() {
-  text = vtkSmartPointer<vtkTextActor>::New();
   text->SetInput("0.0 days");
   text->GetTextProperty()->SetColor(0,0,0);
   text->GetTextProperty()->SetFontSize(50);
@@ -27,5 +26,9 @@ void DayCounter::updateData(int t) {
 
 void DayCounter::handleGameOver() {
   days = 0;
+}
+
+double DayCounter::getValue() const {
+  return days;
 }
 

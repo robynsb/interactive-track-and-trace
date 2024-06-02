@@ -6,10 +6,9 @@ ParticleCollision::ParticleCollision(): distance(0.2) {}
 
 void ParticleCollision::addPointSet(
         vtkSmartPointer<vtkPoints> points,
-        unique_ptr<ParticleCollisionCallback> callback
+        const shared_ptr<ParticleCollisionCallback> &callback
 ) {
-  pair<vtkSmartPointer<vtkPoints>, unique_ptr<ParticleCollisionCallback>> pointset = {points, std::move(callback)};
-  pointsets.push_back(std::move(pointset));
+  pointsets.emplace_back(points, callback);
 }
 
 bool ParticleCollision::isInRange(double pos[3], double point[3]) {
@@ -21,7 +20,7 @@ bool ParticleCollision::isInRange(double pos[3], double point[3]) {
 void ParticleCollision::updateData(int t) {
   double pos[3];
   position->GetPoint(0, pos);
-  for (auto&& [points, cb] : pointsets) {
+  for (const auto& [points, cb] : pointsets) {
     for (int i = 0; i < points->GetNumberOfPoints(); i++) {
       double point[3];
       points->GetPoint(i, point);

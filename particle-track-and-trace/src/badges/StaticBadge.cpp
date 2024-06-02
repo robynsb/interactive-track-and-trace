@@ -13,12 +13,13 @@
 #include <vtkTextureMapToPlane.h>
 #include <vtkTransform.h>
 #include <vtkProperty.h>
+#include <vtkImageData.h>
 
 vtkSmartPointer<vtkActor> StaticBadge::getActor() {
   return texturedPlane;
 }
 
-StaticBadge::StaticBadge(const std::string &datapath, double size, double aspectRatio) : datapath(datapath) {
+StaticBadge::StaticBadge(const std::string &datapath, double size) : datapath(datapath) {
 
   position->InsertPoint(0, 0, initY, 0);
 
@@ -27,6 +28,13 @@ StaticBadge::StaticBadge(const std::string &datapath, double size, double aspect
 
   vtkNew<vtkPNGReader> pngReader;
   pngReader->SetFileName(datapath.c_str());
+  pngReader->Update();
+
+  int dimensions[3];
+  pngReader->GetOutput()->GetDimensions(dimensions);
+  int width = dimensions[0];
+  int height = dimensions[1];
+  double aspectRatio = static_cast<double>(width) / static_cast<double>(height);
 
   // Create a plane
   vtkNew<vtkPlaneSource> plane;
@@ -63,6 +71,7 @@ StaticBadge::StaticBadge(const std::string &datapath, double size, double aspect
 
 //  actor->GetProperty()->SetColor(0, 0, 0);
 //  texturedPlane->GetProperty()->SetOpacity(0);
+  setVisible(false);
 }
 
 void StaticBadge::setVisible(bool visible) {

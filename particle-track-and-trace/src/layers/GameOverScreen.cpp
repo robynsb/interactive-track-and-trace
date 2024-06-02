@@ -82,9 +82,9 @@ void GameOverScreen::setCamera(vtkCamera *camera) {
 
 void GameOverScreen::setVisibility(bool visible) {
   if (visible) {
-    texturedPlane->GetProperty()->SetOpacity(1);
+    texturedPlane->SetVisibility(true);
   } else {
-    texturedPlane->GetProperty()->SetOpacity(0);
+    texturedPlane->SetVisibility(false);
   }
   texturedPlane->Modified();
   if(ren->GetRenderWindow()) ren->GetRenderWindow()->Render();

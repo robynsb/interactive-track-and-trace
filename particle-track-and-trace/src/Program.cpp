@@ -21,30 +21,29 @@ using namespace std;
 
 void Program::setWinProperties() {
 
-  this->interact->SetRenderWindow(this->win);
-  this->interact->Initialize();
+  interact->SetRenderWindow(win);
+  interact->Initialize();
 
 
   vtkNew<vtkInteractorStyleUser> style;
   interact->SetInteractorStyle(style);
 
-  this->win->SetDesiredUpdateRate(60);
-  this->win->SetWindowName("Particle track and trace Gamification");
+  win->SetDesiredUpdateRate(60);
+  win->SetWindowName("Particle Track and Trace Gamification");
 }
 
 Program::Program(int timerDT): cam{createNormalisedCamera()} {
-
-  this->win->SetNumberOfLayers(0);
+  win->SetNumberOfLayers(0);
   setWinProperties();
 }
 
 void Program::addLayer(shared_ptr<Layer> layer) {
-  layer->setCamera(this->cam);
-  layer->getLayer()->SetLayer(this->win->GetNumberOfLayers());
+  layer->setCamera(cam);
+  layer->getLayer()->SetLayer(win->GetNumberOfLayers());
 
-  this->layers.push_back(layer);
-  this->win->AddRenderer(layer->getLayer());
-  this->win->SetNumberOfLayers(this->win->GetNumberOfLayers() + 1);
+  layers.push_back(layer);
+  win->AddRenderer(layer->getLayer());
+  win->SetNumberOfLayers(win->GetNumberOfLayers() + 1);
 }
 
 void Program::removeLayer(std::shared_ptr<Layer> layer) {

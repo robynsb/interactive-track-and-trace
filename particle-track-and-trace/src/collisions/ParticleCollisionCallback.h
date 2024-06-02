@@ -3,7 +3,7 @@
 
 class ParticleCollisionCallback {
 public:
-  virtual void handleCollision(int index) const = 0;
+  virtual void handleCollision(int index) = 0;
 
   virtual ~ParticleCollisionCallback() = default;
 };

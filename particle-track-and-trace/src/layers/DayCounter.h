@@ -3,12 +3,13 @@
 
 #include <vtkTextActor.h>
 #include "Layer.h"
+#include "../badges/Statistic.h"
 
-class DayCounter : public Layer {
+class DayCounter : public Layer, public Statistic {
 private:
-  double days = 0;
-  int lastT = 0;
-  vtkSmartPointer<vtkTextActor> text;
+  double days {0};
+  int lastT {0};
+  vtkNew<vtkTextActor> text;
 public:
   DayCounter();
 
@@ -16,6 +17,7 @@ public:
 
   void updateData(int t) override;
 
+  double getValue() const override;
 };
 
 
