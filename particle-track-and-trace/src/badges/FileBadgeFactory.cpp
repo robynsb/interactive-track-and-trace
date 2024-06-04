@@ -2,6 +2,7 @@
 
 #include "SimpleAchievement.h"
 #include "StaticBadge.h"
+#include "TrackedAchievement.h"
 
 #include <string>
 #include <iostream>
@@ -97,17 +98,21 @@ vector<pair<shared_ptr<Achievement>, shared_ptr<Badge>>> FileBadgeFactory::getBa
   vector<pair<shared_ptr<Achievement>, shared_ptr<Badge>>> badges;
   string badgesDirectory = datapath + "/badges";
   vector<string> statisticNames = getDirectoryNames(badgesDirectory);
-  for(const string &statisticName : statisticNames) {
+  for (const string &statisticName: statisticNames) {
     auto achievementBadges = getBadges(badgesDirectory, statisticName);
     badges.insert(badges.end(), achievementBadges.begin(), achievementBadges.end());
   }
   return badges;
 }
 
-FileBadgeFactory::FileBadgeFactory(const std::string &datapath) : datapath(datapath) {}
+FileBadgeFactory::FileBadgeFactory(const std::string &datapath, const std::shared_ptr<BadgesAcquired> &badgesAcquired)
+        : datapath(datapath),
+          badgesAcquired(badgesAcquired) {}
 
-std::unique_ptr<Achievement>
-FileBadgeFactory::createAchievement(std::string statisticName, double requiredValue) const {
+std::unique_ptr<Achievement> FileBadgeFactory::createAchievement(
+        std::string statisticName, double requiredValue
+) const {
   shared_ptr<Statistic> statistic = statistics.at(statisticName);
-  return make_unique<SimpleAchievement>(statistic, requiredValue);
+  auto achiement = make_unique<SimpleAchievement>(statistic, requiredValue);
+  return make_unique<TrackedAchievement>(std::move(achiement), badgesAcquired->getBadgeStatusSetter());
 }

@@ -1,6 +1,5 @@
 #include "DayCounter.h"
 #include <vtkTextProperty.h>
-#include <iostream>
 #include <sstream>
 #include <iomanip>
 

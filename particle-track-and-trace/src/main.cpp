@@ -11,10 +11,12 @@
 #include "layers/DayCounter.h"
 #include "layers/Badges.h"
 #include "layers/StatisticsManager.h"
+#include "layers/BadgeCounter.h"
 #include "collisions/FoodPickup.h"
 #include "collisions/DebrisPickup.h"
 #include "collisions/TrackedCollision.h"
 #include "badges/FileBadgeFactory.h"
+#include "statistics/BadgesAcquired.h"
 #include "vesselroutes/VesselRouteFactory.h"
 #include "Program.h"
 #include "advection/UVGrid.h"
@@ -69,12 +71,17 @@ int main() {
 
   auto dayCounter = make_shared<DayCounter>();
 
-  FileBadgeFactory fileBadgeFactory{dataPath};
+  auto badgesAcquiredStatistic = make_shared<BadgesAcquired>();
+
+  FileBadgeFactory fileBadgeFactory{dataPath, badgesAcquiredStatistic};
   fileBadgeFactory.addStatistic("food", trackedFoodRemover);
   fileBadgeFactory.addStatistic("litter", trackedLitterRemover);
   fileBadgeFactory.addStatistic("days", dayCounter);
+  fileBadgeFactory.addStatistic("acquiredBadges", badgesAcquiredStatistic);
   auto badgeAchievements = fileBadgeFactory.getBadges();
   auto badges = make_shared<Badges>(badgeAchievements);
+
+  auto badgesCounter = make_unique<BadgeCounter>(badgesAcquiredStatistic);
 
   auto statisticsManager = make_unique<StatisticsManager>();
   statisticsManager->addStatistic(trackedFoodRemover);
@@ -95,6 +102,7 @@ int main() {
   program->addLayer(dayCounter);
   program->addLayer(std::move(statisticsManager));
   program->addLayer(badges);
+  program->addLayer(std::move(badgesCounter));
 
   program->render();
 

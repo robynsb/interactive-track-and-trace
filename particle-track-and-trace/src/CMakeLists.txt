@@ -116,7 +116,7 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         badges/Badge.cpp
         badges/StaticBadge.cpp
         badges/StaticBadge.h
-        badges/Statistic.h
+        statistics/Statistic.h
         collisions/TrackedCollision.cpp
         collisions/TrackedCollision.h
         badges/Achievement.h
@@ -126,7 +126,14 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         badges/FileBadgeFactory.h
         layers/StatisticsManager.cpp
         layers/StatisticsManager.h
-        badges/Statistic.cpp
+        statistics/Statistic.cpp
+        layers/BadgeCounter.cpp
+        layers/BadgeCounter.h
+        layers/BadgeCounter.h
+        statistics/BadgesAcquired.cpp
+        statistics/BadgesAcquired.h
+        badges/TrackedAchievement.cpp
+        badges/TrackedAchievement.h
 )
 
 execute_process(

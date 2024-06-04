@@ -2,7 +2,7 @@
 #define STATISTICSMANAGER_H
 
 #include "Layer.h"
-#include "../badges/Statistic.h"
+#include "../statistics/Statistic.h"
 
 class StatisticsManager : public Layer {
 public:

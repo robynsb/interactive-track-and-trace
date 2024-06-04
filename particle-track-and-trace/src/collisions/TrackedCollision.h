@@ -2,7 +2,7 @@
 #define TRACKEDCOLLISION_H
 
 #include "ParticleCollisionCallback.h"
-#include "../badges/Statistic.h"
+#include "../statistics/Statistic.h"
 
 #include <memory>
 
