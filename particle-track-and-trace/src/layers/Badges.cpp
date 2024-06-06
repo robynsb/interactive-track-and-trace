@@ -22,7 +22,7 @@ Badges::Badges(const vector<std::pair<std::shared_ptr<Achievement>, std::shared_
           return lhs.first > rhs.first; // For ascending order
         }} {
   for (auto &[achievement, badge] : badges) {
-    ren->AddActor(badge->getActor());
+    renderer->AddActor(badge->getActor());
   }
 }
 
@@ -48,7 +48,9 @@ void Badges::updateData(int t) {
     if (!badge->isCollected() and achievement->isAchieved()) {
       collectBadge(t, badge);
     }
-    badge->updateData(t);
+    if(badge->isCollected()) {
+      badge->updateData(t);
+    }
   }
 }
 
@@ -69,5 +71,5 @@ void Badges::collectBadge(int t, const std::shared_ptr<Badge>& badge) {
 
 void Badges::addBadge(const std::shared_ptr<Achievement>& achievement, const std::shared_ptr<Badge>& badge) {
   badges.emplace_back(achievement, badge);
-  ren->AddActor(badge->getActor());
+  renderer->AddActor(badge->getActor());
 }

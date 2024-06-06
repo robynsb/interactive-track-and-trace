@@ -55,7 +55,7 @@ DayCounter::DayCounter() {
   text->GetTextProperty()->SetFontSize(50);
   text->GetPositionCoordinate()->SetCoordinateSystemToNormalizedDisplay();
   text->GetPositionCoordinate()->SetValue(0.6, 0.016);
-  ren->AddActor(text);
+  renderer->AddActor(text);
 }
 
 void DayCounter::updateData(int t) {

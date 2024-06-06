@@ -64,7 +64,7 @@ Vessels::Vessels(std::shared_ptr<UVGrid> uvGrid, string path):
   texturedPlane->SetMapper(planeMapper);
   texturedPlane->SetTexture(texture);
 
-  ren->AddActor(texturedPlane);
+  renderer->AddActor(texturedPlane);
 }
 
 void Vessels::addRoute(std::shared_ptr<VesselRoute> route) {

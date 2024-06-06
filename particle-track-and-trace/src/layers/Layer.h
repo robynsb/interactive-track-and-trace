@@ -9,7 +9,7 @@
   */
 class Layer {
 protected:
-  vtkNew<vtkRenderer> ren;
+  vtkNew<vtkRenderer> renderer;
 
 public:
   Layer();

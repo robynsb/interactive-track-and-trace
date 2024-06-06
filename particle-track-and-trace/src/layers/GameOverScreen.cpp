@@ -73,7 +73,7 @@ GameOverScreen::GameOverScreen(string datapath) {
 
   setVisibility(false);
 
-  ren->AddActor(texturedPlane);
+  renderer->AddActor(texturedPlane);
 }
 
 void GameOverScreen::setCamera(vtkCamera *camera) {
@@ -87,7 +87,7 @@ void GameOverScreen::setVisibility(bool visible) {
     texturedPlane->SetVisibility(false);
   }
   texturedPlane->Modified();
-  if(ren->GetRenderWindow()) ren->GetRenderWindow()->Render();
+  if(renderer->GetRenderWindow()) renderer->GetRenderWindow()->Render();
 }
 
 void GameOverScreen::handleGameOver() {

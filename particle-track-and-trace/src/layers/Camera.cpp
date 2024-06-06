@@ -21,7 +21,7 @@ void Camera::clampCamera(double pos[3]) {
   pos[0] += getScreenShakeOffset();
   pos[1] += getScreenShakeOffset();
 
-  auto cam = ren->GetActiveCamera();
+  auto cam = renderer->GetActiveCamera();
   double ogpos[3];
   cam->GetPosition(ogpos);
 
@@ -44,10 +44,10 @@ void Camera::clampCamera(double pos[3]) {
   cam->SetPosition(pos[0], pos[1], ogpos[2]);
   cam->SetFocalPoint(pos[0], pos[1], 0);
 
-  int* size = ren->GetRenderWindow()->GetSize();
+  int* size = renderer->GetRenderWindow()->GetSize();
   if(size[0] != size[1]) {
     int newSize = (size[0] < size[1]) ? size[0] : size[1]; // Choose the smaller dimension
-    ren->GetRenderWindow()->SetSize(newSize, newSize);
+    renderer->GetRenderWindow()->SetSize(newSize, newSize);
   }
 }
 

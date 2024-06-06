@@ -14,7 +14,7 @@
 using std::string;
 
 BackgroundImage::BackgroundImage(string imagePath) : imagePath(imagePath) {
-  this->ren->InteractiveOff();
+  this->renderer->InteractiveOff();
   updateImage();
 }
 
@@ -73,7 +73,7 @@ void BackgroundImage::updateImage() {
   vtkNew<vtkActor> actor;
   actor->SetMapper(mapper);
     
-  this->ren->AddActor(actor);
+  this->renderer->AddActor(actor);
 }
 
 

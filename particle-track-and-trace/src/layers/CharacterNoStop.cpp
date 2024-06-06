@@ -12,12 +12,12 @@
 #include <vtkTexture.h>
 #include <vtkTextureMapToPlane.h>
 
-#include "Character.h"
+#include "CharacterNoStop.h"
 #include "../CartographicTransformation.h"
 
 using namespace std;
 
-Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_ptr<Camera> camera):
+CharacterNoStop::CharacterNoStop(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_ptr<Camera> camera):
   uvGrid{uvGrid}, camera{camera} {
 
   position->InsertPoint(0, startLon, startLat, 0);
@@ -69,33 +69,15 @@ Character::Character(std::shared_ptr<UVGrid> uvGrid, string path, std::shared_pt
   texturedPlane->SetMapper(mapper);
   texturedPlane->SetTexture(texture);
 
-//  actor->GetProperty()->SetColor(0, 0, 0);
-//  actor->GetProperty()->SetOpacity(0.2);
-
   renderer->AddActor(texturedPlane);
 }
 
-
-void Character::updateData(int t) {
+void CharacterNoStop::updateData(int t) {
   double time = (double) t/10000;
-  if (controller->getIsGoingLeft()) {
-    angleRadians += rotationStep;
-  }
-  if (controller->getIsGoingRight()) {
-    angleRadians -= rotationStep;
-  }
   updateDirection();
-  if(controller->getIsAccelerating() and !controller->getIsReversing()) {
-    throttle += accelerateStep;
-  }
-  if (!controller->getIsAccelerating()) {
-    if(throttle > 1) {
-      throttle = 1;
-    } else if (decelleration < throttle ) {
-      throttle -= decelleration;
-    } else {
-      throttle = 0;
-    }
+
+  if( !clickingNecessaryForSteering or controller->isSteering()) {
+    updateAngle();
   }
   updateDashProgress();
   updateVelocity();
@@ -103,20 +85,50 @@ void Character::updateData(int t) {
   camera->clampCamera(cameraTransform->TransformPoint(position->GetPoint(0)));
 }
 
-double easingFunction(double t) {
-  assert(t >= 0);
-  if (t < 0.5) {
-    return 2*t*t;
+void CharacterNoStop::updateAngle() {
+  double desiredAngle = getDesiredAngle();
+  double currentAngle = fmod(angleRadians, 2*M_PI);
+  if (currentAngle > M_PI) {
+    currentAngle -= 2*M_PI;
+  }
+  if (currentAngle < -M_PI) {
+    currentAngle += 2*M_PI;
+  }
+  double signedDifference = desiredAngle - currentAngle;
+  if (abs(signedDifference) < rotationStep ) {
+    angleRadians = desiredAngle;
   } else {
-    return 1-1/(5*(2*t-0.5)-1);
+    if(signedDifference > M_PI) {
+      signedDifference = signedDifference - 2*M_PI;
+    }
+    if(signedDifference < -M_PI) {
+      signedDifference = signedDifference + 2*M_PI;
+    }
+    angleRadians += signedDifference > 0 ? rotationStep : -rotationStep;
   }
 }
 
-void Character::updateVelocity() {
-  velocity = maxVelocity * easingFunction(throttle) + getDashVelocityBonus();
+double CharacterNoStop::getDesiredAngle() {
+  auto [x, y] = controller->getDesiredDisplayPos();
+  renderer->SetDisplayPoint(x, y, 0);
+  renderer->DisplayToWorld();
+  double desired[4];
+  renderer->GetWorldPoint(desired);
+
+  double point[3];
+  position->GetPoint(0, point);
+  cameraTransform->TransformPoint(point, point);
+  double desiredDirection[2];
+  desiredDirection[0] = desired[0] - point[0];
+  desiredDirection[1] = desired[1] - point[1];
+  return atan2(desiredDirection[1], desiredDirection[0]);
 }
 
-void Character::updatePosition() {
+void CharacterNoStop::updateVelocity() {
+  velocity = maxVelocity + getDashVelocityBonus();
+}
+
+void CharacterNoStop::updatePosition() {
   double point[3];
   position->GetPoint(0, point);
   point[0] += cos(angleRadians)*velocity*scaleHorizontalVelocity;
@@ -139,39 +151,38 @@ void Character::updatePosition() {
   position->Modified();
 }
 
-void Character::updateDirection() {
+void CharacterNoStop::updateDirection() {
   rotater->Identity();
   rotater->RotateZ(- 25+ angleRadians * (180.0 / M_PI));
   rotater->Update();
 }
 
-void Character::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-  interactor->AddObserver(vtkCommand::KeyPressEvent, controller);
-  interactor->AddObserver(vtkCommand::KeyReleaseEvent, controller);
+void CharacterNoStop::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
+  interactor->AddObserver(vtkCommand::LeftButtonPressEvent, controller);
+  interactor->AddObserver(vtkCommand::LeftButtonReleaseEvent, controller);
+  interactor->AddObserver(vtkCommand::MouseMoveEvent, controller);
 }
 
-vtkSmartPointer<vtkPoints> Character::getPosition() {
+vtkSmartPointer<vtkPoints> CharacterNoStop::getPosition() {
   return position;
 }
 
-void Character::handleGameOver() {
+void CharacterNoStop::handleGameOver() {
   position->SetPoint(0, startLon, startLat, 0);
   dashProgress = 0;
-  velocity = 0;
-  throttle = 0;
   updateDashProgress();
 }
 
-void Character::dash() {
+void CharacterNoStop::dash() {
   dashProgress = dashDuration;
   dashing = true;
 }
 
-double Character::getDashVelocityBonus() {
+double CharacterNoStop::getDashVelocityBonus() {
   return dashProgress * dashVelocityBonus / dashDuration;
 }
 
-void Character::updateDashProgress() {
+void CharacterNoStop::updateDashProgress() {
   if (dashing and dashProgress > 0) {
     dashProgress--;
     texturedPlane->GetProperty()->SetColor(12/255.0, 177/255.0, 98/255.0);

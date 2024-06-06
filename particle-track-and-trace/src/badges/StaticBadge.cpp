@@ -69,8 +69,6 @@ StaticBadge::StaticBadge(const std::string &datapath, double size) : datapath(da
   texturedPlane->SetMapper(mapper);
   texturedPlane->SetTexture(texture);
 
-//  actor->GetProperty()->SetColor(0, 0, 0);
-//  texturedPlane->GetProperty()->SetOpacity(0);
   setVisible(false);
 }
 
@@ -84,6 +82,7 @@ void StaticBadge::reset() {
   Badge::reset();
   setVisible(false);
   moving = false;
+  fadingOut = false;
   movingProgress = 0;
 }
 double easeOutQuint(double x) {
@@ -98,7 +97,19 @@ void StaticBadge::updateData(int t) {
     position->SetPoint(0, point);
     position->Modified();
     movingProgress += 0.01;
-    if (movingProgress > 1) moving = false;
+    if (movingProgress > 1) {
+      moving = false;
+      fadingOut = true;
+    }
+  }
+  if(fadingOut) {
+    movingProgress += 0.1;
+    if (movingProgress > fadeOutIn) {
+      texturedPlane->GetProperty()->SetOpacity(1+ fadeOutIn - movingProgress);
+      if (1 + fadeOutIn - movingProgress < 0) {
+        fadingOut = false;
+      }
+    }
   }
 }
 

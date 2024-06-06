@@ -5,7 +5,7 @@
 using std::string;
 
 vtkSmartPointer<vtkRenderer> Layer::getLayer() {
-  return this->ren;
+  return this->renderer;
 }
 
 void Layer::updateData(int t) {

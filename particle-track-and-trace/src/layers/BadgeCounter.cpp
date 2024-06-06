@@ -21,5 +21,5 @@ BadgeCounter::BadgeCounter(const std::shared_ptr<Statistic> &acquiredBadgeStatis
   text->GetTextProperty()->SetFontSize(50);
   text->GetPositionCoordinate()->SetCoordinateSystemToNormalizedDisplay();
   text->GetPositionCoordinate()->SetValue(0.8, 0.016);
-  ren->AddActor(text);
+  renderer->AddActor(text);
 }

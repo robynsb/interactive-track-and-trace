@@ -134,6 +134,10 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         statistics/BadgesAcquired.h
         badges/TrackedAchievement.cpp
         badges/TrackedAchievement.h
+        commands/CharacterMouseMoveCallback.cpp
+        commands/CharacterMouseMoveCallback.h
+        layers/CharacterNoStop.h
+        layers/CharacterNoStop.cpp
 )
 
 execute_process(

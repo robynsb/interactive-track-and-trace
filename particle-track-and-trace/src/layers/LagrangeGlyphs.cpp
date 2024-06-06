@@ -25,41 +25,10 @@ vtkSmartPointer<SpawnPointCallback> LagrangeGlyphs::createSpawnPointCallback() {
   auto newPointCallBack = vtkSmartPointer<SpawnPointCallback>::New();
   newPointCallBack->setData(this->data);
   newPointCallBack->setPoints(this->points);
-  newPointCallBack->setRen(this->ren);
+  newPointCallBack->setRen(this->renderer);
   newPointCallBack->setUVGrid(this->uvGrid);
   newPointCallBack->setBeached(this->particlesBeached);
   return newPointCallBack;
-}
-
-/**
- * Build and returns a vtkLookupTable for the given number of colours in grayscale.
- * @param n : number of colours to add to the SetTableRange
- * @return : a vtkLookupTable with grayscale colours from [1,1,1,1] to [0.5,0.5,0.5,0.5] in n steps.
- */
-vtkSmartPointer<vtkLookupTable> buildLut(int n) {
-  vtkNew<vtkLookupTable> lut;
-  lut->SetNumberOfColors(n);
-  lut->SetTableRange(0, n - 1);
-  lut->SetScaleToLinear();
-  lut->Build();
-
-  double lightColor[3] = {44 / 255, 61 / 255, 85 / 255}; // #2c3d55
-  double blackColor[3] = {0.0, 0.0, 0.0}; // Black
-
-  // Interpolate colors between light and black
-  for (int i = 0; i < n; i++) {
-    double t = static_cast<double>(i) / (n - 1); // Interpolation factor
-    double color[3];
-    for (int j = 0; j < 3; j++) {
-      color[j] = (1.0 - t) * lightColor[j] + t * blackColor[j];
-    }
-    lut->SetTableValue(i, color[0], color[1], color[2], 1.0);
-  }
-
-  // Set the last value to fully black
-  lut->SetTableValue(n - 1, blackColor[0], blackColor[1], blackColor[2], 1.0);
-
-  return lut;
 }
 
 LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> grid, std::unique_ptr<AdvectionKernel> advectionKernel) :
@@ -96,7 +65,7 @@ LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> grid, std::unique_ptr<Adv
 
   actor->SetMapper(mapper);
 
-  this->ren->AddActor(actor);
+  this->renderer->AddActor(actor);
 }
 
 // creates a few points so we can test the updateData function

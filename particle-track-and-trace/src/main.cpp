@@ -4,6 +4,8 @@
 #include "layers/FoodSpawner.h"
 #include "layers/LagrangeGlyphs.h"
 #include "layers/Character.h"
+#include "layers/CharacterNoStop.h"
+#include "layers/CharacterNoStop.h"
 #include "layers/Health.h"
 #include "layers/GameOverScreen.h"
 #include "layers/Timer.h"
@@ -50,7 +52,7 @@ int main() {
   auto litter = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryChecked));
   litter->setColour(254, 74, 73);
 //  auto euler = make_shared<EulerGlyphs>(uvGrid);
-  auto character = make_shared<Character>(uvGrid, dataPath, camera);
+  auto character = make_shared<CharacterNoStop>(uvGrid, dataPath, camera);
 
   auto health = make_shared<Health>(program);
   auto litterRemover = make_unique<DebrisPickup>(litter->getPoints(), health, camera);
@@ -88,7 +90,7 @@ int main() {
   statisticsManager->addStatistic(trackedLitterRemover);
 
   program->addLayer(timer);
-  program->addLayer(make_shared<BackgroundImage>(dataPath + "/map_2071-2067.png"));
+  program->addLayer(make_shared<BackgroundImage>(dataPath + "/northsea.png"));
   program->addLayer(litter);
 //  program->addLayer(euler);
   program->addLayer(food);

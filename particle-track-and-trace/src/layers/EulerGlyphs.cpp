@@ -22,9 +22,9 @@
 using namespace std;
 
 EulerGlyphs::EulerGlyphs(std::shared_ptr<UVGrid> uvGrid) {
-//  this->ren = vtkSmartPointer<vtkRenderer>::New();
-//  this->ren->SetLayer(1);
-  this->ren->InteractiveOff();
+//  this->renderer = vtkSmartPointer<vtkRenderer>::New();
+//  this->renderer->SetLayer(1);
+  this->renderer->InteractiveOff();
 
   this->uvGrid = uvGrid;
 
@@ -91,7 +91,7 @@ void EulerGlyphs::readCoordinates() {
   actor->GetProperty()->SetColor(0, 0, 0);
   actor->GetProperty()->SetOpacity(0.2);
 
-  this->ren->AddActor(actor);
+  this->renderer->AddActor(actor);
 }
 
 

@@ -46,7 +46,7 @@ void Health::placeBackgroundHealth() {
   actor->GetProperty()->SetColor(0.227, 0.188, 0.259);
 //  actor->GetProperty()->SetOpacity(1);
 
-  ren->AddActor(actor);
+  renderer->AddActor(actor);
 }
 
 void Health::placeHealth() {
@@ -93,7 +93,7 @@ void Health::placeHealth() {
   actor->GetProperty()->SetColor(0.165, 0.988, 0.596);
 //  actor->GetProperty()->SetOpacity(1);
 
-  ren->AddActor(actor);
+  renderer->AddActor(actor);
 }
 
 Health::Health(const std::shared_ptr<GameoverCallback> &gameoverCallback): gameoverCallback(gameoverCallback) {
