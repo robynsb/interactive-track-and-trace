@@ -81,6 +81,7 @@ void StaticBadge::setVisible(bool visible) {
 void StaticBadge::reset() {
   Badge::reset();
   setVisible(false);
+  texturedPlane->GetProperty()->SetOpacity(1);
   moving = false;
   fadingOut = false;
   movingProgress = 0;
@@ -103,7 +104,7 @@ void StaticBadge::updateData(int t) {
     }
   }
   if(fadingOut) {
-    movingProgress += 0.1;
+    movingProgress += 0.01;
     if (movingProgress > fadeOutIn) {
       texturedPlane->GetProperty()->SetOpacity(1+ fadeOutIn - movingProgress);
       if (1 + fadeOutIn - movingProgress < 0) {

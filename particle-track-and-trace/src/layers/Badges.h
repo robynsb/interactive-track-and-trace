@@ -21,6 +21,11 @@ public:
   void setCamera(vtkCamera *camera) override;
 
   void handleGameOver() override;
+
+  /**
+   * Precondition: currentlyDisplayingBadge needs to be true to call this.
+   */
+  void stopShowingCurrentBadge();
 private:
   static constexpr int displaytime {2330000};
   std::vector<std::pair<std::shared_ptr<Achievement>, std::shared_ptr<Badge>>> badges;
@@ -28,6 +33,8 @@ private:
   using Comparator = std::function<bool(const BadgePair&, const BadgePair&)>;
   using PriorityQueue = std::priority_queue<BadgePair, std::vector<BadgePair>, Comparator>;
   PriorityQueue pq;
+  bool currentlyDisplayingBadge = false;
+  double displayBadgeUntil {0};
 
   void collectBadge(int t, const std::shared_ptr<Badge>& badge);
 
