@@ -23,7 +23,7 @@ private:
 
   std::vector<std::pair<std::shared_ptr<Achievement>, std::shared_ptr<Badge>>> getBadges(std::string badgesDirectory, std::string statisticName) const;
   std::unique_ptr<Achievement> createAchievement(std::string statistic, double requiredValue) const;
-  std::unique_ptr<Badge> createBadge(std::string assetPath) const;
+  std::unique_ptr<Badge> createBadge(std::string assetPath, std::string assetName) const;
 
   std::map<std::string, std::shared_ptr<Statistic>> statistics;
   std::shared_ptr<BadgesAcquired> badgesAcquired;

@@ -37,6 +37,12 @@ endif()
 # netcdf setup
 find_package(netCDF REQUIRED)
 
+include(FetchContent)
+FetchContent_Declare(SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
+
 add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/BackgroundImage.cpp
         layers/BackgroundImage.h
@@ -138,6 +144,8 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         commands/CharacterMouseMoveCallback.h
         layers/CharacterNoStop.h
         layers/CharacterNoStop.cpp
+        collisions/SoundEffect.cpp
+        collisions/SoundEffect.h
 )
 
 execute_process(
@@ -158,10 +166,18 @@ find_library(NETCDF_LIB NAMES netcdf-cxx4 netcdf_c++4 PATHS ${NETCDFCXX_LIB_DIR}
 
 # Prevent a "command line is too long" failure in Windows.
 set(CMAKE_NINJA_FORCE_RESPONSE_FILE "ON" CACHE BOOL "Force Ninja to use response files.")
-target_link_libraries(ParticleTrackTrace ${NETCDF_LIB} ${VTK_LIBRARIES})
+target_link_libraries(ParticleTrackTrace ${NETCDF_LIB} ${VTK_LIBRARIES} sfml-audio)
 
 # vtk_module_autoinit is needed
 vtk_module_autoinit(
   TARGETS ParticleTrackTrace
   MODULES ${VTK_LIBRARIES}
 )
+
+if(WIN32)
+add_custom_command(
+        TARGET main
+        COMMENT "Copy OpenAL DLL"
+        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:main>
+        VERBATIM)
+endif()

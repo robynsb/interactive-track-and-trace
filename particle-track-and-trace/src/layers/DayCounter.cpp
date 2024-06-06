@@ -54,7 +54,7 @@ DayCounter::DayCounter() {
   text->GetTextProperty()->SetColor(0,0,0);
   text->GetTextProperty()->SetFontSize(50);
   text->GetPositionCoordinate()->SetCoordinateSystemToNormalizedDisplay();
-  text->GetPositionCoordinate()->SetValue(0.6, 0.016);
+  text->GetPositionCoordinate()->SetValue(0.5, 0.016);
   renderer->AddActor(text);
 }
 

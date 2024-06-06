@@ -75,19 +75,19 @@ vector<string> getDirectoryNames(string path) {
   return names;
 }
 
-unique_ptr<Badge> FileBadgeFactory::createBadge(string assetPath) const {
-  return make_unique<StaticBadge>(assetPath, badgeSize);
+unique_ptr<Badge> FileBadgeFactory::createBadge(string assetPath, string assetName) const {
+  return make_unique<StaticBadge>(assetPath, assetName, badgeSize);
 }
 
 vector<pair<shared_ptr<Achievement>, shared_ptr<Badge>>> FileBadgeFactory::getBadges(
-        string badgesDirectory,
+        string assetPath,
         string statisticName) const {
   vector<pair<shared_ptr<Achievement>, shared_ptr<Badge>>> badges;
-  vector<string> badgeNames = findBadgesInDir(badgesDirectory + "/" + statisticName);
+  vector<string> badgeNames = findBadgesInDir(assetPath + "/badges/" + statisticName);
   for (string badgeName: badgeNames) {
     string badgeNameNoExtension = trimExtension(badgeName);
     auto achievement = createAchievement(statisticName, stod(badgeNameNoExtension));
-    auto badge = createBadge(badgesDirectory + "/" + statisticName + "/" + badgeName);
+    auto badge = createBadge(assetPath, "/badges/" + statisticName + "/" + badgeName);
     badges.emplace_back(std::move(achievement), std::move(badge));
   }
 
@@ -99,7 +99,7 @@ vector<pair<shared_ptr<Achievement>, shared_ptr<Badge>>> FileBadgeFactory::getBa
   string badgesDirectory = datapath + "/badges";
   vector<string> statisticNames = getDirectoryNames(badgesDirectory);
   for (const string &statisticName: statisticNames) {
-    auto achievementBadges = getBadges(badgesDirectory, statisticName);
+    auto achievementBadges = getBadges(datapath, statisticName);
     badges.insert(badges.end(), achievementBadges.begin(), achievementBadges.end());
   }
   return badges;

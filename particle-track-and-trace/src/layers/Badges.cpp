@@ -46,7 +46,6 @@ void Badges::updateData(int t) {
   if (!currentlyDisplayingBadge and !pq.empty()) {
     auto [time, badge] = pq.top();
     badge->setVisible(true);
-    badge->collect();
     currentlyDisplayingBadge = true;
     displayBadgeUntil = t + displaytime;
   }
@@ -79,6 +78,7 @@ void Badges::handleGameOver() {
 
 void Badges::collectBadge(int t, const std::shared_ptr<Badge>& badge) {
   pq.emplace(t, badge);
+  badge->collect();
 }
 
 void Badges::addBadge(const std::shared_ptr<Achievement>& achievement, const std::shared_ptr<Badge>& badge) {

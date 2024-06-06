@@ -38,7 +38,7 @@ private:
   // to make the character "look" like they move the same velocity
   // horizontally vs vertically.
   static constexpr double dashVelocityBonus = 0.04;
-  static constexpr int dashDuration = 45;
+  static constexpr int dashDuration = 30;
   static constexpr double startLon = 6.513089433595266; // Groningen
   static constexpr double startLat = 53.44059997086552;
 

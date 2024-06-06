@@ -17,6 +17,7 @@
 #include "collisions/FoodPickup.h"
 #include "collisions/DebrisPickup.h"
 #include "collisions/TrackedCollision.h"
+#include "collisions/SoundEffect.h"
 #include "badges/FileBadgeFactory.h"
 #include "statistics/BadgesAcquired.h"
 #include "vesselroutes/VesselRouteFactory.h"
@@ -57,8 +58,9 @@ int main() {
   auto health = make_shared<Health>(program);
   auto litterRemover = make_unique<DebrisPickup>(litter->getPoints(), health, camera);
   auto trackedLitterRemover = make_shared<TrackedCollision>(0.1, std::move(litterRemover));
+  auto soundingLitterRemover = make_shared<SoundEffect>(dataPath + "/plastic.wav", trackedLitterRemover);
   auto collisionHandler = make_shared<ParticleCollision>();
-  collisionHandler->addPointSet(litter->getPoints(), trackedLitterRemover);
+  collisionHandler->addPointSet(litter->getPoints(), soundingLitterRemover);
   collisionHandler->setPosition(character->getPosition());
 
   auto vessels = createVesselLayer(uvGrid, dataPath);
@@ -69,7 +71,8 @@ int main() {
   auto foodSpawn = make_shared<FoodSpawner>(food->getPoints(), food->getBeached());
   auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health, camera, character);
   auto trackedFoodRemover = make_shared<TrackedCollision>(0.1, std::move(foodRemover));
-  collisionHandler->addPointSet(food->getPoints(), trackedFoodRemover);
+  auto soundingFoodRemover = make_shared<SoundEffect>(dataPath + "/food1.wav", trackedFoodRemover);
+  collisionHandler->addPointSet(food->getPoints(), soundingFoodRemover);
 
   auto dayCounter = make_shared<DayCounter>();
 
@@ -84,6 +87,7 @@ int main() {
   auto badges = make_shared<Badges>(badgeAchievements);
 
   auto badgesCounter = make_unique<BadgeCounter>(badgesAcquiredStatistic);
+
 
   auto statisticsManager = make_unique<StatisticsManager>();
   statisticsManager->addStatistic(trackedFoodRemover);

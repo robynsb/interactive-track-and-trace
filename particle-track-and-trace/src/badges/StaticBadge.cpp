@@ -19,7 +19,7 @@ vtkSmartPointer<vtkActor> StaticBadge::getActor() {
   return texturedPlane;
 }
 
-StaticBadge::StaticBadge(const std::string &datapath, double size) : datapath(datapath) {
+StaticBadge::StaticBadge(const std::string &datapath, std::string name, double size) {
 
   position->InsertPoint(0, 0, initY, 0);
 
@@ -27,7 +27,7 @@ StaticBadge::StaticBadge(const std::string &datapath, double size) : datapath(da
   data->SetPoints(position);
 
   vtkNew<vtkPNGReader> pngReader;
-  pngReader->SetFileName(datapath.c_str());
+  pngReader->SetFileName((datapath+name).c_str());
   pngReader->Update();
 
   int dimensions[3];
@@ -70,11 +70,20 @@ StaticBadge::StaticBadge(const std::string &datapath, double size) : datapath(da
   texturedPlane->SetTexture(texture);
 
   setVisible(false);
+
+  if (!buffer.loadFromFile(datapath + "/badge.wav")) {
+    throw std::runtime_error("File at \"" + datapath + "\" not found.");
+  }
+  sound.setBuffer(buffer);
+  sound.setVolume(20);
 }
 
 void StaticBadge::setVisible(bool visible) {
   texturedPlane->SetVisibility(visible);
-  if(visible) moving = true;
+  if(visible) {
+    moving = true;
+    sound.play();
+  }
   texturedPlane->Modified();
 }
 
@@ -85,6 +94,7 @@ void StaticBadge::reset() {
   moving = false;
   fadingOut = false;
   movingProgress = 0;
+  sound.stop();
 }
 double easeOutQuint(double x) {
   return 1 - pow(1 - x, 5);

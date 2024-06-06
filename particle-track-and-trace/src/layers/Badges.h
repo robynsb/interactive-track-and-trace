@@ -37,7 +37,6 @@ private:
   double displayBadgeUntil {0};
 
   void collectBadge(int t, const std::shared_ptr<Badge>& badge);
-
 };
 
 
