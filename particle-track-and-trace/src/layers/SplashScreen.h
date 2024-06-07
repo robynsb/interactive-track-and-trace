@@ -1,12 +1,12 @@
-#ifndef GAMEOVERSCREEN_H
-#define GAMEOVERSCREEN_H
+#ifndef SPLASHSCREEN_H
+#define SPLASHSCREEN_H
 
 #include "Layer.h"
 
-class GameOverScreen : public Layer {
+class SplashScreen : public Layer {
 public:
   void setVisibility(bool visible);
-  GameOverScreen(std::string datapath);
+  SplashScreen(std::string datapath);
 
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;
 
@@ -15,7 +15,9 @@ public:
   void handleGameOver() override;
 private:
   vtkSmartPointer<vtkActor> texturedPlane;
-  void dismiss();
+  void toggle();
+  bool gameOver {false};
 };
 
-#endif //GAMEOVERSCREEN_H
+
+#endif //SPLASHSCREEN_H

@@ -146,6 +146,10 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/CharacterNoStop.cpp
         collisions/SoundEffect.cpp
         collisions/SoundEffect.h
+        layers/SplashScreen.cpp
+        layers/SplashScreen.h
+        commands/DisplaySplashScreenCommand.cpp
+        commands/DisplaySplashScreenCommand.h
 )
 
 execute_process(

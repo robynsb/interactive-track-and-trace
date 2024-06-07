@@ -1,4 +1,3 @@
-
 #include <vtkRenderWindowInteractor.h>
 #include "DismissGameoverScreen.h"
 

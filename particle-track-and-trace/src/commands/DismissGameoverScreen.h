@@ -4,10 +4,6 @@
 #include <vtkCallbackCommand.h>
 
 class DismissGameoverScreen : public vtkCallbackCommand {
-private:
-  std::function<void()> dismiss;
-  explicit DismissGameoverScreen(std::function<void()> dismiss);
-
 public:
   void Execute(vtkObject *caller, unsigned long eid, void *callData) override;
 
@@ -15,6 +11,9 @@ public:
   DismissGameoverScreen();
 
   void setDismiss(const std::function<void()> &dismiss);
+private:
+  std::function<void()> dismiss;
+  explicit DismissGameoverScreen(std::function<void()> dismiss);
 };
 
 

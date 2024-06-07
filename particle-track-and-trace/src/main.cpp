@@ -14,6 +14,7 @@
 #include "layers/Badges.h"
 #include "layers/StatisticsManager.h"
 #include "layers/BadgeCounter.h"
+#include "layers/SplashScreen.h"
 #include "collisions/FoodPickup.h"
 #include "collisions/DebrisPickup.h"
 #include "collisions/TrackedCollision.h"
@@ -104,6 +105,7 @@ int main() {
   program->addLayer(character);
   program->addLayer(health);
   program->addLayer(camera);
+  program->addLayer(make_unique<SplashScreen>(dataPath));
   program->addLayer(gameover);
   program->addLayer(dayCounter);
   program->addLayer(std::move(statisticsManager));

@@ -1,6 +1,6 @@
-#include "GameOverScreen.h"
+#include "SplashScreen.h"
 
-#include "../commands/DismissGameoverScreen.h"
+#include "../commands/DisplaySplashScreenCommand.h"
 #include "../CartographicTransformation.h"
 
 #include <vtkGlyph2D.h>
@@ -19,7 +19,7 @@
 
 using namespace std;
 
-GameOverScreen::GameOverScreen(string datapath) {
+SplashScreen::SplashScreen(string datapath) {
   vtkSmartPointer<vtkPolyData> data;
 
   vtkSmartPointer<vtkPoints> position;
@@ -30,7 +30,7 @@ GameOverScreen::GameOverScreen(string datapath) {
   data->SetPoints(position);
 
   vtkNew<vtkPNGReader> pngReader;
-  pngReader->SetFileName((datapath + "/gameover.png").c_str());
+  pngReader->SetFileName((datapath + "/splash.png").c_str());
 
   // Create a plane
   vtkNew<vtkPlaneSource> plane;
@@ -45,7 +45,7 @@ GameOverScreen::GameOverScreen(string datapath) {
   texturePlane->SetInputConnection(plane->GetOutputPort());
 
   vtkNew<vtkTransform> scaler;
-  scaler->Scale(1.5*1.77, 1.5, 1.0);
+  scaler->Scale(1*16.0/9, 1, 1.0);
 
   vtkNew<vtkTransformFilter> scaleFilter;
   scaleFilter->SetTransform(scaler);
@@ -66,35 +66,35 @@ GameOverScreen::GameOverScreen(string datapath) {
   texturedPlane->SetMapper(mapper);
   texturedPlane->SetTexture(texture);
 
-  setVisibility(false);
+  setVisibility(true);
 
   renderer->AddActor(texturedPlane);
 }
 
-void GameOverScreen::setCamera(vtkCamera *camera) {
+void SplashScreen::setCamera(vtkCamera *camera) {
   getLayer()->SetActiveCamera(createNormalisedCamera());
 }
 
-void GameOverScreen::setVisibility(bool visible) {
-  if (visible) {
-    texturedPlane->SetVisibility(true);
-  } else {
-    texturedPlane->SetVisibility(false);
-  }
+void SplashScreen::setVisibility(bool visible) {
+  texturedPlane->SetVisibility(visible);
   texturedPlane->Modified();
   if(renderer->GetRenderWindow()) renderer->GetRenderWindow()->Render();
 }
 
-void GameOverScreen::handleGameOver() {
-  setVisibility(true);
+void SplashScreen::handleGameOver() {
+  gameOver = true;
 }
 
-void GameOverScreen::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-  vtkNew<DismissGameoverScreen> controller;
-  controller->setDismiss(bind(&GameOverScreen::dismiss, this));
+void SplashScreen::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
+  vtkNew<DisplaySplashScreenCommand> controller;
+  controller->setToggle(bind(&SplashScreen::toggle, this));
   interactor->AddObserver(vtkCommand::KeyPressEvent, controller);
 }
 
-void GameOverScreen::dismiss() {
-  setVisibility(false);
+void SplashScreen::toggle() {
+  if(gameOver) {
+    gameOver = false;
+    return;
+  }
+  setVisibility(!texturedPlane->GetVisibility());
 }

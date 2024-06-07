@@ -14,18 +14,6 @@
  * using the 'glyph' mark and 'transparency' channel to denote age.
  */
 class LagrangeGlyphs : public Layer {
-private:
-//  vtkSmartPointer<vtkPoints> points;
-  vtkNew<vtkPoints> points;
-  vtkSmartPointer<vtkPolyData> data;
-  vtkSmartPointer<vtkIntArray> particlesBeached;
-  std::unique_ptr<AdvectionKernel> advector;
-  std::shared_ptr<UVGrid> uvGrid;
-  vtkNew<vtkActor> actor;
-  int lastT = 1000;
-  int beachedAtNumberOfTimes = 50;
-
-  vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();
 public:
   /**
    * Constructor.
@@ -54,6 +42,18 @@ public:
   void setColour(int red, int green, int blue);
 
   void handleGameOver() override;
+private:
+//  vtkSmartPointer<vtkPoints> points;
+  vtkNew<vtkPoints> points;
+  vtkSmartPointer<vtkPolyData> data;
+  vtkSmartPointer<vtkIntArray> particlesBeached;
+  std::unique_ptr<AdvectionKernel> advector;
+  std::shared_ptr<UVGrid> uvGrid;
+  vtkNew<vtkActor> actor;
+  int lastT = 1000;
+  int beachedAtNumberOfTimes = 50;
+
+  vtkSmartPointer<SpawnPointCallback> createSpawnPointCallback();
 };
 
 #endif
