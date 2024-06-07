@@ -41,6 +41,7 @@ private:
   static constexpr int dashDuration = 30;
   static constexpr double startLon = 6.513089433595266; // Groningen
   static constexpr double startLat = 53.44059997086552;
+  bool clickingNecessaryForSteering = true;
 
   vtkNew<vtkTexture> texture;
   vtkNew<vtkActor> texturedPlane;
@@ -51,7 +52,6 @@ private:
   vtkNew<vtkTransform> rotater;
   std::shared_ptr<UVGrid> uvGrid;
   std::shared_ptr<Camera> camera;
-  bool clickingNecessaryForSteering = false;
 
   double velocity {maxVelocity};
   double angleRadians {0};

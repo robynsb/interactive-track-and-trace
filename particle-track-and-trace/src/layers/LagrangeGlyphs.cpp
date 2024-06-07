@@ -3,7 +3,6 @@
 #include <vtkActor2D.h>
 #include <vtkGlyph2D.h>
 #include <vtkLookupTable.h>
-#include <vtkGlyphSource2D.h>
 #include <vtkNamedColors.h>
 #include <vtkPointData.h>
 #include <vtkPolyDataMapper2D.h>
@@ -46,7 +45,6 @@ LagrangeGlyphs::LagrangeGlyphs(std::shared_ptr<UVGrid> grid, std::unique_ptr<Adv
   vtkSmartPointer<vtkTransformFilter> transformFilter = createCartographicTransformFilter(*uvGrid);
   transformFilter->SetInputData(data);
 
-  vtkNew<vtkGlyphSource2D> circleSource;
   circleSource->SetGlyphTypeToCircle();
   circleSource->SetScale(0.02);
   circleSource->Update();
@@ -147,6 +145,10 @@ vtkSmartPointer<vtkIntArray> LagrangeGlyphs::getBeached() {
 
 void LagrangeGlyphs::setColour(int red, int green, int blue) {
   actor->GetProperty()->SetColor(red / 255.0, green / 255.0, blue / 255.0);
+}
+
+void LagrangeGlyphs::setToDiamond() {
+  circleSource->SetGlyphTypeToDiamond();
 }
 
 void LagrangeGlyphs::handleGameOver() {

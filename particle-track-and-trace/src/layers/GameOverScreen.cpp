@@ -45,7 +45,7 @@ GameOverScreen::GameOverScreen(string datapath) {
   texturePlane->SetInputConnection(plane->GetOutputPort());
 
   vtkNew<vtkTransform> scaler;
-  scaler->Scale(1.5*1.77, 1.5, 1.0);
+  scaler->Scale(1*16.0/9, 1, 1.0);
 
   vtkNew<vtkTransformFilter> scaleFilter;
   scaleFilter->SetTransform(scaler);

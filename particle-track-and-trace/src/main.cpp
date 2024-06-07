@@ -52,7 +52,8 @@ int main() {
   auto gameover = make_shared<GameOverScreen>(dataPath);
 
   auto litter = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryChecked));
-  litter->setColour(254, 74, 73);
+  litter->setColour(235, 83, 159);
+  litter->setToDiamond();
 //  auto euler = make_shared<EulerGlyphs>(uvGrid);
   auto character = make_shared<CharacterNoStop>(uvGrid, dataPath, camera);
 
@@ -71,7 +72,7 @@ int main() {
   food->setColour(5, 74, 41);
   auto foodSpawn = make_shared<FoodSpawner>(food->getPoints(), food->getBeached());
   auto foodRemover = make_unique<FoodPickup>(food->getPoints(), health, camera, character);
-  auto trackedFoodRemover = make_shared<TrackedCollision>(0.1, std::move(foodRemover));
+  auto trackedFoodRemover = make_shared<TrackedCollision>(1000, std::move(foodRemover));
   auto soundingFoodRemover = make_shared<SoundEffect>(dataPath + "/food1.wav", trackedFoodRemover);
   collisionHandler->addPointSet(food->getPoints(), soundingFoodRemover);
 

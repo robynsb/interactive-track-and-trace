@@ -7,6 +7,7 @@
 #include "../gameovers/GameoverCallback.h"
 #include <vtkPolyData.h>
 #include <vtkInteractorStyle.h>
+#include <vtkGlyphSource2D.h>
 
 /**
  * Implements the Layer class for the case of a Lagrangian visualization.
@@ -41,6 +42,8 @@ public:
 
   void setColour(int red, int green, int blue);
 
+  void setToDiamond();
+
   void handleGameOver() override;
 private:
 //  vtkSmartPointer<vtkPoints> points;
@@ -50,6 +53,7 @@ private:
   std::unique_ptr<AdvectionKernel> advector;
   std::shared_ptr<UVGrid> uvGrid;
   vtkNew<vtkActor> actor;
+  vtkNew<vtkGlyphSource2D> circleSource;
   int lastT = 1000;
   int beachedAtNumberOfTimes = 50;
 
