@@ -6,8 +6,16 @@
 
 #include <memory>
 
+/**
+ * A SimpleAchievement is achieved when the inputted statistic is greater than some constant requiredValue.
+ */
 class SimpleAchievement : public Achievement {
 public:
+  /**
+   * Constructor.
+   * @param statistic to evaluate.
+   * @param requiredValue to compare with statistic value.
+   */
   SimpleAchievement(const std::shared_ptr<Statistic> &statistic, double requiredValue);
 
   bool isAchieved() override;

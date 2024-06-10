@@ -52,7 +52,7 @@ int main() {
   auto gameover = make_shared<GameOverScreen>(dataPath);
 
   auto litter = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryChecked));
-  litter->setColour(235, 83, 159);
+  litter->setColour(255, 255, 255);
   litter->setToDiamond();
 //  auto euler = make_shared<EulerGlyphs>(uvGrid);
   auto character = make_shared<CharacterNoStop>(uvGrid, dataPath, camera);
@@ -93,6 +93,7 @@ int main() {
 
   auto statisticsManager = make_unique<StatisticsManager>();
   statisticsManager->addStatistic(trackedFoodRemover);
+  statisticsManager->addStatistic(badgesAcquiredStatistic);
   statisticsManager->addStatistic(trackedLitterRemover);
 
   program->addLayer(timer);

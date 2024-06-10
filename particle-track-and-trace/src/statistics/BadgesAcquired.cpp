@@ -11,7 +11,7 @@ double BadgesAcquired::getValue() const {
 }
 
 void BadgesAcquired::resetStatistic() {
-  acquiredBadges.clear();
+  // Do nothing.
 }
 
 std::function<void(bool)> BadgesAcquired::getBadgeStatusSetter() {

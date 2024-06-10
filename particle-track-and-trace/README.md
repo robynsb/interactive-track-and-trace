@@ -29,7 +29,8 @@ interactive-track-and-trace/
 ```
 
 ## Compiling
-You will need [vtk](https://gitlab.kitware.com/vtk/vtk) and [netcdf-cxx](https://github.com/Unidata/netcdf-cxx4/).
+You will need [vtk](https://gitlab.kitware.com/vtk/vtk), [netcdf-cxx](https://github.com/Unidata/netcdf-cxx4/),
+[SFML](https://github.com/SFML/SFML).
 
 Let the current directory be the `src` directory. Run:
 ```shell

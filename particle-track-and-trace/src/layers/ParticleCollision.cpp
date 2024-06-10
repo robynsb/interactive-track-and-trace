@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ParticleCollision::ParticleCollision(): distance(0.2) {}
+ParticleCollision::ParticleCollision() {}
 
 void ParticleCollision::addPointSet(
         vtkSmartPointer<vtkPoints> points,
@@ -17,7 +17,7 @@ bool ParticleCollision::isInRange(double pos[3], double point[3]) {
   return x*x + y*y < distance*distance;
 }
 
-void ParticleCollision::updateData(int t) {
+void ParticleCollision::updateData(int) {
   double pos[3];
   position->GetPoint(0, pos);
   for (const auto& [points, cb] : pointsets) {

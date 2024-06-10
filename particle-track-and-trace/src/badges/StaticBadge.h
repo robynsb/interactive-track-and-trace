@@ -7,18 +7,35 @@
 #include <vtkPoints.h>
 #include <SFML/Audio.hpp>
 
+/**
+ * StaticBadge is a badge represented by a simple image asset png.
+ */
 class StaticBadge : public Badge {
 public:
-  vtkSmartPointer<vtkActor> getActor() override;
-
+  /**
+   * Set visibility of badge.
+   */
   void setVisible(bool visible) override;
 
-  void updateData(int t) override;
-
+  /**
+   * Creates badge actor.
+   * @param datapath to find the image file.
+   * @param name of the image file.
+   * @param size of that the badge should have.
+   */
   explicit StaticBadge(const std::string &datapath, std::string name, double size);
 
+  /**
+   * updateData used for animating the badge from the top of the screen and fading it out afterwards.
+   */
+  void updateData(int t) override;
+
+  /**
+   * Resets the badge so that it can be collected again.
+   */
   void reset() override;
 
+  vtkSmartPointer<vtkActor> getActor() override;
   void setZ(double z);
 private:
   static constexpr double initY {1.5};
