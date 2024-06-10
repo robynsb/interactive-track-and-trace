@@ -12,6 +12,7 @@
 #include "layers/BackgroundImage.h"
 #include "layers/EGlyphLayer.h"
 #include "layers/LGlyphLayer.h"
+#include "layers/SplashScreen.h"
 #include "Program.h"
 #include "advection/UVGrid.h"
 #include "advection/kernel/RK4AdvectionKernel.h"
@@ -34,9 +35,10 @@ int main() {
   l->setDt(DT);
 
   unique_ptr<Program> program = make_unique<Program>(DT);
-  program->addLayer(new BackgroundImage(dataPath + "/map_661-661.png"));
+  program->addLayer(new BackgroundImage(dataPath + "/northsea.png"));
   program->addLayer(new EGlyphLayer(uvGrid));
   program->addLayer(l);
+  program->addLayer(new SplashScreen(dataPath));
 
   program->render();
 

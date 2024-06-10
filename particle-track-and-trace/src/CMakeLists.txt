@@ -15,6 +15,7 @@ find_package(VTK COMPONENTS
   CommonDataModel
   FiltersGeneral
   FiltersGeometry
+  FiltersTexture
   FiltersProgrammable
   FiltersSources
   ImagingSources
@@ -70,6 +71,10 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         advection/Vel.h
         advection/kernel/SnapBoundaryConditionKernel.h
         advection/kernel/SnapBoundaryConditionKernel.cpp
+        layers/SplashScreen.cpp
+        layers/SplashScreen.h
+        commands/DisplaySplashScreenCommand.cpp
+        commands/DisplaySplashScreenCommand.h
 )
 
 execute_process(

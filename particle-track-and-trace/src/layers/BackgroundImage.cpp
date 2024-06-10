@@ -22,7 +22,6 @@ BackgroundImage::BackgroundImage(string imagePath) : imagePath(imagePath) {
   updateImage();
 }
 
-
 vtkSmartPointer<vtkMatrix4x4> BackgroundImage::getMatrix(const double x0, const double y0, const int xMax, const int yMax) {
     double eyeTransform[] = {
             2/(xMax-x0), 0, 0, -(xMax+x0)/(xMax-x0),
