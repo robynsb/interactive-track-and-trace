@@ -10,7 +10,6 @@ The `LagrangeGlyphs` deserves some more explanation, as it depends on the `Spawn
 
 The program also adds a second observer to the vtk pattern through the `TimerCallbackCommand`. This class subscribes to a vtkTimerEvent to manage the simulation of the program. To this end the TimerCallbackCommand has attributes for a timestep (dt) and current time (time). On every controller, the current time is updated according to the dt attribute, and this change is propagated to the layers containing the data by use of the program and layer's `updateData()` functions.
 
-
 ## Location of data
 The data path is hardcoded such that the following tree structure is assumed:
 ```
