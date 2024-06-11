@@ -15,6 +15,11 @@ public:
    */
   virtual std::pair<double, double> getPosition(int time) = 0;
 
+  /**
+   * VesselRoute should indicate if it is wrecking at any time t.
+   * @param time time in seconds
+   * @return boolean value indicating if the vessel is wrecking or not
+   */
   virtual bool isWrecking(int time) = 0;
 
   virtual ~VesselRoute() = default;

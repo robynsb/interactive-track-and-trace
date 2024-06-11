@@ -90,7 +90,6 @@ int main() {
 
   auto badgesCounter = make_unique<BadgeCounter>(badgesAcquiredStatistic);
 
-
   auto statisticsManager = make_unique<StatisticsManager>();
   statisticsManager->addStatistic(trackedFoodRemover);
   statisticsManager->addStatistic(badgesAcquiredStatistic);

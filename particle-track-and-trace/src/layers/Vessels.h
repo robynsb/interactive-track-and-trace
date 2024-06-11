@@ -9,6 +9,12 @@
 #include "../advection/UVGrid.h"
 
 class Vessels : public Layer {
+public:
+  void addRoute(std::shared_ptr<VesselRoute> route);
+  Vessels(std::shared_ptr<UVGrid> uvGrid, std::string path);
+  void setDepositAndBeached(vtkSmartPointer<vtkPoints> deposit, vtkSmartPointer<vtkIntArray> particlesBeached);
+
+  void updateData(int t) override;
 private:
   vtkSmartPointer<vtkPoints> deposition;
   vtkSmartPointer<vtkPoints> position;
@@ -16,12 +22,6 @@ private:
   vtkSmartPointer<vtkPolyData> data;
   std::vector<std::shared_ptr<VesselRoute>> routes;
   std::shared_ptr<UVGrid> uvGrid;
-public:
-  void addRoute(std::shared_ptr<VesselRoute> route);
-  Vessels(std::shared_ptr<UVGrid> uvGrid, std::string path);
-  void setDepositAndBeached(vtkSmartPointer<vtkPoints> deposit, vtkSmartPointer<vtkIntArray> particlesBeached);
-
-  void updateData(int t) override;
 };
 
 #endif //VESSELS_H
