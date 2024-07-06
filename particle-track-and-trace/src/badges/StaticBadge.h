@@ -40,7 +40,7 @@ public:
 private:
   static constexpr double initY {1.5};
   static constexpr double targetY {0.85};
-  static constexpr double fadeOutIn {5};
+  static constexpr double fadeOutIn {10};
   vtkNew<vtkPoints> position;
   vtkNew<vtkActor> texturedPlane;
   bool moving = false;

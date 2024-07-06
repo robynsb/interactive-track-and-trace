@@ -7,7 +7,7 @@ void Timer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) 
   callback->setDt(dt);
   interactor->AddObserver(vtkCommand::TimerEvent, callback);
   interactor->AddObserver(vtkCommand::KeyPressEvent, callback);
-  interactor->CreateRepeatingTimer(17); // 60 fps == 1000 / 60 == 16.7 ms per frame
+  interactor->CreateRepeatingTimer(16); // 60 fps == 1000 / 60 == 16.7 ms per frame
 }
 
 Timer::Timer(const std::shared_ptr<Program> &program, int dt) : program(program), dt(dt) {}

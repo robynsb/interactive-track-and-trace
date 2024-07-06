@@ -27,7 +27,7 @@ public:
    */
   void stopShowingCurrentBadge();
 private:
-  static constexpr int displaytime {2330000};
+  static constexpr int displaytime {4330000};
   std::vector<std::pair<std::shared_ptr<Achievement>, std::shared_ptr<Badge>>> badges;
   using BadgePair = std::pair<int, std::shared_ptr<Badge>>;
   using Comparator = std::function<bool(const BadgePair&, const BadgePair&)>;

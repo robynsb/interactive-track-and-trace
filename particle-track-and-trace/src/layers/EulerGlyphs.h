@@ -7,10 +7,22 @@
 
 #include "../advection/UVGrid.h"
 
-/** Implements the Layer class for the case of a Eulerian visualization.
-  * Specifically, this class models the eulerian flow-fields of the simulation using the 'glyph' mark and 'direction' and 'form' channels to denote direction and strength of velocities.
-  */
+/**
+ * Implements the Layer class for the case of a Eulerian visualization.
+ * Specifically, this class models the eulerian flow-fields of the simulation using the 'glyph' mark and 'direction' and 'form' channels to denote direction and strength of velocities.
+ */
 class EulerGlyphs : public Layer {
+public:
+  /**
+   * Constructor.
+    */
+  EulerGlyphs(std::shared_ptr<UVGrid> uvGrid);
+
+  /**
+   * Updates the glyphs to reflect the given timestamp in the dataset.
+   * @param t : the time at which to fetch the data.
+   */
+  void updateData(int t);
 private:
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<vtkDoubleArray> direction;
@@ -22,17 +34,6 @@ private:
     * It also reads some initial data to actually display.
     */
   void readCoordinates();
-
-public:
-  /** Constructor.
-    */
-  EulerGlyphs(std::shared_ptr<UVGrid> uvGrid);
-
-  /** updates the glyphs to reflect the given timestamp in the dataset.
-    * @param t : the time at which to fetch the data.
-    */
-  void updateData(int t);
-
 };
 
 
