@@ -5,4 +5,5 @@ src/build
 .idea
 src/cmake-build-debug
 src/cmake-build-release
+src/game-build
 compile_commands.json
