@@ -2,6 +2,7 @@
 #include <vtkTextProperty.h>
 #include <sstream>
 #include <iomanip>
+#include <math.h>
 
 // Utility function to determine if a year is a leap year
 bool isLeapYear(int year) {

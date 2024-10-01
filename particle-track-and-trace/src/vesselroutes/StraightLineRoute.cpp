@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <cmath>
 #include "StraightLineRoute.h"
 
 using namespace std;

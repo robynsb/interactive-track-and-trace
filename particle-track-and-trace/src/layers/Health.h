@@ -2,6 +2,7 @@
 #define HEALTH_H
 
 #include "Layer.h"
+#include <memory>
 #include "../gameovers/GameoverCallback.h"
 
 class Health : public Layer {

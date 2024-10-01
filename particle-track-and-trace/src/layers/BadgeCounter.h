@@ -2,6 +2,7 @@
 #define BADGECOUNTER_H
 
 #include "Layer.h"
+#include <memory>
 
 #include "../statistics/Statistic.h"
 

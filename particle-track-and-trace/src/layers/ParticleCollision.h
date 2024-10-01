@@ -4,6 +4,7 @@
 
 #include <vtkPoints.h>
 #include <memory.h>
+#include <memory>
 
 #include "Layer.h"
 #include "../collisions/ParticleCollisionCallback.h"

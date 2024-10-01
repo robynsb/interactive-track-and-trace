@@ -1,5 +1,6 @@
 #ifndef GAMEOVERCALLBACK_H
 #define GAMEOVERCALLBACK_H
+#include <memory>
 
 class GameoverCallback {
 public:

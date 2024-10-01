@@ -2,6 +2,7 @@
 #define DEBRISPICKUP_H
 
 #include "ParticleRemover.h"
+#include <memory>
 #include "../layers/Health.h"
 #include "../layers/Camera.h"
 #include "../layers/Badges.h"

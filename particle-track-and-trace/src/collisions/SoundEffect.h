@@ -4,6 +4,7 @@
 #include "ParticleCollisionCallback.h"
 #include <SFML/Audio.hpp>
 #include <string>
+#include <memory>
 
 /**
  * SoundEffect is a ParticleCollisionCallback that plays a sound at collision.
