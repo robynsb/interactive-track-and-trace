@@ -6,6 +6,15 @@
 #include "../gameovers/GameoverCallback.h"
 
 class Health : public Layer {
+public:
+  void updateData(int t) override;
+  void changeHealth(double healthChange);
+  void grace();
+
+  Health(const std::shared_ptr<GameoverCallback> &gameoverCallback);
+  void setCamera(vtkCamera *camera) override;
+
+  void handleGameOver() override;
 private:
   static constexpr int gracePeriod = 10;;
   int graceProgress = 10;
@@ -21,15 +30,6 @@ private:
   void placeBackgroundHealth();
   void placeHealth();
   void setHealth(double health);
-public:
-  void updateData(int t) override;
-  void changeHealth(double healthChange);
-  void grace();
-
-  Health(const std::shared_ptr<GameoverCallback> &gameoverCallback);
-  void setCamera(vtkCamera *camera) override;
-
-  void handleGameOver() override;
 };
 
 

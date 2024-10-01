@@ -4,13 +4,9 @@ This project seeks to interactively visualise the motion of particles in the Dut
 
 Two approaches will be produced and evaluated, to answer the research question: **How does a dedicated interaction-reward scheme impact the engagement with a visual simulation of floating marine debris?**
 
-## Base Interaction Approach
-
-See original proposal for description.
-
-![GIF of base interaction scheme](figures/demo5.gif)
-
 ## Gamified Reward Scheme Interaction Approach
+
+See [this video](https://drive.google.com/file/d/1askJoW9KZgn4T2hocWXa_N5sQsZD4yfk/view?usp=drive_link) for a demo.
 
 ![GIF of base interaction scheme](figures/demo2.gif)
 

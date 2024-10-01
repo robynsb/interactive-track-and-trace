@@ -15,6 +15,7 @@
 #include "layers/StatisticsManager.h"
 #include "layers/BadgeCounter.h"
 #include "layers/SplashScreen.h"
+#include "layers/UserStudyTimerInitialiser.h"
 #include "collisions/FoodPickup.h"
 #include "collisions/DebrisPickup.h"
 #include "collisions/TrackedCollision.h"
@@ -112,6 +113,7 @@ int main() {
   program->addLayer(std::move(statisticsManager));
   program->addLayer(badges);
   program->addLayer(std::move(badgesCounter));
+  program->addLayer(make_unique<UserStudyTimerInitialiser>());
 
   program->render();
 
