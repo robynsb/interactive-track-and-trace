@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(VTK_DIR $ENV{VTK_DIR})
+
 find_package(VTK COMPONENTS
   GeovisCore
   CommonColor

@@ -3,6 +3,7 @@
 
 
 #include <vtkPoints.h>
+#include <vtkSmartPointer.h>
 #include <memory.h>
 #include <memory>
 

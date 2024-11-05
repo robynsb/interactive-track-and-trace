@@ -31,6 +31,7 @@
 #include <vtkPolyDataMapper2D.h>
 #include <vtkProperty2D.h>
 #include <memory>
+#include <vtkSmartPointer.h>
 
 using namespace std;
 

@@ -3,6 +3,7 @@
 
 
 #include "ParticleCollisionCallback.h"
+#include <vtkSmartPointer.h>
 
 /**
  * Dummy collision to test collisions.

@@ -3,6 +3,7 @@
 
 #include <vtkInteractorStyle.h>
 #include <vtkRenderer.h>
+#include <vtkNew.h>
 
 /** This class represents one abstract layer to be rendered to VTK.
   * It exists to manage multiple different layers under the Program class.

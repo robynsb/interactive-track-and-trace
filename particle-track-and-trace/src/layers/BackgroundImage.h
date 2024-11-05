@@ -3,6 +3,7 @@
 
 #include "Layer.h"
 #include <vtkImageReader2Factory.h>
+#include <vtkSmartPointer.h>
 
 /** Implements the Layer class for the case of a background image.
   * Specifically, reads a backgroundImage given by the imagePath attribute and puts it on layer 0.

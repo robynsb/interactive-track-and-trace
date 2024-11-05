@@ -4,7 +4,6 @@
 #include <utility>
 #include <stdexcept>
 #include <iostream>
-#include <format>
 
 class Vel {
 public:
