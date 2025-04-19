@@ -1,8 +1,10 @@
 #include "Timer.h"
 #include "../commands/TimerCallbackCommand.h"
+#include <vtkSmartPointer.h>
 
 void Timer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-  callback = vtkSmartPointer<TimerCallbackCommand>::New(program.get());
+  callback = vtkSmartPointer<TimerCallbackCommand>::New();
+  callback->setProgram(program.get());
   callback->SetClientData(this);
   callback->setDt(dt);
   interactor->AddObserver(vtkCommand::TimerEvent, callback);

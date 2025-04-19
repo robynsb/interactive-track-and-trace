@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(ParticleTrackTrace)
 
+include(CMakePrintHelpers)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -35,13 +37,16 @@ if (NOT VTK_FOUND)
 endif()
 
 # netcdf setup
-find_package(netCDF REQUIRED)
+# find_package(netCDF REQUIRED)
 
-include(FetchContent)
-FetchContent_Declare(SFML
-        GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG 2.6.x)
-FetchContent_MakeAvailable(SFML)
+# include(FetchContent)
+# FetchContent_Declare(SFML
+#         GIT_REPOSITORY https://github.com/SFML/SFML.git
+#         GIT_TAG 2.5.x
+#         FIND_PACKAGE_ARGS NAMES SFML COMPONENTS system window audio main)
+# FetchContent_MakeAvailable(SFML)
+
+find_package(SFML COMPONENTS system window audio)
 
 add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/BackgroundImage.cpp
@@ -158,19 +163,23 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
 
 execute_process(
     COMMAND nc-config --includedir
-    OUTPUT_VARIABLE NETCDF_INCLUDE_DIR
+    OUTPUT_VARIABLE netCDF_INCLUDE_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 execute_process(
-    COMMAND ncxx4-config --libdir
+    COMMAND ncxx4-config --prefix
     OUTPUT_VARIABLE NETCDFCXX_LIB_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 target_include_directories(ParticleTrackTrace PUBLIC ${netCDF_INCLUDE_DIR})
 
-find_library(NETCDF_LIB NAMES netcdf-cxx4 netcdf_c++4 PATHS ${NETCDFCXX_LIB_DIR} NO_DEFAULT_PATH)
+cmake_print_variables(netCDF_INCLUDE_DIR "${NETCDFCXX_LIB_DIR}/lib" NETCDF_LIB)
+
+find_library(NETCDF_LIB NAMES netcdf-cxx4 netcdf_c++4 PATHS "${NETCDFCXX_LIB_DIR}/lib" NO_DEFAULT_PATH)
+
+cmake_print_variables(netCDF_INCLUDE_DIR "${NETCDFCXX_LIB_DIR}/lib" NETCDF_LIB)
 
 # Prevent a "command line is too long" failure in Windows.
 set(CMAKE_NINJA_FORCE_RESPONSE_FILE "ON" CACHE BOOL "Force Ninja to use response files.")

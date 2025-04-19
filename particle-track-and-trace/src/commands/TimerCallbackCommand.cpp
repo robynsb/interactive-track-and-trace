@@ -6,9 +6,8 @@
 // TODO: maxTime: hard coded values?!
 TimerCallbackCommand::TimerCallbackCommand() : dt(3600), maxTime(3600*24*365), time(0) {}
 
-TimerCallbackCommand* TimerCallbackCommand::New(Program *program) {
+TimerCallbackCommand* TimerCallbackCommand::New() {
   TimerCallbackCommand *cb = new TimerCallbackCommand();
-  cb->setProgram(program);
   cb->setPaused(true);
   return cb;
 }

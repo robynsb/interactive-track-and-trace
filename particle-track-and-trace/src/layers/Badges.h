@@ -7,6 +7,7 @@
 #include "../badges/Achievement.h"
 
 #include <queue>
+#include <functional>
 
 class Badges : public Layer {
 public:

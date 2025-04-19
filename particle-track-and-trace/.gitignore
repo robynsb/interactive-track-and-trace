@@ -8,3 +8,6 @@ src/cmake-build-release
 src/game-build
 compile_commands.json
 src/base-build
+**/.vscode
+**/*.csv
+src/result

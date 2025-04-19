@@ -7,7 +7,7 @@
 class TimerCallbackCommand : public vtkCallbackCommand {
 public:
   TimerCallbackCommand();
-  static TimerCallbackCommand* New(Program *program);
+  static TimerCallbackCommand* New();
   void Execute(vtkObject* caller, unsigned long eventId, void* vtkNotUsed(callData)) override;
 
   void setProgram(Program *program);
