@@ -5,6 +5,7 @@
 #include <vtkGeoProjection.h>
 #include <vtkGeoTransform.h>
 #include <vtkGeneralTransform.h>
+#include "vtk_libproj.h"
 
 vtkSmartPointer<vtkCamera> createNormalisedCamera() {
   vtkNew<vtkCamera> camera;

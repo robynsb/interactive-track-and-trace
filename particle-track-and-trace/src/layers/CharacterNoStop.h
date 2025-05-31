@@ -41,7 +41,7 @@ private:
   static constexpr int dashDuration = 30;
   static constexpr double startLon = 6.513089433595266; // Groningen
   static constexpr double startLat = 53.44059997086552;
-  bool clickingNecessaryForSteering = true;
+  bool clickingNecessaryForSteering = false;
 
   vtkNew<vtkTexture> texture;
   vtkNew<vtkActor> texturedPlane;

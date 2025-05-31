@@ -6,7 +6,7 @@
   hdf5,
   curl,
   cmake,
-  ninja,
+  ninja
 }:
 stdenv.mkDerivation rec {
   pname = "netcdf-cxx4";
