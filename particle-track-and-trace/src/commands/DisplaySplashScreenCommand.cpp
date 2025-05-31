@@ -2,6 +2,7 @@
 
 #include <vtkRenderWindowInteractor.h>
 
+// TODO: Could refactor this functionality with DisplayEulerCommand.h to make a more general "toggle" functionality.
 void DisplaySplashScreenCommand::Execute(vtkObject *caller, unsigned long eid, void *callData) {
   auto intr = reinterpret_cast<vtkRenderWindowInteractor *>(caller);
   if(eid == vtkCommand::KeyPressEvent) {
