@@ -11,9 +11,12 @@
 #include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkVertexGlyphFilter.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
 #include <vtkArrowSource.h>
 
 #include "../CartographicTransformation.h"
+#include "../commands/DisplayEulerCommand.h"
 #include "../advection/readdata.h"
 #include "../advection/interpolate.h"
 
@@ -85,17 +88,21 @@ void EulerGlyphs::readCoordinates() {
   mapper->SetInputConnection(glyph2D->GetOutputPort());
   mapper->Update();
 
-  vtkNew<vtkActor> actor;
+  actor = vtkSmartPointer<vtkActor>::New();
   actor->SetMapper(mapper);
 
   actor->GetProperty()->SetColor(0, 0, 0);
   actor->GetProperty()->SetOpacity(0.2);
 
   this->renderer->AddActor(actor);
+  toggle();
 }
 
 
 void EulerGlyphs::updateData(int t) {
+  if(!actor->GetVisibility()) {
+    return;
+  }
   int i = 0;
   for (int lat = 0; lat < uvGrid->latSize; lat++) {
     for (int lon = 0; lon < uvGrid->lonSize; lon++) {
@@ -106,4 +113,20 @@ void EulerGlyphs::updateData(int t) {
     }
   }
   this->direction->Modified();
+}
+
+void EulerGlyphs::setVisibility(bool visible) {
+  actor->SetVisibility(visible);
+  actor->Modified();
+  if(renderer->GetRenderWindow()) renderer->GetRenderWindow()->Render();
+}
+
+void EulerGlyphs::toggle() {
+  setVisibility(!actor->GetVisibility());
+}
+
+void EulerGlyphs::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
+  vtkNew<DisplayEulerCommand> controller;
+  controller->setToggle(bind(&EulerGlyphs::toggle, this));
+  interactor->AddObserver(vtkCommand::KeyPressEvent, controller);
 }

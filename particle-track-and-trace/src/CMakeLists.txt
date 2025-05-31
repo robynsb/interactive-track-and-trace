@@ -155,6 +155,8 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/SplashScreen.h
         commands/DisplaySplashScreenCommand.cpp
         commands/DisplaySplashScreenCommand.h
+        commands/DisplayEulerCommand.cpp
+        commands/DisplayEulerCommand.h
         commands/UserStudyTimer.h
         commands/UserStudyTimer.cpp
         layers/UserStudyTimerInitialiser.cpp

@@ -22,10 +22,16 @@ public:
    * Updates the glyphs to reflect the given timestamp in the dataset.
    * @param t : the time at which to fetch the data.
    */
-  void updateData(int t);
+  void updateData(int t) override;
+
+  void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;
+  void setVisibility(bool visible);
+
 private:
+  void toggle();
   vtkSmartPointer<vtkPolyData> data;
   vtkSmartPointer<vtkDoubleArray> direction;
+  vtkSmartPointer<vtkActor> actor;
   std::shared_ptr<UVGrid> uvGrid;
   int numLats;
   int numLons;

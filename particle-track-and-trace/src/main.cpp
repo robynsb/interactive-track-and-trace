@@ -55,7 +55,7 @@ int main() {
   auto litter = make_shared<LagrangeGlyphs>(uvGrid, std::move(kernelRK4BoundaryChecked));
   litter->setColour(255, 255, 255);
   litter->setToDiamond();
-  // auto euler = make_shared<EulerGlyphs>(uvGrid);
+  auto euler = make_shared<EulerGlyphs>(uvGrid);
   auto character = make_shared<CharacterNoStop>(uvGrid, dataPath, camera);
 
   auto health = make_shared<Health>(program);
@@ -99,7 +99,7 @@ int main() {
   program->addLayer(timer);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/northsea.png"));
   program->addLayer(litter);
-  // program->addLayer(euler);
+  program->addLayer(euler);
   program->addLayer(food);
   program->addLayer(foodSpawn);
   program->addLayer(collisionHandler);
