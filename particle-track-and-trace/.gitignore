@@ -6,3 +6,7 @@ src/build
 src/cmake-build-debug
 src/cmake-build-release
 compile_commands.json
+**/.vscode/
+**/*build/
+**/*.csv
+**/result

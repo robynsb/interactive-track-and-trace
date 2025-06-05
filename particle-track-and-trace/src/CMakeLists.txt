@@ -36,7 +36,7 @@ if (NOT VTK_FOUND)
 endif()
 
 # netcdf setup
-find_package(netCDF REQUIRED)
+# find_package(netCDF REQUIRED)
 
 add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
         layers/BackgroundImage.cpp
@@ -79,19 +79,19 @@ add_executable(ParticleTrackTrace MACOSX_BUNDLE main.cpp
 
 execute_process(
     COMMAND nc-config --includedir
-    OUTPUT_VARIABLE NETCDF_INCLUDE_DIR
+    OUTPUT_VARIABLE netCDF_INCLUDE_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 execute_process(
-    COMMAND ncxx4-config --libdir
+    COMMAND ncxx4-config --prefix
     OUTPUT_VARIABLE NETCDFCXX_LIB_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 target_include_directories(ParticleTrackTrace PUBLIC ${netCDF_INCLUDE_DIR})
 
-find_library(NETCDF_LIB NAMES netcdf-cxx4 netcdf_c++4 PATHS ${NETCDFCXX_LIB_DIR} NO_DEFAULT_PATH)
+find_library(NETCDF_LIB NAMES netcdf-cxx4 netcdf_c++4 PATHS "${NETCDFCXX_LIB_DIR}/lib" NO_DEFAULT_PATH)
 
 # Prevent a "command line is too long" failure in Windows.
 set(CMAKE_NINJA_FORCE_RESPONSE_FILE "ON" CACHE BOOL "Force Ninja to use response files.")

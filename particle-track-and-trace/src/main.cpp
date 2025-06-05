@@ -24,7 +24,7 @@ using namespace std;
 
 int main() {
   cout << "Reading data..." << endl;
-  string dataPath = "../../../../data";
+  string dataPath = "../../../data";
   shared_ptr<UVGrid> uvGrid = make_shared<UVGrid>(dataPath);
   auto kernelRK4 = make_unique<RK4AdvectionKernel>(uvGrid);
   auto kernelRK4BoundaryChecked = make_unique<SnapBoundaryConditionKernel>(std::move(kernelRK4), uvGrid);
