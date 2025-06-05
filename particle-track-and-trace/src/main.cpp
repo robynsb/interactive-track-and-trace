@@ -98,8 +98,8 @@ int main() {
 
   program->addLayer(timer);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/northsea.png"));
-  program->addLayer(litter);
   program->addLayer(euler);
+  program->addLayer(litter);
   program->addLayer(food);
   program->addLayer(foodSpawn);
   program->addLayer(collisionHandler);
