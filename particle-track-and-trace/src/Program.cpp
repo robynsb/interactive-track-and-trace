@@ -32,7 +32,7 @@ void Program::setWinProperties() {
   win->SetWindowName("Particle Track and Trace Gamification");
 }
 
-Program::Program(int timerDT): cam{createNormalisedCamera()} {
+Program::Program(): cam{createNormalisedCamera()} {
   win->SetNumberOfLayers(0);
   setWinProperties();
 }

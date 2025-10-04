@@ -44,7 +44,7 @@ private:
 public:
   /** Constructor.
     */ 
-  Program(int timerDT);
+  Program();
 
   /** This function adds a new layer (and thus vtkRenderer) to the program.
     * The layer is expected to set its own position in the vtkRenderWindow layer system.

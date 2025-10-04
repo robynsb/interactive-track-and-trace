@@ -24,3 +24,9 @@ void Timer::handleGameOver() {
   setPaused(true);
   resetTime();
 }
+
+
+void Timer::changeDT(int dt) {
+  this->dt = std::min(1, this->dt+dt);
+  this->callback->setDt(this->dt);
+}

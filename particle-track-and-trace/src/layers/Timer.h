@@ -17,6 +17,7 @@ public:
   void handleGameOver() override;
 
   void resetTime();
+  void changeDT(int dt);
   Timer(const std::shared_ptr<Program> &program, int dt);
 
   void addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) override;

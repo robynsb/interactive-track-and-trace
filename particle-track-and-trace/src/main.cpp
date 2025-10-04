@@ -47,7 +47,7 @@ int main() {
   auto kernelRK4BoundaryCheckedFood = make_unique<SnapBoundaryConditionKernel>(std::move(kernelRK4Food), uvGrid);
 
   cout << "Starting vtk..." << endl;
-  auto program = make_shared<Program>(dt);
+  auto program = make_shared<Program>();
   auto timer = make_shared<Timer>(program, dt);
   auto camera = make_shared<Camera>();
 
