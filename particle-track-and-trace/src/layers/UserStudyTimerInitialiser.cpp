@@ -2,6 +2,7 @@
 #include "../commands/UserStudyTimer.h"
 
 #include <vtkRenderWindowInteractor.h>
+#include <vtkSmartPointer.h>
 
 void UserStudyTimerInitialiser::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
   vtkNew<UserStudyTimer> userStudyTimer;

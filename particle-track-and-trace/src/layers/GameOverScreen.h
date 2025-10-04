@@ -2,6 +2,7 @@
 #define GAMEOVERSCREEN_H
 
 #include "Layer.h"
+#include <vtkSmartPointer.h>
 
 class GameOverScreen : public Layer {
 public:

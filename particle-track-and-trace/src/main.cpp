@@ -15,7 +15,7 @@
 #include "layers/StatisticsManager.h"
 #include "layers/BadgeCounter.h"
 #include "layers/SplashScreen.h"
-#include "layers/UserStudyTimerInitialiser.h"
+//#include "layers/UserStudyTimerInitialiser.h"
 #include "collisions/FoodPickup.h"
 #include "collisions/DebrisPickup.h"
 #include "collisions/TrackedCollision.h"
@@ -35,7 +35,8 @@
 
 using namespace std;
 
-constexpr int dt = 60 * 60; // 60 sec/min * 60 mins
+//constexpr int dt = 60 * 60; // 60 sec/min * 60 mins
+constexpr int dt = 60 * 60 *3; 
 
 int main() {
   cout << "Reading data..." << endl;
@@ -97,10 +98,8 @@ int main() {
   statisticsManager->addStatistic(badgesAcquiredStatistic);
   statisticsManager->addStatistic(trackedLitterRemover);
 
-  program->addLayer(timer);
   program->addLayer(make_shared<BackgroundImage>(dataPath + "/northsea.png"));
   program->addLayer(litter);
-//  program->addLayer(euler);
   program->addLayer(food);
   program->addLayer(foodSpawn);
   program->addLayer(collisionHandler);
@@ -114,7 +113,7 @@ int main() {
   program->addLayer(std::move(statisticsManager));
   program->addLayer(badges);
   program->addLayer(std::move(badgesCounter));
-  program->addLayer(make_unique<UserStudyTimerInitialiser>());
+  program->addLayer(timer);
 
   program->render();
 

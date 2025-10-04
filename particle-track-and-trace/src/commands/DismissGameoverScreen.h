@@ -2,6 +2,7 @@
 #define DISMISSGAMEOVERSCREEN_H
 
 #include <vtkCallbackCommand.h>
+#include <functional>
 
 class DismissGameoverScreen : public vtkCallbackCommand {
 public:

@@ -31,7 +31,7 @@ public:
 
 private:
   static constexpr double rotationStep = 0.1;
-  static constexpr double maxVelocity = 0.02;
+  static constexpr double maxVelocity = 0.04;
   static constexpr double scaleHorizontalVelocity = 1.6; // Since the velocity is measured in degrees per time step,
   // and the longitudanal lines on our map are "squished" more
   // than latitudanal lines. This scaling factor corrects for this

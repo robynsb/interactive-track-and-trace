@@ -2,6 +2,7 @@
 #define SPLASHSCREEN_H
 
 #include "Layer.h"
+#include <vtkSmartPointer.h>
 
 class SplashScreen : public Layer {
 public:

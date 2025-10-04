@@ -2,12 +2,15 @@
 #include "../commands/TimerCallbackCommand.h"
 
 void Timer::addObservers(vtkSmartPointer<vtkRenderWindowInteractor> interactor) {
-  callback = vtkSmartPointer<TimerCallbackCommand>::New(program.get());
+  callback = vtkSmartPointer<TimerCallbackCommand>::New();
+  callback->setProgram(program.get());
   callback->SetClientData(this);
   callback->setDt(dt);
   interactor->AddObserver(vtkCommand::TimerEvent, callback);
   interactor->AddObserver(vtkCommand::KeyPressEvent, callback);
   interactor->CreateRepeatingTimer(16); // 60 fps == 1000 / 60 == 16.7 ms per frame
+  //interactor->CreateRepeatingTimer(42); // 24 fps == 1000 / 24 == 41.7 ms per frame
+  //interactor->CreateRepeatingTimer(30); // 24 fps == 1000 / 24 == 41.7 ms per frame
 }
 
 Timer::Timer(const std::shared_ptr<Program> &program, int dt) : program(program), dt(dt) {}
